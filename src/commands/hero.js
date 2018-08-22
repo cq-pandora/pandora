@@ -50,7 +50,7 @@ const command = (message, args) => {
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
     const grade = args[1] ? Math.max(1, Math.min(parseInt(args[1], 10), 6)) : null;
     
-    let form = hero.forms.filter(f => f.star == grade)[0] || ;
+    let form = null;
 
     if (grade) {
         form = hero.forms.filter(f => f.star == grade)[0];        
