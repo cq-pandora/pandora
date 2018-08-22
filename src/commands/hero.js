@@ -70,7 +70,7 @@ const command = (message, args) => {
     const embeds = hero.forms.map((form, idx, arr) => new MessageEmbed()
             .setTitle(`${translate(form.name)} (${form.star}★)`)
             .setDescription(translate(form.lore))
-            .setThumbnail(imageUrl(form.image))
+            .setThumbnail(imageUrl('heroes/' + form.image))
             .setFooter(`Page ${idx + 1}/${arr.length}`)
         );
 
@@ -84,11 +84,11 @@ const command = (message, args) => {
         .setColor(classColors[hero.class])
         .addField('Class', capitalizeFirstLetter(hero.class), true)
         .addField('Type', capitalizeFirstLetter(hero.type), true)
-        .addField('Domain', hero.domain ? '-' : '-', true)
+        .addField('Domain', (!hero.domain || hero.domain === "NONEHROUP") ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
         .addField('Gender', capitalizeFirstLetter(hero.gender), true)
         .build();
 
-    message.channel
+    return message.channel
         .send(msg)
         .catch(error => console.log(error));
 };
@@ -97,5 +97,5 @@ exports.run = (message, args) => {
     if (!args.length) 
         return instructions(message);
 
-    command(message, args);
+    return command(message, args);
 };
