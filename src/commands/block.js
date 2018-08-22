@@ -51,9 +51,7 @@ const command = (message, args) => {
     let form = null;
 
     if (grade) {
-        const possibleForm = hero.forms.filter(f => f.star == grade)[0];
-        if (possibleForm)
-            form = possibleForm
+        form = hero.forms.filter(f => f.star == grade)[0];
     } else {
         form = hero.forms[hero.forms.length - 1];
     }
