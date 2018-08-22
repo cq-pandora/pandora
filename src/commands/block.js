@@ -16,7 +16,7 @@ const classColors = {
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
-        title: `${prefix}block [<name>] [<star>] [<lang>]`,
+        title: `${prefix}block [<name>] [<star>]`,
         footer: {
             text: 'Argument order does not matter.',
         },
