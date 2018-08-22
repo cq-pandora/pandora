@@ -4,6 +4,7 @@ module.exports = {
 	getPrefix: (message) => !config.prefix ? `@${message.client.user.username} ` : config.prefix,
 	
 	textSplitter: (str, l) => {
+		l = l || 1024;
 	    let strs = [];
 
 	    while(str.length > l){
