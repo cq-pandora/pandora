@@ -1,5 +1,5 @@
 {
   "token": "",
   "prefix": "!",
-  "prasedData": "path/to/information/files/cq-data-parse"
+  "parsedData": "path/to/information/files/cq-data-parse"
 }
