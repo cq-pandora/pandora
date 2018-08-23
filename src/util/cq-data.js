@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('../config');
 const path = require('path');
 const Fuse = require('fuse.js');
 

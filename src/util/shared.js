@@ -1,4 +1,5 @@
 const config = require('../config');
+const _ = require('lodash');
 
 module.exports = {
 	getPrefix: (message) => !config.prefix ? `@${message.client.user.username} ` : config.prefix,
@@ -23,6 +24,10 @@ module.exports = {
 	},
 
 	capitalizeFirstLetter: (str) => str ? (str.charAt(0).toUpperCase() + str.substr(1)) : str,
+
+	parseGrade: (args) => parseInt(args.find(i => [1, 2, 3, 4, 5, 6,].includes(parseInt(i, 10)))) || null,
+
+	parseQuery: (args, remove) => _.pullAll(args.filter(i => !!i), remove).join(' '),
 
 	imageUrl: (filename) => `${config.imagePrefix}${filename}${config.imageSuffix}`,
 }

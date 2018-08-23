@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { goddessesFuzzy, goddesses, translate, } = require('../cq-data');
+const { goddessesFuzzy, goddesses, translate, } = require('../util/cq-data');
 const { getPrefix, imageUrl } = require('../util/shared');
 
 const instructions = (message) => {
@@ -20,7 +20,7 @@ const instructions = (message) => {
 }
 
 const command = (message, args) => {
-    const name = args[0];
+    const name = args.join(' ');
     
     const candidates = goddessesFuzzy.search(name);
 

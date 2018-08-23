@@ -1,7 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const { heroesFuzzy, heroes, translate } = require('../cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl } = require('../util/shared');
+const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
+const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
 const _ = require('lodash');
 
 const classColors = {
@@ -33,7 +33,8 @@ const instructions = (message) => {
 };
 
 const command = (message, args) => {
-    const name = args[0];
+    const grade = parseGrade(args);
+    const name = parseQuery(args, [grade]);
 
     const candidates = heroesFuzzy.search(name);
 
@@ -44,8 +45,7 @@ const command = (message, args) => {
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
-    const grade = args[1] ? Math.max(4, Math.min(parseInt(args[1], 10), 6)) : null;
-
+    
     let sbw = null;
 
     if (grade) {

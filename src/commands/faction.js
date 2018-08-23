@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { factionsFuzzy, factions, heroes, translate, } = require('../cq-data');
+const { factionsFuzzy, factions, heroes, translate, } = require('../util/cq-data');
 const { getPrefix, imageUrl, textSplitter } = require('../util/shared');
 const _ = require('lodash');
 
@@ -20,7 +20,7 @@ const instructions = (message) => {
 }
 
 const command = (message, args) => {
-    const name = args[0];
+    const name = args.join(' ');
     
     const candidates = factionsFuzzy.search(name);
 
