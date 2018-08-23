@@ -28,13 +28,8 @@ const instructions = (message) => {
 const command = (message, args) => {
     const grade = parseGrade(args);
     const name = parseQuery(args, [grade]);
-    
-    console.log(name);
-    console.log(grade);
 
     const candidates = berriesFuzzy.search(name);
-
-    console.log(candidates);
 
     if (!candidates.length) {
         return message.channel
