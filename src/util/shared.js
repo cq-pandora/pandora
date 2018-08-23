@@ -1,6 +1,22 @@
 const config = require('../config');
 const _ = require('lodash');
 
+const statsNameMapping = {
+    "atk_power": "Attack power",
+    "hp": "HP",
+    "crit_chance": "Crit chance",
+    "armor": "Armor",
+    "resistance": "Resistance",
+    "crit_dmg": "Crit damage",
+    "accuracy": "Accuracy",
+    "evasion": "Evasion",
+    "armor_pen": "Armor penetration",
+    "resistance_pen": "Resistance penetration",
+    "dmg_reduction": "Damage reduction",
+    "lifesteal": "Lifesteal",
+    "crit_chance_reduction": "Crit chance reduction",
+}
+
 module.exports = {
 	getPrefix: (message) => !config.prefix ? `@${message.client.user.username} ` : config.prefix,
 	
@@ -30,4 +46,6 @@ module.exports = {
 	parseQuery: (args, remove) => _.pullAll(args.filter(i => !!i), remove).join(' '),
 
 	imageUrl: (filename) => `${config.imagePrefix}${filename}${config.imageSuffix}`,
+
+	translateStat: (stat) => statsNameMapping[stat] || stat;
 }

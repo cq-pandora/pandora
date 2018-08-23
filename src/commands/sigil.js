@@ -1,26 +1,10 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { sigilsFuzzy, sigils, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
+const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, translateStat } = require('../util/shared');
 const _ = require('lodash');
 
-const sigilsStatsNameMapping = {
-    "atk_power": "Attack power",
-    "hp": "HP",
-    "crit_chance": "Crit chance",
-    "armor": "Armor",
-    "resistance": "Resistance",
-    "crit_dmg": "Crit damage",
-    "accuracy": "Accuracy",
-    "evasion": "Evasion",
-    "armor_pen": "Armor penetration",
-    "resistance_pen": "Resistance penetration",
-    "dmg_reduction": "Damage reduction",
-    "lifesteal": "Lifesteal",
-    "crit_chance_reduction": "Crit chance reduction",
-}
-
-const statsToString = (obj) => _.entries(obj).map(el => `${sigilsStatsNameMapping[el[0]]}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n');
+const statsToString = (obj) => _.entries(obj).map(el => `${translateStat(el[0])}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
