@@ -47,5 +47,7 @@ module.exports = {
 
 	imageUrl: (filename) => `${config.imagePrefix}${filename}${config.imageSuffix}`,
 
-	translateStat: (stat) => statsNameMapping[stat] || stat;
+	translateStat: (stat) => statsNameMapping[stat] || stat,
+	
+	statsToString: (obj) => _.entries(obj).map(el => `${statsNameMapping[el[0]]}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n'),
 }

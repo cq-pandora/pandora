@@ -1,10 +1,8 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { sigilsFuzzy, sigils, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, translateStat } = require('../util/shared');
+const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, translateStat, statsToString } = require('../util/shared');
 const _ = require('lodash');
-
-const statsToString = (obj) => _.entries(obj).map(el => `${translateStat(el[0])}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -53,7 +51,7 @@ const command = (message, args) => {
         .setTitle(`${translate(sigil.name)} (${sigil.grade}★)`)
         .setThumbnail(imageUrl('sigils/' + sigil.image))
         .addField('Rarity', capitalizeFirstLetter(sigil.rarity), true)
-        .addField('Sell cost', sigil.sell_cost, true)
+        .addField('Sell price', sigil.sell_cost, true)
         .addField('Extract cost', sigil.extract_cost, true);
 
     let stats = {}, totalStats = {};

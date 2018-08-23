@@ -52,7 +52,7 @@ const command = (message, args) => {
             .addField('Stat', capitalizeFirstLetter(berry.target_stat), true)
             .addField('Great rate', `${(100 * berry.great_chance)}%`, true)
             .addField('Stat value', berry.is_percentage ? `${(100 * berry.value)}%` : berry.value, true)
-            .addField('Sell cost', berry.sell_cost, true)
+            .addField('Sell price', berry.sell_cost, true)
             .addField('Eat cost', berry.eat_cost, true);
 
     return message.channel
