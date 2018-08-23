@@ -3,3 +3,6 @@ node_modules
 
 # privy to me
 config.json
+
+.gitignore
+.data
