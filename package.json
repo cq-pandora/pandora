@@ -6,7 +6,9 @@
     "discord.js": "github:discordjs/discord.js",
     "erlpack": "github:discordapp/erlpack",
     "fuse.js": "^3.2.1",
+    "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
+    "mathjs": "^5.1.1",
     "uws": "^10.148.1"
   },
   "scripts": {

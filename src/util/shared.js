@@ -15,6 +15,8 @@ const statsNameMapping = {
     "dmg_reduction": "Damage reduction",
     "lifesteal": "Lifesteal",
     "crit_chance_reduction": "Crit chance reduction",
+    "All": "All",
+    "all": "All"
 }
 
 module.exports = {
@@ -50,4 +52,10 @@ module.exports = {
 	translateStat: (stat) => statsNameMapping[stat] || stat,
 	
 	statsToString: (obj) => _.entries(obj).map(el => `${statsNameMapping[el[0]]}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n'),
+
+	random: (min, max) => {
+	    min = Math.ceil(min);
+	    max = Math.floor(max);
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 }
