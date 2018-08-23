@@ -17,9 +17,6 @@ const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
         title: `${prefix}hero [<name>] [<star>]`,
-        footer: {
-            text: 'Argument order matters!',
-        },
         fields: [
             {
                 name: '<name>',

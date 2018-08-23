@@ -17,9 +17,6 @@ const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
         title: `${prefix}block [<name>] [<star>]`,
-        footer: {
-            text: 'Argument order does not matter.',
-        },
         fields: [{
             name: '<name>',
             value: `Get block data.\n*e.g. ${prefix}block lee*`,
