@@ -79,7 +79,7 @@ const command = (message, args) => {
         .setColor(classColors[hero.class])
         .addField('Class', capitalizeFirstLetter(hero.class), true)
         .addField('Type', capitalizeFirstLetter(hero.type), true)
-        .addField('Faction', (!hero.domain || hero.domain === "NONEHROUP") ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
+        .addField('Faction', (!hero.domain || hero.domain === "NONEGROUP") ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
         .addField('Gender', capitalizeFirstLetter(hero.gender), true)
         .build();
 
