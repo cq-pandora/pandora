@@ -25,7 +25,7 @@ module.exports = {
 	goddesses: requireFile('goddesses'),
 	factions: requireFile('factions'),
 	translations: translations,
-	translate: (key) => translations[key] ? translations[key].text : key,
+	translate: (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, ''),
 	fuzzyIndicies: fuzzyIndicies,
 	heroesFuzzy: new Fuse(fuzzyIndicies.heroes, fuzzyOptions),
 	breadsFuzzy: new Fuse(fuzzyIndicies.breads, fuzzyOptions),

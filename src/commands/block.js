@@ -61,13 +61,13 @@ const command = (message, args) => {
     const page = hero.forms.indexOf(form) + 1;
 
     const embeds = hero.forms.map((form, idx, arr) => 
-        _.reduce(form.passive_name ? textSplitter(translate(form.passive_description).replace(/@|#|\$/g, '')) : [],
+        _.reduce(form.passive_name ? textSplitter(translate(form.passive_description)) : [],
         (res, chunk, idx) => res.addField(idx ? '\u200b' : translate(form.passive_name), chunk),
         new MessageEmbed()
             .setTitle(`${translate(form.name)} (${form.star}★)`)
             .setThumbnail(imageUrl('skills/' + form.block_image))
             .setFooter(`Page ${idx + 1}/${arr.length}`)
-            .addField(`${translate(form.block_name).replace(/@|#|\$/g, '')} (Lv. ${form.skill_lvl})`, translate(form.block_description))
+            .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
     ));
 
     

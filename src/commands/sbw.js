@@ -61,7 +61,7 @@ const command = (message, args) => {
     const page = hero.sbws.indexOf(sbw) + 1;
 
     const embeds = hero.sbws.map((sbw, idx, arr) => {
-        const abilityChunks = textSplitter(translate(sbw.ability).replace(/@|#|\$/g, ''));
+        const abilityChunks = textSplitter(translate(sbw.ability));
         let embed = new MessageEmbed()
             .setTitle(`${translate(sbw.name)} (${sbw.star}★)`)
             .setThumbnail(imageUrl('weapons/' + sbw.image))
