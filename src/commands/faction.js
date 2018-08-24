@@ -41,7 +41,7 @@ const command = (message, args) => {
         (msg, chunk) => msg.addField('\u200b', chunk),
         new MessageEmbed()
             .setTitle(translate(faction.name))
-            .setThumbnail(imageUrl('heroes/' + faction.image))
+            .setThumbnail(imageUrl('common/' + faction.image))
     );
 
     return message.channel
