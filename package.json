@@ -1,6 +1,43 @@
 {
-  "name": "create-discord-bot",
-  "version": "1.0.0",
+  "name": "cq-pandora",
+  "version": "0.1.1",
+  "main": "./src/index.js",
+  "license": "MIT",
+  "private": true,
+  "keywords": [ "cq", "crusaders quest", "pandora", "bot", "discord", "discord bot" ],
+  "description": "Crusaders Quest data bot for Discord",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TrueLecter/pandora.git"
+  },
+  "bugs": "https://github.com/TrueLecter/pandora/issues",
+  "homepage": "https://github.com/TrueLecter/pandora",
+  "author": {
+    "name": "TrueLecter",
+    "email": "gabriel@tenma.moe"
+  },
+  "contributors": [
+    {
+      "name": "TrueLecter",
+      "email": "gabriel@tenma.moe",
+      "web": "https://github.com/TrueLecter"
+    },
+    {
+      "name": "Peter Han",
+      "email": "peter.han.9493@gmail.com",
+      "web": "https://github.com/Johj"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "TrueLecter",
+      "email": "gabriel@tenma.moe",
+      "web": "https://github.com/TrueLecter"
+    }
+  ],
+  "engines": {
+    "node": ">=8.0"
+  },
   "dependencies": {
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
