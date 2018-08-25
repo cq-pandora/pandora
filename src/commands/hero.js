@@ -69,7 +69,7 @@ const command = (message, args) => {
             .setFooter(`Page ${idx + 1}/${arr.length}`)
         );
 
-    const msg = new EmbedsMode()
+    return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
@@ -82,10 +82,6 @@ const command = (message, args) => {
         .addField('Faction', (!hero.domain || hero.domain === "NONEGROUP") ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
         .addField('Gender', capitalizeFirstLetter(hero.gender), true)
         .build();
-
-    return message.channel
-        .send(msg)
-        .catch(error => console.log(error));
 };
 
 exports.run = (message, args) => {

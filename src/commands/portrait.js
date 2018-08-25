@@ -46,17 +46,13 @@ const command = (message, args) => {
             .setFooter(`Page ${idx + 1}/${arr.length}`)
         );
     
-    const msg = new EmbedsMode()
+    return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
         .build();
-
-    return message.channel
-        .send(msg)
-        .catch(error => console.log(error));
 };
 
 exports.run = (message, args) => {

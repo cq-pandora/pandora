@@ -1,5 +1,4 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
-const { MessageEmbed } = require('discord.js');
 const { berriesFuzzy, berries, translate, } = require('../util/cq-data');
 const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
 const _ = require('lodash');

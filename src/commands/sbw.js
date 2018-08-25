@@ -78,8 +78,7 @@ const command = (message, args) => {
             .addField('Attack speed', sbw.atk_speed, true);
     });
 
-    
-    const msg = new EmbedsMode()
+    return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
@@ -88,10 +87,6 @@ const command = (message, args) => {
         .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[hero.class])
         .build();
-
-    return message.channel
-        .send(msg)
-        .catch(error => console.log(error));
 };
 
 exports.run = (message, args) => {

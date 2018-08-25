@@ -41,17 +41,13 @@ const command = (message, args) => {
             .addField('Sell price', skin.cost, true)
     );
 
-    const msg = new EmbedsMode()
+    return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
         .build();
-
-    return message.channel
-        .send(msg)
-        .catch(error => console.log(error));
 };
 
 exports.run = (message, args) => {

@@ -71,7 +71,7 @@ const command = (message, args) => {
     ));
 
     
-    const msg = new EmbedsMode()
+    return EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
@@ -80,10 +80,6 @@ const command = (message, args) => {
         .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[hero.class])
         .build();
-
-    return message.channel
-        .send(msg)
-        .catch(error => console.log(error));
 };
 
 exports.run = (message, args) => {
