@@ -1,7 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
+const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseQuery  } = require('../util/shared');
 const _ = require('lodash');
 
 const instructions = (message) => {

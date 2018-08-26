@@ -24,6 +24,7 @@ module.exports = {
 	sigils: requireFile('sigils'),
 	goddesses: requireFile('goddesses'),
 	factions: requireFile('factions'),
+	inheritance: requireFile('inheritance'),
 	translations: translations,
 	translate: (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, ''),
 	fuzzyIndicies: fuzzyIndicies,

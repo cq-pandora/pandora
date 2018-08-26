@@ -27,7 +27,7 @@ const instructions = (message) => {
 
 const command = (message, args) => {
     const grade = parseGrade(args);
-    const name = parseQuery(args, [grade]);
+    const name = parseQuery(args, [`${grade}`]);
 
     const candidates = sigilsFuzzy.search(name);
 

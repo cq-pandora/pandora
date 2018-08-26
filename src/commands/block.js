@@ -33,7 +33,7 @@ const instructions = (message) => {
 
 const command = (message, args) => {
     const grade = parseGrade(args);
-    const name = parseQuery(args, [grade]);
+    const name = parseQuery(args, [`${grade}`]);
 
     const candidates = heroesFuzzy.search(name);
 
@@ -71,7 +71,7 @@ const command = (message, args) => {
     ));
 
     
-    return EmbedsMode()
+    return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)

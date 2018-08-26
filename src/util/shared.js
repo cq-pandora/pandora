@@ -19,6 +19,8 @@ const statsNameMapping = {
     "all": "All"
 }
 
+const range = (start, end) => (new Array(end - start + 1)).fill(0).map((_, i) => i + start);
+
 module.exports = {
 	getPrefix: (message) => !config.prefix ? `@${message.client.user.username} ` : config.prefix,
 	
@@ -43,15 +45,21 @@ module.exports = {
 
 	capitalizeFirstLetter: (str) => str ? (str.charAt(0).toUpperCase() + str.substr(1)) : str,
 
-	parseGrade: (args) => parseInt(args.find(i => [1, 2, 3, 4, 5, 6,].includes(parseInt(i, 10)))) || null,
+	parseGrade: (args) => parseInt(args.find(i => range(1, 6).includes(parseInt(i, 10)))) || null,
 
-	parseQuery: (args, remove) => _.pullAll(args.filter(i => !!i), remove).join(' '),
+	parseInheritance: (args) => parseInt(args.find(i => range(0, 20).includes(parseInt(i, 10)))) || null,
+
+	parseQuery: (args, remove) => _.pullAll(args.filter(i => !!i), remove.map(r => `${r}`)).join(' '),
 
 	imageUrl: (filename) => `${config.imagePrefix}${filename}${config.imageSuffix}`,
 
 	translateStat: (stat) => statsNameMapping[stat] || stat,
 	
-	statsToString: (obj) => _.entries(obj).map(el => `${statsNameMapping[el[0]]}: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n'),
+	statsToString: (obj, force) => _.entries(obj).filter(([_, s]) => (s > 0 || force))
+		.map(el => `**${statsNameMapping[el[0]]}**: ${el[1] < 1 ? `${el[1] * 100}%` : el[1]}`).join('\n'),
+
+	sumStats: (stat1, stat2) => _.reduce(_.keys(stat1 || {}), 
+		(res, stat) => (res[stat] = (stat1[stat] || 0) + (stat2[stat] || 0), res), {}),
 
 	random: (min, max) => {
 	    min = Math.ceil(min);
