@@ -4,7 +4,14 @@
   "main": "./src/index.js",
   "license": "MIT",
   "private": true,
-  "keywords": [ "cq", "crusaders quest", "pandora", "bot", "discord", "discord bot" ],
+  "keywords": [
+    "cq",
+    "crusaders quest",
+    "pandora",
+    "bot",
+    "discord",
+    "discord bot"
+  ],
   "description": "Crusaders Quest data bot for Discord",
   "repository": {
     "type": "git",
@@ -46,6 +53,7 @@
     "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
     "mathjs": "^5.1.1",
+    "mysql": "^2.16.0",
     "uws": "^10.148.1"
   },
   "scripts": {

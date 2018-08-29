@@ -1,3 +1,20 @@
-const path = require('path');
+const path   = require('path');
+const config = require(path.join(process.cwd(), 'config.json'));
+const _      = require('lodash');
 
-module.exports = require(path.join(process.cwd(), 'config.json'));
+config.get = (path, defauld = null) => {
+	if (!path) return defauld;
+
+	path = _.toPath(path);
+	let value = config;
+
+	for (let i = 0; i < path.length; i++) {
+		value = value[path[i]];
+
+		if (value === undefined) return defauld;
+	}
+
+	return value || defauld;
+};
+
+module.exports = config;
