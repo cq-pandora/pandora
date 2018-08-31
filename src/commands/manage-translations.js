@@ -17,7 +17,7 @@ const instructions = (message) => {
                 value: `Field to translate.\nCan be block-name, block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability`,
             },{
                 name: '<name>',
-                value: `Hero name.\n**Important**: this should be single word, so test if bot can find by what you want to translate by that word`,
+                value: `Hero name.\n**Important**: this should be single word, so test if bot can find what you want to translate by that word`,
             },{
                 name: '<grade>',
                 value: `SBW or hero grade`,
