@@ -24,6 +24,7 @@ exports.submit = (key, translation) => connect()
 .catch(err => {
 	console.log(`Error submitting translation for review: ${key} = ${translation}`);
 	console.log(err);
+	throw err;
 });
 
 exports.accept = (id) => connect()
@@ -32,6 +33,7 @@ exports.accept = (id) => connect()
 .catch(err => {
 	console.log(`Error accepting translation: ${id}`);
 	console.log(err);
+	throw err;
 });
 
 exports.decline = (id) => connect()
@@ -39,6 +41,7 @@ exports.decline = (id) => connect()
 .catch(err => {
 	console.log(`Error declining translation: ${id}`);
 	console.log(err);
+	throw err;
 });
 
 exports.declineAllUnaccepted = (key) => connect()
@@ -46,6 +49,7 @@ exports.declineAllUnaccepted = (key) => connect()
 .catch(err => {
 	console.log(`Error declining translations for key ${id}`);
 	console.log(err);
+	throw err;
 });
 
 exports.list = (key = null) => connect()
@@ -53,6 +57,7 @@ exports.list = (key = null) => connect()
 .catch(err => {
 	console.log(`Error getting translations: ${key}`);
 	console.log(err);
+	throw err;
 });
 
 exports.get = (key) => connect()
@@ -60,4 +65,5 @@ exports.get = (key) => connect()
 .catch(err => {
 	console.log(`Error getting translation: ${key}`);
 	console.log(err);
+	throw err;
 });
