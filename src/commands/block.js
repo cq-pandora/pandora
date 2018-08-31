@@ -69,7 +69,6 @@ const command = (message, args) => {
             .setFooter(`Page ${idx + 1}/${arr.length}`)
             .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
     ));
-
     
     return new EmbedsMode()
         .setArray(embeds)

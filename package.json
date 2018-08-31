@@ -46,6 +46,8 @@
     "node": ">=8.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "compare-versions": "^3.4.0",
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
     "erlpack": "github:discordapp/erlpack",

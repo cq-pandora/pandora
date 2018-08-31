@@ -1,10 +1,20 @@
 const Discord = require('discord.js');
-const config = require('./config');
+const config  = require('./config');
+const fs      = require('fs');
+const path    = require('path');
 
-// create bot
-const client = new Discord.Client();
+(async function main(){
+	const preloadDir = path.resolve(__dirname, 'preload');
+	for (const file of fs.readdirSync(preloadDir)) {
+		const entry = require(path.resolve(preloadDir, file));
+		await entry().catch(e => (console.log('Unable to start app', e), process.exit(entry.errorCode)));
+	}
 
-// load event handlers
-require('./util/loadEvents.js')(client);
+	// create bot
+	const client = new Discord.Client();
 
-client.login(config.token);
+	// load event handlers
+	require('./util/loadEvents.js')(client);
+
+	client.login(config.token);
+})();

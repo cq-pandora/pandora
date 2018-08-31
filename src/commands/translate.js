@@ -29,7 +29,7 @@ const instructions = (message) => {
 };
 
 const command = (message, args) => {
-    const action = args[0];
+    const field = args[0];
     const name = args[1];
     const grade = parseInt(args[2]);
 
@@ -45,7 +45,7 @@ const command = (message, args) => {
     
     let form = null, sbw = null;
 
-    if (action.includes('sbw')) {
+    if (field.includes('sbw')) {
         sbw = hero.sbws.filter(f => f.star == grade)[0];
 
         if (!sbw)
@@ -63,7 +63,7 @@ const command = (message, args) => {
 
     let key = null;
 
-    switch (action) {
+    switch (field) {
         case 'block-name': key = form.block_name; break;
         case 'block-description': key = form.block_description; break;
         case 'passive-name': key = form.passive_name; break;
@@ -73,7 +73,7 @@ const command = (message, args) => {
         case 'sbw-name': key = sbw.name; break;
         case 'sbw-ability': key = sbw.ability; break;
         default: return message.channel
-            .send('Unknown action!')
+            .send('Unknown field!')
             .catch(error => console.log(error));
     }
 

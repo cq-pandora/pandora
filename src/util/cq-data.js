@@ -1,6 +1,6 @@
-const config = require('../config');
-const path = require('path');
-const Fuse = require('fuse.js');
+const config   = require('../config');
+const path     = require('path');
+const Fuse     = require('fuse.js');
 
 const requireFile = (f) => require(path.resolve(config.parsedData, f + '.json'));
 
@@ -16,6 +16,8 @@ const fuzzyOptions = {
 
 const translations = requireFile('translations');
 
+const translate = (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, '');
+
 module.exports = {
 	berries: requireFile('berries'),
 	breads: requireFile('breads'),
@@ -25,8 +27,9 @@ module.exports = {
 	goddesses: requireFile('goddesses'),
 	factions: requireFile('factions'),
 	inheritance: requireFile('inheritance'),
+	keysDescriptions: requireFile('heroes_translations_indicies'),
 	translations: translations,
-	translate: (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, ''),
+	translate: translate,
 	fuzzyIndicies: fuzzyIndicies,
 	heroesFuzzy: new Fuse(fuzzyIndicies.heroes, fuzzyOptions),
 	breadsFuzzy: new Fuse(fuzzyIndicies.breads, fuzzyOptions),
@@ -35,3 +38,4 @@ module.exports = {
 	goddessesFuzzy: new Fuse(fuzzyIndicies.goddesses, fuzzyOptions),
 	factionsFuzzy: new Fuse(fuzzyIndicies.factions, fuzzyOptions),
 }
+
