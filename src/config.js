@@ -16,5 +16,6 @@ config.get = (path, defauld = null) => {
 
 	return value || defauld;
 };
+if (!config.aliases) config.aliases = {};
 
 module.exports = config;
