@@ -21,7 +21,7 @@ exports.submit = (alias, fogh) => connect()
 
 exports.accept = (alias) => connect()
 .then(con => new Promise((resolve, reject) => con.query(ACCEPT_ALIAS, alias, (err, res) => err ? reject(err) : resolve(res))))
-.then(connect).then(con => con.query(GET_BY_ALIAS, alias, (err, res) => err ? console.log('Unable to apply new alias locally') : config.alias[alias] = res[0].for))
+.then(connect).then(con => con.query(GET_BY_ALIAS, alias, (err, res) => err ? console.log('Unable to apply new alias locally') : config.aliases[alias] = res[0].for))
 .catch(err => {
 	console.log(`Error accepting alias: ${alias}`);
 	console.log(err);

@@ -16,7 +16,13 @@ const fuzzyOptions = {
 
 const translations = requireFile('translations');
 
-const translate = (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, '');
+const alias = (key) => config.aliases[key] || key;
+
+const aliasFuse = (fuse) => {
+	const oldSearch = fuse.search;
+	fuse.search = function (a) { return oldSearch.call(fuse, alias(a)); };
+	return fuse;
+}
 
 module.exports = {
 	berries: requireFile('berries'),
@@ -29,9 +35,9 @@ module.exports = {
 	inheritance: requireFile('inheritance'),
 	keysDescriptions: requireFile('heroes_translations_indicies'),
 	translations: translations,
-	translate: translate,
+	translate: (key) => (translations[key] ? (translations[key].text || ""): key).replace(/@|#|\$/g, ''),
 	fuzzyIndicies: fuzzyIndicies,
-	heroesFuzzy: new Fuse(fuzzyIndicies.heroes, fuzzyOptions),
+	heroesFuzzy: aliasFuse(new Fuse(fuzzyIndicies.heroes, fuzzyOptions)),
 	breadsFuzzy: new Fuse(fuzzyIndicies.breads, fuzzyOptions),
 	berriesFuzzy: new Fuse(fuzzyIndicies.berries, fuzzyOptions),
 	sigilsFuzzy: new Fuse(fuzzyIndicies.sigils, fuzzyOptions),
