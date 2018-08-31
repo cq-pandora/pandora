@@ -21,6 +21,8 @@ exports.run = (message, args) => {
             'fergus',
             'links',
             'pick',
+            'alias',
+            'translate',
         ],
         'Miscellaneous': [
             'lenny',

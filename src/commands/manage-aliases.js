@@ -107,3 +107,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.protected = true;

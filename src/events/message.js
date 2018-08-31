@@ -64,7 +64,12 @@ module.exports = message => {
 
     // check if command file exists
     try {
-        (commands[command] || commands[config.aliases[command]]).run(message, args);
+        const executable = (commands[command] || commands[config.aliases[command]]);
+        if (executable.protected && message.author.id !== config.owner_id) {
+            message.channel.send('No enough permissions!');
+            return;
+        }
+        executable.run(message, args);
     } catch (error) {
     	message.channel.send('Error while executing command!');
         console.log(error);
