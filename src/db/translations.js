@@ -1,5 +1,6 @@
 const connect = require('./connect');
 const data = require('../util/cq-data');
+const config = require('../config');
 
 const SUBMIT_TRANSLATION = 'INSERT INTO translations (`key`, `text`, `version`) VALUES (?, ?, ?)';
 const ACCEPT_TRANSLATION = 'UPDATE translations SET `status` = 1 WHERE `id` = ?';
