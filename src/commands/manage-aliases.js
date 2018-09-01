@@ -49,13 +49,13 @@ const command = (message, args) => {
         return aliases.list()
             .catch(error => message.channel.send('Unable to list aliases. Please, contact bot owner.'))
             .then(aliasesToEmbeds)
-            .then(r => new EmbedsMode()
+            .then(r => r.length ? new EmbedsMode()
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
-                .build()
+                .build() : message.channel.send('No pending aliases!')
             ).catch(e => console.log(e))
     }
 
@@ -83,7 +83,7 @@ const command = (message, args) => {
                 .then(r => message.channel.send('Aliases cleared!')) 
             break;
         case 'list': 
-            translations.list(fogh)
+            aliases.list(fogh)
                 .catch(error => message.channel.send('Unable to list submitted aliases. Please, contact bot owner.'))
                 .then(aliasesToEmbeds)
                 .then(r => new EmbedsMode()
