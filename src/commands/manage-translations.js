@@ -54,13 +54,13 @@ const command = (message, args) => {
         return translations.list()
             .catch(error => message.channel.send('Unable to list submitted translations. Please, contact bot owner.'))
             .then(translationsToEmbeds)
-            .then(r => new EmbedsMode()
+            .then(r => r.length ? new EmbedsMode()
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
-                .build()
+                .build() : message.channel.send('No pending translations!')
             ).catch(e => console.log(e))
     }
 
