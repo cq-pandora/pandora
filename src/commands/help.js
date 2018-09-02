@@ -16,7 +16,7 @@ exports.run = (message, args) => {
             'inherit',
             'portrait',
             'sbw',
-            'sbw-block'
+            'sbw-block',
             'sigil',
             'skin',
             'sp-skill',
