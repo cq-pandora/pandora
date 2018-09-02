@@ -8,14 +8,18 @@ exports.run = (message, args) => {
             'ping',
         ],
         'Database': [
+            'berry',
             'block',
             'faction',
             'goddess',
             'hero',
-            'portrait',
             'inherit',
+            'portrait',
             'sbw',
+            'sbw-block'
+            'sigil',
             'skin',
+            'sp-skill',
         ],
         'Utility': [
             'fergus',
@@ -31,6 +35,8 @@ exports.run = (message, args) => {
         ],
         'Reserved': [
             'eval',
+            'manage-aliases',
+            'manage-translations',
         ],
     };
 
