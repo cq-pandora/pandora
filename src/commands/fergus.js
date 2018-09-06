@@ -1,3 +1,5 @@
+const categories = require('../util/categories');
+
 exports.run = (message, args) => {
     const e = {
         image: {
@@ -9,3 +11,5 @@ exports.run = (message, args) => {
         embed: e,
     });
 }
+
+exports.category = categories.MISC;

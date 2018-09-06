@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
 const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseQuery, statsToString } = require('../util/shared');
 const _ = require('lodash');
+const categories = require('../util/categories');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -55,3 +56,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;

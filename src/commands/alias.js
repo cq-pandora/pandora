@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
 const { getPrefix } = require('../util/shared');
+const categories = require('../util/categories');
 const _ = require('lodash');
 const aliases = require('../db/aliases');
 
@@ -34,3 +35,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.UTIL;

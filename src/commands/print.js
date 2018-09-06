@@ -1,4 +1,5 @@
 const { getPrefix } = require('../util/shared.js');
+const categories = require('../util/categories');
 
 printInstructions = (message) => {
     const prefix = getPrefix(message);
@@ -25,3 +26,5 @@ exports.run = (message, args) => {
         embed: e,
     });
 }
+
+exports.category = categories.MISC;

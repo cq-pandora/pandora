@@ -1,3 +1,4 @@
+const categories = require('../util/categories');
 const { MessageEmbed } = require('discord.js');
 const { goddessesFuzzy, goddesses, translate, } = require('../util/cq-data');
 const { getPrefix, imageUrl } = require('../util/shared');
@@ -48,3 +49,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;

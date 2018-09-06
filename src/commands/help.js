@@ -1,62 +1,21 @@
 const config = require('../config');
+const categories = require('../util/categories');
+const _ = require('lodash');
 
-exports.run = (message, args) => {
-    const cmds = {
-        'Bot': [
-            //'about',
-            'help',
-            'ping',
-        ],
-        'Database': [
-            'berry',
-            'block',
-            'faction',
-            'goddess',
-            'hero',
-            'inherit',
-            'portrait',
-            'sbw',
-            'sbw-block',
-            'sigil',
-            'skin',
-            'sp-skill',
-        ],
-        'Utility': [
-            'fergus',
-            'links',
-            'pick',
-            'alias',
-            'translate',
-        ],
-        'Miscellaneous': [
-            'lenny',
-            'math',
-            'print',
-        ],
-        'Reserved': [
-            'eval',
-            'manage-aliases',
-            'manage-translations',
-        ],
-    };
-
-    const e = {
-        title: 'Commands',
-        description: `Prefix: ${config.prefix}, ${message.client.user}`,
-        fields: Object.keys(cmds).map(currentValue => {
-            return {
-                name: currentValue,
-                value: cmds[currentValue].join(', '),
-                inline: false,
-            };
-        }),
-        /*footer: {
-            text: `Android ${config.android_version} | iOS ${config.ios_version}`,
-        },
-        */
-    };
-
+exports.category = categories.BOT;
+exports.run = (message, args) =>
     message.channel.send({
-        embed: e,
+            embed: {
+                title: 'Commands',
+                description: `Prefix: ${config.prefix}, ${message.client.user}`,
+                fields: _(config.commands).groupBy('category').entries().map(([cat, cmds]) => ({
+                    name: cat,
+                    value: cmds.map(cmd => `${cmd.name}${config.reverseAliases[cmd.name] ? ` (${config.reverseAliases[cmd.name].join(', ')})` : ''}`).join(', '),
+                    inline: false,
+                })),
+            /*footer: {
+                text: `Android ${config.android_version} | iOS ${config.ios_version}`,
+            },
+            */
+        },
     });
-}

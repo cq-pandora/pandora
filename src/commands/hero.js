@@ -1,3 +1,4 @@
+const categories = require('../util/categories');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate, } = require('../util/cq-data');
@@ -90,3 +91,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;

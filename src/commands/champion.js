@@ -1,5 +1,6 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
+const categories = require('../util/categories');
 const { championsFuzzy, champions, translate, } = require('../util/cq-data');
 const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
 const _ = require('lodash');
@@ -91,3 +92,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;

@@ -3,6 +3,7 @@ const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
 const { getPrefix } = require('../util/shared');
 const _ = require('lodash');
 const translations = require('../db/translations');
+const categories = require('../util/categories');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -91,3 +92,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.UTIL;

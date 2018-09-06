@@ -16,6 +16,8 @@ config.get = (path, defauld = null) => {
 
 	return value || defauld;
 };
+
 if (!config.aliases) config.aliases = {};
+if (!config.reverseAliases) config.reverseAliases = {};
 
 module.exports = config;

@@ -1,18 +1,4 @@
-const config = require('../config');
-const fs = require('fs');
-const _ = require('lodash');
-const path = require('path');
-
-const commandsDir = '../commands/';
-
-const commands = _.reduce(fs.readdirSync(path.resolve(__dirname, commandsDir)), (res, c) => {
-    if (!c.endsWith('.js')) {
-        return res;
-    }
-
-    res[c.substring(0, c.length - 3).toLowerCase()] = require(path.resolve(__dirname, commandsDir, c));
-    return res;
-}, {});
+const { prefix, aliases, commands, owner_id } = require('../config');
 
 module.exports = message => {
     // uncomment for self bot
@@ -31,7 +17,7 @@ module.exports = message => {
     // }
 
     const mentionRegExp = RegExp(`^<@!?${message.client.user.id}>`);
-    const noPrefix = !config.prefix || !message.content.startsWith(config.prefix);
+    const noPrefix = !prefix || !message.content.startsWith(prefix);
     const noMention = !mentionRegExp.test(message.content);
 
     // ignore if not a command
@@ -46,7 +32,7 @@ module.exports = message => {
         args = message.content.split(' ').filter(t => !!t);
         command = args
             .shift()
-            .slice(config.prefix.length)
+            .slice(prefix.length)
             .toLowerCase();
     } else {
         args = message.content
@@ -57,15 +43,15 @@ module.exports = message => {
         command = args.shift().toLowerCase();
     }
 
-    if (!(commands[command] || commands[config.aliases[command]])){
+    if (!(commands[command] || commands[aliases[command]])){
     	//message.channel.send('Command not found!');
     	return;
     }
 
     // check if command file exists
     try {
-        const executable = (commands[command] || commands[config.aliases[command]]);
-        if (executable.protected && message.author.id !== config.owner_id) {
+        const executable = (commands[command] || commands[aliases[command]]);
+        if (executable.protected && message.author.id !== owner_id) {
             message.channel.send('No enough permissions!');
             return;
         }

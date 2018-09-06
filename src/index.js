@@ -7,7 +7,7 @@ const path    = require('path');
 	const preloadDir = path.resolve(__dirname, 'preload');
 	for (const file of fs.readdirSync(preloadDir)) {
 		const entry = require(path.resolve(preloadDir, file));
-		await entry().catch(e => (console.log('Unable to start app', e), process.exit(entry.errorCode)));
+		file, await entry().catch(e => (console.log('Unable to start app', e), process.exit(entry.errorCode)));
 	}
 
 	// create bot

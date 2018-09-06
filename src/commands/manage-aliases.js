@@ -4,6 +4,7 @@ const { heroesFuzzy, heroes, translate, keysDescriptions } = require('../util/cq
 const { getPrefix } = require('../util/shared');
 const _ = require('lodash');
 const aliases = require('../db/aliases');
+const categories = require('../util/categories');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -109,3 +110,5 @@ exports.run = (message, args) => {
 };
 
 exports.protected = true;
+
+exports.category = categories.PROTECTED;

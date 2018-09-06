@@ -3,6 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { spSkillsFuzzy, spSkills, translate } = require('../util/cq-data');
 const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
 const _ = require('lodash');
+const categories = require('../util/categories');
 
 const classColors = {
     archer: 0x79B21D,
@@ -85,3 +86,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;

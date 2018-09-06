@@ -1,4 +1,5 @@
 const { getPrefix, random } = require('../util/shared.js');
+const categories = require('../util/categories');
 
 pickInstructions = (message) => {
     const prefix = getPrefix(message);
@@ -26,3 +27,5 @@ exports.run = (message, args) => {
         embed: e,
     });
 }
+
+exports.category = categories.MISC;

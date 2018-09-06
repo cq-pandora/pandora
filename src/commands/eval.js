@@ -1,5 +1,6 @@
 const beautify = require('js-beautify').js_beautify;
 const config = require('../config');
+const categories = require('../util/categories');
 
 evaluate = (message, args) => {
     let input = args.join(' ');
@@ -40,4 +41,6 @@ exports.run = (message, args) => {
     message.channel.send({
         embed: e,
     });
-}
+};
+
+exports.category = categories.PROTECTED;

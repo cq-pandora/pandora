@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const categories = require('../util/categories');
 const { factionsFuzzy, factions, heroes, translate, } = require('../util/cq-data');
 const { getPrefix, imageUrl, textSplitter } = require('../util/shared');
 const _ = require('lodash');
@@ -55,3 +56,5 @@ exports.run = (message, args) => {
 
     return command(message, args);
 };
+
+exports.category = categories.DB;
