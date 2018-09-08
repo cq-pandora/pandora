@@ -1,8 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { spSkillsFuzzy, spSkills, translate } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
-const _ = require('lodash');
+const { getPrefix, imageUrl, parseGrade, parseQuery } = require('../util/shared');
 const categories = require('../util/categories');
 
 const classColors = {
@@ -11,7 +10,7 @@ const classColors = {
     paladin: 0x24A2BF,
     priest: 0xF163B3,
     warrior: 0xB43026,
-    wizard: 0x985ED5,
+    wizard: 0x985ED5
 };
 
 const instructions = (message) => {
@@ -20,15 +19,15 @@ const instructions = (message) => {
         title: `${prefix}sp-skill [<name>] [<level>]`,
         fields: [{
             name: '<name>',
-            value: `Get special skill data.`,
+            value: `Get special skill data.`
         }, {
             name: '<level>',
-            value: `Filter skills by Level. If omitted, defaults to highest level`,
-        }, ],
+            value: `Filter skills by Level. If omitted, defaults to highest level`
+        } ]
     };
 
     message.channel.send({
-        embed: e,
+        embed: e
     });
 };
 
@@ -45,19 +44,20 @@ const command = (message, args) => {
     }
 
     const skill = spSkills[candidates.map(c => c.path)[0]];
-    
+
     let form = null;
 
     if (grade) {
-        form = skill.forms.filter(f => f.level == grade)[0];
+        form = skill.forms.filter(f => f.level === grade)[0];
     } else {
         form = skill.forms[skill.forms.length - 1];
     }
 
-    if (!form)
+    if (!form) {
         return message.channel
             .send('No such level for this skill!')
             .catch(error => console.log(error));
+    }
 
     const page = skill.forms.indexOf(form) + 1;
 
@@ -68,7 +68,7 @@ const command = (message, args) => {
             .setThumbnail(imageUrl('skills/' + form.image))
             .setFooter(`Page ${idx + 1}/${arr.length}`)
     );
-    
+
     return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
@@ -81,8 +81,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length)
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

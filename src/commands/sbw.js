@@ -1,8 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
-const _ = require('lodash');
+const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
 const categories = require('../util/categories');
 
 const classColors = {
@@ -11,7 +10,7 @@ const classColors = {
     paladin: 0x24A2BF,
     priest: 0xF163B3,
     warrior: 0xB43026,
-    wizard: 0x985ED5,
+    wizard: 0x985ED5
 };
 
 const instructions = (message) => {
@@ -19,17 +18,17 @@ const instructions = (message) => {
     const e = {
         title: `${prefix}sbw [<name>] [<star>]`,
         fields: [{
-                name: '<name>',
-                value: `Get sbw data.\n*e.g. ${prefix}sbw lee*`,
-            },
-            {
-                name: '<star>',
-                value: `Filter heroes by <star>. If omitted, defaults to highest form.\n*e.g. ${prefix}sbw lee 4*`,
-            },
-        ],
+            name: '<name>',
+            value: `Get sbw data.\n*e.g. ${prefix}sbw lee*`
+        },
+        {
+            name: '<star>',
+            value: `Filter heroes by <star>. If omitted, defaults to highest form.\n*e.g. ${prefix}sbw lee 4*`
+        }
+        ]
     };
 
-    message.channel.send({ embed: e, });
+    message.channel.send({ embed: e });
 };
 
 const command = (message, args) => {
@@ -45,19 +44,20 @@ const command = (message, args) => {
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
-    
+
     let sbw = null;
 
     if (grade) {
-        sbw = hero.sbws.filter(f => f.star == grade)[0];
+        sbw = hero.sbws.filter(f => f.star === grade)[0];
     } else {
         sbw = hero.sbws[hero.sbws.length - 1];
     }
 
-    if (!sbw)
+    if (!sbw) {
         return message.channel
             .send('Soulbound weapon grade not found!')
             .catch(error => console.log(error));
+    }
 
     const page = hero.sbws.indexOf(sbw) + 1;
 
@@ -74,7 +74,7 @@ const command = (message, args) => {
 
         return embed
             .addField('Class', capitalizeFirstLetter(sbw.class), true)
-            //.addField('Range', capitalizeFirstLetter(sb.range), true)
+            // .addField('Range', capitalizeFirstLetter(sb.range), true)
             .addField('Attack power', sbw.atk_power, true)
             .addField('Attack speed', sbw.atk_speed, true);
     });
@@ -91,8 +91,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length)
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

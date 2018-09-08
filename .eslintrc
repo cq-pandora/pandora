@@ -1,0 +1,10 @@
+{
+    "extends": "standard",
+    "rules": {
+        "indent": ["error", 4],
+        "no-unreachable": 2,
+        "semi": ["error", "always"],
+        "camelcase": ["error", { "properties": "never", "ignoreDestructuring": true }],
+        "no-sequences": "off"
+    }
+}

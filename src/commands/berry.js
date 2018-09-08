@@ -1,7 +1,6 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
-const { berriesFuzzy, berries, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
-const _ = require('lodash');
+const { berriesFuzzy, berries, translate } = require('../util/cq-data');
+const { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
+const { MessageEmbed } = require('discord.js');
 const categories = require('../util/categories');
 
 const instructions = (message) => {
@@ -11,17 +10,17 @@ const instructions = (message) => {
         fields: [
             {
                 name: '<name>',
-                value: `Get berry data.\n*e.g. ${prefix}berry almighty berry*`,
+                value: `Get berry data.\n*e.g. ${prefix}berry almighty berry*`
             },
             {
                 name: '<star>',
-                value: `Filter berries by <star>.\n*e.g. ${prefix}berry almighty berry 4*`,
-            }, 
-        ],
+                value: `Filter berries by <star>.\n*e.g. ${prefix}berry almighty berry 4*`
+            }
+        ]
     };
 
     message.channel.send({
-        embed: e,
+        embed: e
     });
 };
 
@@ -38,22 +37,23 @@ const command = (message, args) => {
     }
 
     const berry = grade ? candidates.map(c => berries[c.path]).filter(b => b.grade === grade)[0]
-                        : berries[candidates[0].path]
+        : berries[candidates[0].path];
 
-    if (!berry) 
+    if (!berry) {
         return message.channel
             .send('Berry grade not found!')
             .catch(error => console.log(error));
+    }
 
     const embed = new MessageEmbed()
-            .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
-            .setThumbnail(imageUrl('berries/' + berry.image))
-            .addField('Rarity', capitalizeFirstLetter(berry.rarity), true)
-            .addField('Stat', capitalizeFirstLetter(berry.target_stat), true)
-            .addField('Great rate', `${(100 * berry.great_chance)}%`, true)
-            .addField('Stat value', berry.is_percentage ? `${(100 * berry.value)}%` : berry.value, true)
-            .addField('Sell price', berry.sell_cost, true)
-            .addField('Eat cost', berry.eat_cost, true);
+        .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
+        .setThumbnail(imageUrl('berries/' + berry.image))
+        .addField('Rarity', capitalizeFirstLetter(berry.rarity), true)
+        .addField('Stat', capitalizeFirstLetter(berry.target_stat), true)
+        .addField('Great rate', `${(100 * berry.great_chance)}%`, true)
+        .addField('Stat value', berry.is_percentage ? `${(100 * berry.value)}%` : berry.value, true)
+        .addField('Sell price', berry.sell_cost, true)
+        .addField('Eat cost', berry.eat_cost, true);
 
     return message.channel
         .send(embed)
@@ -61,8 +61,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length) 
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

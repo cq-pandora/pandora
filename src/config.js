@@ -1,20 +1,20 @@
-const path   = require('path');
+const path = require('path');
 const config = require(path.join(process.cwd(), 'config.json'));
-const _      = require('lodash');
+const _ = require('lodash');
 
 config.get = (path, defauld = null) => {
-	if (!path) return defauld;
+    if (!path) return defauld;
 
-	path = _.toPath(path);
-	let value = config;
+    path = _.toPath(path);
+    let value = config;
 
-	for (let i = 0; i < path.length; i++) {
-		value = value[path[i]];
+    for (let i = 0; i < path.length; i++) {
+        value = value[path[i]];
 
-		if (value === undefined) return defauld;
-	}
+        if (value === undefined) return defauld;
+    }
 
-	return value || defauld;
+    return value || defauld;
 };
 
 if (!config.aliases) config.aliases = {};

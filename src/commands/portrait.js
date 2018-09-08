@@ -1,8 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const { heroesFuzzy, heroes, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseQuery  } = require('../util/shared');
-const _ = require('lodash');
+const { heroesFuzzy, heroes } = require('../util/cq-data');
+const { getPrefix, imageUrl } = require('../util/shared');
 const categories = require('../util/categories');
 
 const instructions = (message) => {
@@ -12,13 +11,13 @@ const instructions = (message) => {
         fields: [
             {
                 name: '<name>',
-                value: `Get hero portraits.\n*e.g. ${prefix}portrait leon*`,
-            },
-        ],
+                value: `Get hero portraits.\n*e.g. ${prefix}portrait leon*`
+            }
+        ]
     };
 
     message.channel.send({
-        embed: e,
+        embed: e
     });
 };
 
@@ -34,7 +33,7 @@ const command = (message, args) => {
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
-    
+
     if (!hero.portraits.length) {
         return message.channel
             .send('No portraits available for this hero!')
@@ -45,8 +44,8 @@ const command = (message, args) => {
         new MessageEmbed()
             .setImage(imageUrl('portraits/' + portrait))
             .setFooter(`Page ${idx + 1}/${arr.length}`)
-        );
-    
+    );
+
     return new EmbedsMode()
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
@@ -57,8 +56,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length) 
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

@@ -1,6 +1,6 @@
 const categories = require('../util/categories');
 const { MessageEmbed } = require('discord.js');
-const { goddessesFuzzy, goddesses, translate, } = require('../util/cq-data');
+const { goddessesFuzzy, goddesses, translate } = require('../util/cq-data');
 const { getPrefix, imageUrl } = require('../util/shared');
 
 const instructions = (message) => {
@@ -10,19 +10,19 @@ const instructions = (message) => {
         fields: [
             {
                 name: '<name>',
-                value: `Get goddess data.\n*e.g. ${prefix}goddess sera*`,
-            },
-        ],
+                value: `Get goddess data.\n*e.g. ${prefix}goddess sera*`
+            }
+        ]
     };
 
     return message.channel
-        .send({embed: msg})
-        .catch(error => console.log(error))
-}
+        .send({ embed: msg })
+        .catch(error => console.log(error));
+};
 
 const command = (message, args) => {
     const name = args.join(' ');
-    
+
     const candidates = goddessesFuzzy.search(name);
 
     if (!candidates.length) {
@@ -44,8 +44,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length) 
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

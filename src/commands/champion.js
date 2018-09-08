@@ -1,9 +1,8 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const categories = require('../util/categories');
-const { championsFuzzy, champions, translate, } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery  } = require('../util/shared');
-const _ = require('lodash');
+const { championsFuzzy, champions, translate } = require('../util/cq-data');
+const { getPrefix, imageUrl, parseGrade, parseQuery } = require('../util/shared');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -12,16 +11,16 @@ const instructions = (message) => {
         fields: [
             {
                 name: '<name>',
-                value: `Get champion data`,
+                value: `Get champion data`
             }, {
                 name: '<grade>',
-                value: `Champion level. Defaults to highest possible`,
-            }, 
-        ],
+                value: `Champion level. Defaults to highest possible`
+            }
+        ]
     };
 
     message.channel.send({
-        embed: e,
+        embed: e
     });
 };
 
@@ -38,41 +37,42 @@ const command = (message, args) => {
     }
 
     const champ = champions[candidates.map(c => parseInt(c.path))[0]];
-    
+
     let form = null;
 
     if (grade) {
-        form = champ.forms.filter(f => f.grade == grade)[0];        
+        form = champ.forms.filter(f => f.grade === grade)[0];
     } else {
         form = champ.forms[champ.forms.length - 1];
     }
 
-    if (!form) 
+    if (!form) {
         return message.channel
             .send('Champ level not found!')
             .catch(error => console.log(error));
+    }
 
     const page = champ.forms.indexOf(form) + 1;
 
     const embeds = champ.forms.map((form, idx, arr) => {
-            let base = new MessageEmbed()
-                .setTitle(`${translate(champ.name)} (Lvl. ${form.grade})`)
-                .setFooter(`Page ${idx + 1}/${arr.length}`);
+        let base = new MessageEmbed()
+            .setTitle(`${translate(champ.name)} (Lvl. ${form.grade})`)
+            .setFooter(`Page ${idx + 1}/${arr.length}`);
 
-            if (form.active) {
-                base = base.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
-            }
-            
-            if (form.passive) {
-                base = base.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
-            }
-            
-            if (form.exclusive) {
-                base = base.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
-            }
+        if (form.active) {
+            base = base.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
+        }
 
-            return base;
-        });
+        if (form.passive) {
+            base = base.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
+        }
+
+        if (form.exclusive) {
+            base = base.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
+        }
+
+        return base;
+    });
 
     return new EmbedsMode()
         .setDescription(translate(champ.lore))
@@ -87,8 +87,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length) 
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

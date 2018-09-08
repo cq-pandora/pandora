@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const categories = require('../util/categories');
-const { factionsFuzzy, factions, heroes, translate, } = require('../util/cq-data');
+const { factionsFuzzy, factions, heroes, translate } = require('../util/cq-data');
 const { getPrefix, imageUrl, textSplitter } = require('../util/shared');
 const _ = require('lodash');
 
@@ -9,20 +9,20 @@ const instructions = (message) => {
     const msg = {
         title: `${prefix}faction [<name>]`,
         fields: [{
-                name: '<name>',
-                value: `Get faction data.\n*e.g. ${prefix}faction han*`,
-            },
-        ],
+            name: '<name>',
+            value: `Get faction data.\n*e.g. ${prefix}faction han*`
+        }
+        ]
     };
 
     return message.channel
-        .send({embed: msg})
-        .catch(error => console.log(error))
-}
+        .send({ embed: msg })
+        .catch(error => console.log(error));
+};
 
 const command = (message, args) => {
     const name = args.join(' ');
-    
+
     const candidates = factionsFuzzy.search(name);
 
     if (!candidates.length) {
@@ -38,7 +38,7 @@ const command = (message, args) => {
         .map(h => translate(h.forms[0].name));
 
     const msg = _.reduce(
-        textSplitter(description), 
+        textSplitter(description),
         (msg, chunk) => msg.addField('\u200b', chunk),
         new MessageEmbed()
             .setTitle(translate(faction.name))
@@ -51,8 +51,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length) 
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

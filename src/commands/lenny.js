@@ -2,12 +2,12 @@ const categories = require('../util/categories');
 
 exports.run = (message, args) => {
     const e = {
-        description: '( ͡° ͜ʖ ͡°)',
+        description: '( ͡° ͜ʖ ͡°)'
     };
 
     message.channel.send({
-        embed: e,
+        embed: e
     });
-}
+};
 
 exports.category = categories.MISC;

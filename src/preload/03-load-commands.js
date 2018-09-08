@@ -1,7 +1,7 @@
 const config = require('../config');
-const fs     = require('fs');
-const _      = require('lodash');
-const path   = require('path');
+const fs = require('fs');
+const _ = require('lodash');
+const path = require('path');
 
 const commandsDir = '../commands/';
 

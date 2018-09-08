@@ -1,8 +1,7 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const { heroesFuzzy, heroes, translate } = require('../util/cq-data');
-const { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseQuery, statsToString } = require('../util/shared');
-const _ = require('lodash');
+const { getPrefix, imageUrl, parseQuery, statsToString } = require('../util/shared');
 const categories = require('../util/categories');
 
 const instructions = (message) => {
@@ -10,13 +9,13 @@ const instructions = (message) => {
     const e = {
         title: `${prefix}skin [<name>]`,
         fields: [{
-                name: '<name>',
-                value: `Get skin data.\n*e.g. ${prefix}skin lee*`,
-            },
-        ],
+            name: '<name>',
+            value: `Get skin data.\n*e.g. ${prefix}skin lee*`
+        }
+        ]
     };
 
-    message.channel.send({ embed: e, });
+    message.channel.send({ embed: e });
 };
 
 const command = (message, args) => {
@@ -32,7 +31,7 @@ const command = (message, args) => {
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
 
-    const embeds = hero.skins.map((skin, idx, arr) => 
+    const embeds = hero.skins.map((skin, idx, arr) =>
         new MessageEmbed()
             .setTitle(translate(skin.name))
             .setDescription(statsToString(skin.stats))
@@ -51,8 +50,7 @@ const command = (message, args) => {
 };
 
 exports.run = (message, args) => {
-    if (!args.length)
-        return instructions(message);
+    if (!args.length) { return instructions(message); }
 
     return command(message, args);
 };

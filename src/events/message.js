@@ -43,21 +43,21 @@ module.exports = message => {
         command = args.shift().toLowerCase();
     }
 
-    if (!(commands[command] || commands[aliases[command]])){
-    	//message.channel.send('Command not found!');
-    	return;
+    if (!(commands[command] || commands[aliases[command]])) {
+        // message.channel.send('Command not found!');
+        return;
     }
 
     // check if command file exists
     try {
         const executable = (commands[command] || commands[aliases[command]]);
-        if (executable.protected && message.author.id !== owner_id) {
+        if (executable.protected && message.author.id !== owner_id) { // eslint-disable-line camelcase
             message.channel.send('No enough permissions!');
             return;
         }
         executable.run(message, args);
     } catch (error) {
-    	message.channel.send('Error while executing command!');
+        message.channel.send('Error while executing command!');
         console.log(error);
     }
 };
