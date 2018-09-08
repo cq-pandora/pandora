@@ -57,10 +57,7 @@ module.exports = {
     statsToString: (obj, force) => _.entries(obj).filter(([_, s]) => (s > 0 || force))
         .map(el => `**${statsNameMapping[el[0]]}**: ${el[1] < 1 ? `${(el[1] * 100).toFixed(2)}%` : el[1].toFixed(2)}`).join('\n'),
 
-    // FIXME remove eslint-disable-line no-return-assign
-    sumStats: (stat1, stat2) => _.reduce(_.keys(stat1 || {}),
-        (res, stat) => (res[stat] = (stat1[stat] || 0) + (stat2[stat] || 0), res), // eslint-disable-line no-return-assign
-        {}),
+    sumStats: (stat1, stat2) => _(stat1 || {}).keys().reduce((res, stat) => { res[stat] = (stat1[stat] || 0) + (stat2[stat] || 0); return res; }, {}),
 
     random: (min, max) => {
         min = Math.ceil(min);
