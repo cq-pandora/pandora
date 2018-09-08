@@ -49,10 +49,7 @@ const command = (message, args) => {
     let embed = new MessageEmbed()
         .setDescription(translate(sigil.description))
         .setTitle(`${translate(sigil.name)} (${sigil.grade}★)`)
-        .setThumbnail(imageUrl('sigils/' + sigil.image))
-        .addField('Rarity', capitalizeFirstLetter(sigil.rarity), true)
-        .addField('Sell price', sigil.sell_cost, true)
-        .addField('Extract cost', sigil.extract_cost, true);
+        .setThumbnail(imageUrl('sigils/' + sigil.image));
 
     let stats = {}; let totalStats = {};
 
@@ -80,13 +77,19 @@ const command = (message, args) => {
         // FIXME somehow parse total stats with set effect
 
         embed = embed
-            .addField('Other piece stats', statsToString(otherStats), true)
             .addField('Set effect', translate(sigil.set.effect), true)
+            .addField('Other piece', translate(otherPiece.name), true)
+            .addField('Other piece stats', statsToString(otherStats), true)
             .setFooter(`Set: ${translate(sigil.set.name)}`);
     }
 
     return message.channel
-        .send(embed)
+        .send(embed
+            .addBlankField()
+            .addField('Sell price', sigil.sell_cost, true)
+            .addField('Extract cost', sigil.extract_cost, true)
+            .addField('Rarity', capitalizeFirstLetter(sigil.rarity), true)
+        )
         .catch(error => console.log(error));
 };
 
