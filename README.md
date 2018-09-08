@@ -1,34 +1,26 @@
-# Create Discord Bot
+<div align="center">
+  <p>
+    <img src="https://raw.githubusercontent.com/TrueLecter/pandora/master/assets/banner.png" title="Pandora" />
+  </p>
 
-Create Discord bots using a simple template.
+  <a href="https://www.npmjs.com/package/discord.js">
+    <img src="https://img.shields.io/badge/discord.js-v11.4.2-blue.svg" title="Discord.js" />
+  </a>
+  <a href="https://david-dm.org/TrueLecter/pandora">
+    <img src="https://david-dm.org/TrueLecter/pandora.svg" title="Dependencies" />
+  </a>
+</div>
 
-## Setup
+## About
+Pandora is a database [Discord](https://discordapp.com/) bot for Crusaders Quest ([Android](https://play.google.com/store/apps/details?id=com.nhnent.SKQUEST)/[iOS](https://itunes.apple.com/app/crusaders-quest/id901858272?mt=8)).
 
-#### Discord Bot Setup
+Invite her to your server using [this link](https://discordapp.com/oauth2/authorize?client_id=482249831709016064&scope=bot&permissions=44032) or try her out first in either of the two servers listed below!
 
-The following instructions assume you are signed in with a Discord account.
-
-1. Go to Discord's [My Apps](https://discordapp.com/developers/applications/me) page.
-2. Create a new app.
-3. Click the `Create a Bot User` button and confirm.
-4. You can create an invitation link for your bot with `https://discordapp.com/oauth2/authorize?client_id=YOUR_DISCORD_BOT_CLIENT_ID_HERE&scope=bot`.
-5. Click `click to reveal` to view your bot's token.
-
->Keep your Discord bot token and any file containing it **private**!
-
-#### Get Bot
-
-1. Type `git clone https://github.com/Johj/create-discord-bot.git`.
-2. Type `cd create-discord-bot/` and `npm install`.
-3. In the root of the `src` folder, open the `config.json` file and add your bot's token:
-
-```js
-{
-  "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
-  "prefix": "!"
-}
-```
-
-#### Run Bot
-
-1. Type `npm start` or `node src/index.js` to run. You're ready to add your own commands! 
+<div align="center">
+  <a href="https://discord.gg/6TRnyhj">
+    <img src="https://discordapp.com/api/guilds/206599473282023424/embed.png?style=banner2" title="Official Server"/>
+  </a>  
+  <a href="https://discord.gg/WjEFnzC">
+    <img src="https://discordapp.com/api/guilds/258167954913361930/embed.png?style=banner2" title="Irc server"/>
+  </a>
+</div>
