@@ -5,6 +5,7 @@
         "no-unreachable": 2,
         "semi": ["error", "always"],
         "camelcase": ["error", { "properties": "never", "ignoreDestructuring": true }],
-        "no-sequences": "off"
+        "no-sequences": "off",
+        "comma-dangle": ["error", "only-multiline"]
     }
 }
