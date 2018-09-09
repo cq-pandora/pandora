@@ -1,8 +1,10 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const { heroesFuzzy, heroes, translate, inheritance } = require('../util/cq-data');
-const { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString } = require('../util/shared');
-const categories = require('../util/categories');
+const {
+    fileDb: { heroesFuzzy, heroes, translate, inheritance },
+    functions: { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString },
+    categories
+} = require('../util');
 
 const classColors = {
     archer: 0x79B21D,

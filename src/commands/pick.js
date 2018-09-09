@@ -1,5 +1,7 @@
-const { getPrefix, random } = require('../util/shared.js');
-const categories = require('../util/categories');
+const {
+    functions: { getPrefix, random },
+    categories,
+} = require('../util');
 
 const pickInstructions = (message) => {
     const prefix = getPrefix(message);

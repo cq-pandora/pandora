@@ -1,6 +1,8 @@
 const math = require('mathjs');
-const { getPrefix } = require('../util/shared.js');
-const categories = require('../util/categories');
+const {
+    functions: { getPrefix },
+    categories,
+} = require('../util');
 
 const mathInstructions = (message) => {
     const prefix = getPrefix(message);

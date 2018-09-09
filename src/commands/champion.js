@@ -1,8 +1,10 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const categories = require('../util/categories');
-const { championsFuzzy, champions, translate } = require('../util/cq-data');
-const { getPrefix, imageUrl, parseGrade, parseQuery } = require('../util/shared');
+const {
+    fileDb: { championsFuzzy, champions, translate },
+    functions: { getPrefix, imageUrl, parseGrade, parseQuery },
+    categories,
+} = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

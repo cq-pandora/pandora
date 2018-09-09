@@ -1,7 +1,9 @@
-const { berriesFuzzy, berries, translate } = require('../util/cq-data');
-const { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery } = require('../util/shared');
+const {
+    fileDb: { berriesFuzzy, berries, translate },
+    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    categories,
+} = require('../util');
 const { MessageEmbed } = require('discord.js');
-const categories = require('../util/categories');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

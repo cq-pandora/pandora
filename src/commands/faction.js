@@ -1,8 +1,10 @@
 const { MessageEmbed } = require('discord.js');
-const categories = require('../util/categories');
-const { factionsFuzzy, factions, heroes, translate } = require('../util/cq-data');
-const { getPrefix, imageUrl, textSplitter } = require('../util/shared');
 const _ = require('lodash');
+const {
+    fileDb: { factionsFuzzy, factions, heroes, translate },
+    functions: { getPrefix, imageUrl, textSplitter },
+    categories,
+} = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

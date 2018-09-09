@@ -1,7 +1,9 @@
-const { heroesFuzzy, heroes } = require('../util/cq-data');
-const { getPrefix } = require('../util/shared');
 const translations = require('../db/translations');
-const categories = require('../util/categories');
+const {
+    fileDb: { heroesFuzzy, heroes },
+    functions: { getPrefix },
+    categories,
+} = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

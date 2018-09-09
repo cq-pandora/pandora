@@ -1,8 +1,10 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const { spSkillsFuzzy, spSkills, translate } = require('../util/cq-data');
-const { getPrefix, imageUrl, parseGrade, parseQuery } = require('../util/shared');
-const categories = require('../util/categories');
+const {
+    fileDb: { spSkillsFuzzy, spSkills, translate },
+    functions: { getPrefix, imageUrl, parseGrade, parseQuery },
+    categories,
+} = require('../util');
 
 const classColors = {
     archer: 0x79B21D,

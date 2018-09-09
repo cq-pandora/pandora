@@ -1,6 +1,8 @@
 const config = require('../config');
-const categories = require('../util/categories');
 const _ = require('lodash');
+const {
+    categories,
+} = require('../util');
 
 exports.category = categories.BOT;
 exports.run = (message, args) =>

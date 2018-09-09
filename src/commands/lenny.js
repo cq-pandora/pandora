@@ -1,4 +1,4 @@
-const categories = require('../util/categories');
+const { categories } = require('../util');
 
 exports.run = (message, args) => {
     const e = {

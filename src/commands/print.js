@@ -1,5 +1,7 @@
-const { getPrefix } = require('../util/shared.js');
-const categories = require('../util/categories');
+const {
+    functions: { getPrefix },
+    categories,
+} = require('../util');
 
 const printInstructions = (message) => {
     const prefix = getPrefix(message);

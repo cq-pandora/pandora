@@ -1,6 +1,6 @@
 const beautify = require('js-beautify').js_beautify;
 const config = require('../config');
-const categories = require('../util/categories');
+const { categories } = require('../util');
 
 const evaluate = (message, args) => {
     let input = args.join(' ');

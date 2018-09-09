@@ -1,9 +1,11 @@
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
-const { getPrefix } = require('../util/shared');
 const _ = require('lodash');
 const aliases = require('../db/aliases');
-const categories = require('../util/categories');
+const {
+    functions: { getPrefix },
+    categories,
+} = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

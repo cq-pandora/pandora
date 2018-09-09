@@ -1,7 +1,9 @@
-const categories = require('../util/categories');
 const { MessageEmbed } = require('discord.js');
-const { goddessesFuzzy, goddesses, translate } = require('../util/cq-data');
-const { getPrefix, imageUrl } = require('../util/shared');
+const {
+    fileDb: { goddessesFuzzy, goddesses, translate },
+    functions: { getPrefix, imageUrl },
+    categories
+} = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
