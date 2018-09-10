@@ -4,7 +4,7 @@ const _ = require('lodash');
 const translations = require('../db/translations');
 const {
     fileDb: { heroesFuzzy, heroes, keysDescriptions },
-    functions: { getPrefix, textSplitter },
+    functions: { getPrefix, splitText },
     categories
 } = require('../util');
 
@@ -42,7 +42,7 @@ const translationsToEmbeds = ts => {
     for (var i = 0; i < chunks.length; i++) {
         let embed = new MessageEmbed().setFooter(`Translations ${i * 10 + 1}-${i * 10 + chunks[i].length}/${ts.length}`);
         for (const translation of chunks[i]) {
-            _.reduce(textSplitter(translation.text), (res, chunk, idx) => res.addField(idx ? '\u200b' : `${keysDescriptions[translation.key]}, ID: ${translation.id}`, chunk), embed);
+            _.reduce(splitText(translation.text), (res, chunk, idx) => res.addField(idx ? '\u200b' : `${keysDescriptions[translation.key]}, ID: ${translation.id}`, chunk), embed);
         }
         embeds.push(embed);
     }

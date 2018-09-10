@@ -2,7 +2,7 @@ const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes, translate },
-    functions: { getPrefix, textSplitter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, splitText, imageUrl, parseGrade, parseQuery },
     categories,
 } = require('../util');
 
@@ -73,7 +73,7 @@ const command = (message, args) => {
             .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
             .setFooter(`Page ${idx + 1}/${arr.length}`);
 
-        const abilityChunks = textSplitter(translate(form.passive_description));
+        const abilityChunks = splitText(translate(form.passive_description));
 
         embed.addField(translate(form.passive_name), abilityChunks[0]);
 
@@ -81,7 +81,7 @@ const command = (message, args) => {
             embed = embed.addField('\u200b', abilityChunks[i]);
         }
 
-        const sbwChunks = textSplitter(translate(sbw.ability));
+        const sbwChunks = splitText(translate(sbw.ability));
 
         embed.addField('SBW effect', sbwChunks[0]);
 

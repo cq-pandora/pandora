@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const {
     fileDb: { factionsFuzzy, factions, heroes, translate },
-    functions: { getPrefix, imageUrl, textSplitter },
+    functions: { getPrefix, imageUrl, splitText },
     categories,
 } = require('../util');
 
@@ -40,7 +40,7 @@ const command = (message, args) => {
         .map(h => translate(h.forms[0].name));
 
     const msg = _.reduce(
-        textSplitter(description),
+        splitText(description),
         (msg, chunk) => msg.addField('\u200b', chunk),
         new MessageEmbed()
             .setTitle(translate(faction.name))

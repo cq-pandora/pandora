@@ -2,7 +2,7 @@ const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes, translate },
-    functions: { getPrefix, textSplitter, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, splitText, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
     categories,
 } = require('../util');
 
@@ -64,7 +64,7 @@ const command = (message, args) => {
     const page = hero.sbws.indexOf(sbw) + 1;
 
     const embeds = hero.sbws.map((sbw, idx, arr) => {
-        const abilityChunks = textSplitter(translate(sbw.ability));
+        const abilityChunks = splitText(translate(sbw.ability));
         let embed = new MessageEmbed()
             .setTitle(`${translate(sbw.name)} (${sbw.star}★)`)
             .setThumbnail(imageUrl('weapons/' + sbw.image))

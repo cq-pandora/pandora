@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const {
     fileDb: { heroesFuzzy, heroes, translate },
-    functions: { getPrefix, textSplitter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, splitText, imageUrl, parseGrade, parseQuery },
     categories
 } = require('../util');
 
@@ -65,7 +65,7 @@ const command = (message, args) => {
     const page = hero.forms.indexOf(form) + 1;
 
     const embeds = hero.forms.map((form, idx, arr) =>
-        _.reduce(form.passive_name ? textSplitter(translate(form.passive_description)) : [],
+        _.reduce(form.passive_name ? splitText(translate(form.passive_description)) : [],
             (res, chunk, idx) => res.addField(idx ? '\u200b' : translate(form.passive_name), chunk),
             new MessageEmbed()
                 .setTitle(`${translate(form.name)} (${form.star}★)`)
