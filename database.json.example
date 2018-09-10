@@ -4,7 +4,7 @@
 		"host": "localhost",
 		"user": "pandora",
 		"password": "supersecretpassword",
-		"db": "cqdata",
+		"database": "cqdata",
 		"driver": "mysql",
 		"multipleStatements": true
 	}
