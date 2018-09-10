@@ -1,6 +1,6 @@
 <div align="center">
   <p>
-    <img src="https://raw.githubusercontent.com/TrueLecter/pandora/master/assets/banner.png" title="Pandora" />
+    <img src="https://raw.githubusercontent.com/TrueLecter/pandora/master/assets/pandora_banner.png" title="Pandora" />
   </p>
 
   <a href="https://www.npmjs.com/package/discord.js">
