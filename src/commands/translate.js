@@ -3,6 +3,7 @@ const {
     fileDb: { heroesFuzzy, heroes },
     functions: { getPrefix },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -26,7 +27,10 @@ const instructions = (message) => {
         footer: { text: 'Argument order matters!' }
     };
 
-    message.channel.send({ embed: e });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -39,7 +43,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Hero not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                target: 'hero',
+            }));
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
@@ -52,7 +59,10 @@ const command = (message, args) => {
         if (!sbw) {
             return message.channel
                 .send('Soulbound weapon grade not found!')
-                .catch(error => console.log(error));
+                .then(m => ({
+                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                    target: sbw.id,
+                }));
         }
     } else {
         form = hero.forms.filter(f => f.star === grade)[0];
@@ -60,7 +70,10 @@ const command = (message, args) => {
         if (!form) {
             return message.channel
                 .send('Hero grade not found!')
-                .catch(error => console.log(error));
+                .then(m => ({
+                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                    target: hero.id,
+                }));
         }
     }
 
@@ -77,7 +90,10 @@ const command = (message, args) => {
     case 'sbw-ability': key = sbw.ability; break;
     default: return message.channel
         .send('Unknown field!')
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'field',
+        }));
     }
 
     const text = args.splice(3).filter(t => t && t.trim()).join(' ');
@@ -85,7 +101,11 @@ const command = (message, args) => {
     return translations.submit(key, text)
         .catch(e => { message.channel.send('Unable to submit your transltion. Please, contact bot owner.'); throw e; })
         .then(r => message.channel.send('Translation request submited!\nThanks for trying to make translations clearer'))
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: hero ? hero.id : sbw.id,
+            arguments: JSON.stringify({ field: field, name: name, grade: grade, text: text }),
+        }));
 };
 
 exports.run = (message, args) => {

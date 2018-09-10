@@ -4,6 +4,7 @@ const {
     fileDb: { heroesFuzzy, heroes },
     functions: { getPrefix, imageUrl },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -18,9 +19,10 @@ const instructions = (message) => {
         ]
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -31,7 +33,9 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Hero not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+            }));
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
@@ -39,7 +43,11 @@ const command = (message, args) => {
     if (!hero.portraits.length) {
         return message.channel
             .send('No portraits available for this hero!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.SUBENTITY_NOT_FOUND,
+                target: hero.id,
+                arguments: JSON.stringify({ name: name }),
+            }));
     }
 
     const embeds = hero.portraits.map((portrait, idx, arr) =>
@@ -54,7 +62,12 @@ const command = (message, args) => {
         .setChannel(message.channel)
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
-        .build();
+        .build()
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: hero.id,
+            arguments: JSON.stringify({ name: name }),
+        }));
 };
 
 exports.run = (message, args) => {

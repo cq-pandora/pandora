@@ -4,6 +4,7 @@ const {
     fileDb: { spSkillsFuzzy, spSkills, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
+    cmdResult,
 } = require('../util');
 
 const classColors = {
@@ -28,9 +29,10 @@ const instructions = (message) => {
         } ]
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -42,7 +44,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Skill not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                target: 'spskill',
+            }));
     }
 
     const skill = spSkills[candidates.map(c => c.path)[0]];
@@ -58,7 +63,10 @@ const command = (message, args) => {
     if (!form) {
         return message.channel
             .send('No such level for this skill!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                target: skill.id,
+            }));
     }
 
     const page = skill.forms.indexOf(form) + 1;
@@ -79,7 +87,12 @@ const command = (message, args) => {
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[form.class])
-        .build();
+        .build()
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: skill.id,
+            arguments: JSON.stringify({ name: name, grade: grade }),
+        }));
 };
 
 exports.run = (message, args) => {

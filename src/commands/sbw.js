@@ -4,6 +4,7 @@ const {
     fileDb: { heroesFuzzy, heroes, translate },
     functions: { getPrefix, splitText, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
     categories,
+    cmdResult,
 } = require('../util');
 
 const classColors = {
@@ -30,7 +31,10 @@ const instructions = (message) => {
         ]
     };
 
-    message.channel.send({ embed: e });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -42,7 +46,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Hero not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                target: 'hero',
+            }));
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
@@ -58,7 +65,10 @@ const command = (message, args) => {
     if (!sbw) {
         return message.channel
             .send('Soulbound weapon grade not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                target: 'sbw',
+            }));
     }
 
     const page = hero.sbws.indexOf(sbw) + 1;
@@ -89,7 +99,12 @@ const command = (message, args) => {
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[hero.class])
-        .build();
+        .build()
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: hero.id,
+            arguments: JSON.stringify({ name: name, grade: grade }),
+        }));
 };
 
 exports.run = (message, args) => {

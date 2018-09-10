@@ -4,6 +4,7 @@ const {
     fileDb: { championsFuzzy, champions, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -21,9 +22,10 @@ const instructions = (message) => {
         ]
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -35,7 +37,9 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Champion not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+            }));
     }
 
     const champ = champions[candidates.map(c => parseInt(c.path))[0]];
@@ -51,7 +55,9 @@ const command = (message, args) => {
     if (!form) {
         return message.channel
             .send('Champ level not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+            }));
     }
 
     const page = champ.forms.indexOf(form) + 1;
@@ -85,7 +91,12 @@ const command = (message, args) => {
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(['JUMP'])
         .setThumbnail(imageUrl('heroes/' + champ.image))
-        .build();
+        .build()
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: champ.id,
+            arguments: JSON.stringify({ name: name, grade: grade }),
+        }));
 };
 
 exports.run = (message, args) => {

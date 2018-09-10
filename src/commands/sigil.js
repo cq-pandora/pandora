@@ -3,6 +3,7 @@ const {
     fileDb: { sigilsFuzzy, sigils, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, statsToString },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -22,9 +23,10 @@ const instructions = (message) => {
         ]
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -36,7 +38,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Sigil not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                target: 'sigil',
+            }));
     }
 
     const sigil = grade ? candidates.map(c => sigils[c.path]).filter(b => b.grade === grade)[0]
@@ -45,7 +50,10 @@ const command = (message, args) => {
     if (!sigil) {
         return message.channel
             .send('Sigil grade not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                target: sigil.id,
+            }));
     }
 
     let embed = new MessageEmbed()
@@ -92,7 +100,11 @@ const command = (message, args) => {
             .addField('Extract cost', sigil.extract_cost, true)
             .addField('Rarity', capitalizeFirstLetter(sigil.rarity), true)
         )
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: sigil.id,
+            arguments: JSON.stringify({ name: name, grade: grade }),
+        }));
 };
 
 exports.run = (message, args) => {

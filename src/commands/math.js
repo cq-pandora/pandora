@@ -2,11 +2,12 @@ const math = require('mathjs');
 const {
     functions: { getPrefix },
     categories,
+    cmdResult,
 } = require('../util');
 
 const mathInstructions = (message) => {
     const prefix = getPrefix(message);
-    return {
+    return message.channel.send({
         title: `${prefix}math [<expression>]`,
         footer: {
             text: 'Visit http://mathjs.org/ for examples.'
@@ -15,28 +16,36 @@ const mathInstructions = (message) => {
             name: '<expression>',
             value: `Resolve <expression>.\n*e.g. ${prefix}math 2 + 2*`
         } ]
-    };
+    }).then(m => ({
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    }));
 };
 
-const mathInfo = (args) => {
+const mathInfo = (message, args) => {
+    const problem = args.join(' ');
+    let result = null;
+    let err = false;
+
     try {
-        return {
-            description: math.eval(args.join(' ')).toString()
-        };
+        result = math.eval(problem).toString();
     } catch (error) {
-        console.log(error);
-        return {
-            description: error.toString()
-        };
+        result = error.toString();
+        err = true;
     }
+
+    return message.channel.send({
+        embed: {
+            description: result
+        },
+    }).then(m => ({
+        status_code: err ? cmdResult.UNKNOWN_ERROR : cmdResult.SUCCESS,
+        target: 'math',
+        arguments: JSON.stringify({ problem: problem }),
+    }));
 };
 
 exports.run = (message, args) => {
-    const e = !args.length ? mathInstructions(message) : mathInfo(args);
-
-    message.channel.send({
-        embed: e
-    });
+    return !args.length ? mathInstructions(message) : mathInfo(message, args);
 };
 
 exports.category = categories.MISC;

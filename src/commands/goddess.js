@@ -2,7 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { goddessesFuzzy, goddesses, translate },
     functions: { getPrefix, imageUrl },
-    categories
+    categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -19,7 +20,9 @@ const instructions = (message) => {
 
     return message.channel
         .send({ embed: msg })
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -30,7 +33,9 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Goddess not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+            }));
     }
 
     const goddess = goddesses[candidates[0].path];
@@ -42,7 +47,11 @@ const command = (message, args) => {
 
     return message.channel
         .send(msg)
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: goddess.id,
+            arguments: JSON.stringify({ input: args.join(' ') }),
+        }));
 };
 
 exports.run = (message, args) => {

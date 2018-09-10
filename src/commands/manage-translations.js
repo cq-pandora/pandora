@@ -5,7 +5,8 @@ const translations = require('../db/translations');
 const {
     fileDb: { heroesFuzzy, heroes, keysDescriptions },
     functions: { getPrefix, splitText },
-    categories
+    categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -32,7 +33,10 @@ const instructions = (message) => {
         footer: { text: 'Argument order matters!' }
     };
 
-    message.channel.send({ embed: e });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const translationsToEmbeds = ts => {
@@ -64,7 +68,12 @@ const command = (message, args) => {
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
                 .build() : message.channel.send('No pending translations!')
-            ).catch(e => console.log(e));
+            )
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: '*',
+                arguments: JSON.stringify({ action: action }),
+            }));
     }
 
     const field = args[1];
@@ -72,11 +81,21 @@ const command = (message, args) => {
     switch (action) {
     case 'accept':
         return translations.accept(field)
-            .catch(e => message.channel.send('Unable to accept translation. Please, contact bot owner.'))
+            .catch(e => { message.channel.send('Unable to accept translation. Please, contact bot owner.'); throw e; })
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: field,
+                arguments: JSON.stringify({ action: action, field: field }),
+            }))
             .then(r => message.channel.send('Translation accepted!'));
     case 'decline':
         return translations.decline(field)
-            .catch(e => message.channel.send('Unable to decline translation. Please, contact bot owner.'))
+            .catch(e => { message.channel.send('Unable to decline translation. Please, contact bot owner.'); throw e; })
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: field,
+                arguments: JSON.stringify({ action: action, field: field }),
+            }))
             .then(r => message.channel.send('Translation declined!'));
     }
 
@@ -88,7 +107,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Hero not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                target: 'hero',
+            }));
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
@@ -101,7 +123,10 @@ const command = (message, args) => {
         if (!sbw) {
             return message.channel
                 .send('Soulbound weapon grade not found!')
-                .catch(error => console.log(error));
+                .then(m => ({
+                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                    target: 'sbw',
+                }));
         }
     } else {
         form = hero.forms.filter(f => f.star === grade)[0];
@@ -109,7 +134,10 @@ const command = (message, args) => {
         if (!form) {
             return message.channel
                 .send('Hero grade not found!')
-                .catch(error => console.log(error));
+                .then(m => ({
+                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                    target: 'hero',
+                }));
         }
     }
 
@@ -126,17 +154,24 @@ const command = (message, args) => {
     case 'sbw-ability': key = sbw.ability; break;
     default: return message.channel
         .send('Unknown field!')
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'field',
+        }));
     }
 
     switch (action) {
     case 'clear':
-        translations.declineAllUnaccepted(key)
-            .catch(e => message.channel.send('Unable to clear translations. Please, contact bot owner.'))
-            .then(r => message.channel.send('Translation accepted!'));
-        break;
+        return translations.declineAllUnaccepted(key)
+            .catch(e => { message.channel.send('Unable to clear translations. Please, contact bot owner.'); throw e; })
+            .then(r => message.channel.send('Translation accepted!'))
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: key,
+                arguments: JSON.stringify({ action: action, field: field }),
+            }));
     case 'list':
-        translations.list(key)
+        return translations.list(key)
             .catch(e => { message.channel.send('Unable to list submitted translations. Please, contact bot owner.'); throw e; })
             .then(translationsToEmbeds)
             .then(r => new EmbedsMode()
@@ -146,11 +181,19 @@ const command = (message, args) => {
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
                 .build()
-            ).catch(e => console.log(e));
-        break;
+            )
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: key,
+                arguments: JSON.stringify({ action: action, field: field, key: key }),
+            }));
     default: return message.channel
         .send('Unknown action!')
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'action',
+            arguments: JSON.stringify({ action: action, field: field }),
+        }));
     }
 };
 

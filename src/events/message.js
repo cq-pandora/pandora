@@ -1,4 +1,7 @@
 const { prefix, aliases, commands, owner_id } = require('../config');
+const { cmdResult, categories } = require('../util');
+const stats = require('../db/stats');
+const _ = require('lodash');
 
 module.exports = message => {
     // uncomment for self bot
@@ -43,21 +46,42 @@ module.exports = message => {
         command = args.shift().toLowerCase();
     }
 
-    if (!(commands[command] || commands[aliases[command]])) {
+    const executable = commands[command] || commands[aliases[command]];
+
+    if (!executable) {
         // message.channel.send('Command not found!');
         return;
     }
 
-    // check if command file exists
+    const meta = {
+        command: executable.name,
+        user_id: message.author.id,
+        channel_id: message.channel.id,
+        server: (message.channel.guild || message.author).id,
+        sent_to: message.channel.type,
+        content: message.content,
+    };
+
+    let msg = null;
+
     try {
-        const executable = (commands[command] || commands[aliases[command]]);
-        if (executable.protected && message.author.id !== owner_id) { // eslint-disable-line camelcase
-            message.channel.send('No enough permissions!');
-            return;
+        // eslint-disable-next-line camelcase
+        if ((executable.protected || executable.category === categories.PROTECTED) && message.author.id !== owner_id) {
+            msg = message.channel.send('No enough permissions!')
+                .then(() => ({
+                    status_code: cmdResult.NOT_ENOUGH_PERMISSIONS,
+                }));
+        } else {
+            msg = executable.run(message, args)
+                .catch(e => console.log(e));
         }
-        executable.run(message, args);
     } catch (error) {
-        message.channel.send('Error while executing command!');
+        message.channel.send('Error while executing command!')
+            .then(m => ({
+                status_code: cmdResult.FATAL,
+            }));
         console.log(error);
     }
+
+    msg.then(stat => stats.submit(_.defaults(stat, meta)));
 };

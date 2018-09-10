@@ -2,6 +2,7 @@ const config = require('../config');
 const _ = require('lodash');
 const {
     categories,
+    cmdResult,
 } = require('../util');
 
 exports.category = categories.BOT;
@@ -20,4 +21,7 @@ exports.run = (message, args) =>
             },
             */
         }
-    });
+    }).then(m => ({
+        status_code: cmdResult.SUCCESS,
+        target: 'help',
+    }));

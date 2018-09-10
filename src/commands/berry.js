@@ -2,6 +2,7 @@ const {
     fileDb: { berriesFuzzy, berries, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
     categories,
+    cmdResult,
 } = require('../util');
 const { MessageEmbed } = require('discord.js');
 
@@ -21,9 +22,10 @@ const instructions = (message) => {
         ]
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -35,7 +37,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Berry not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+                arguments: JSON.stringify({ name: name, grade: grade }),
+            }));
     }
 
     const berry = grade ? candidates.map(c => berries[c.path]).filter(b => b.grade === grade)[0]
@@ -44,7 +49,10 @@ const command = (message, args) => {
     if (!berry) {
         return message.channel
             .send('Berry grade not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                arguments: JSON.stringify({ name: name, grade: grade }),
+            }));
     }
 
     const embed = new MessageEmbed()
@@ -59,7 +67,11 @@ const command = (message, args) => {
 
     return message.channel
         .send(embed)
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: berry.id,
+            arguments: JSON.stringify({ name: name, grade: grade }),
+        }));
 };
 
 exports.run = (message, args) => {

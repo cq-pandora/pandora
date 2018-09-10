@@ -5,6 +5,7 @@ const aliases = require('../db/aliases');
 const {
     functions: { getPrefix },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
@@ -25,7 +26,10 @@ const instructions = (message) => {
         footer: { text: 'Argument order matters!' }
     };
 
-    message.channel.send({ embed: e });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const aliasesToEmbeds = ts => {
@@ -58,7 +62,12 @@ const command = (message, args) => {
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
                 .build() : message.channel.send('No pending aliases!')
-            ).catch(e => console.log(e));
+            )
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: '*',
+                arguments: JSON.stringify({ action: action }),
+            }));
     }
 
     const alias = args[1];
@@ -66,24 +75,38 @@ const command = (message, args) => {
     switch (action) {
     case 'accept':
         return aliases.accept(alias)
-            .catch(e => message.channel.send('Unable to accept alias. Please, contact bot owner.'))
-            .then(r => message.channel.send('Alias accepted!'));
+            .catch(e => { message.channel.send('Unable to accept alias. Please, contact bot owner.'); throw e; })
+            .then(r => message.channel.send('Alias accepted!'))
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: alias,
+                arguments: JSON.stringify({ action: action, alias: alias }),
+            }));
     case 'decline':
         return aliases.decline(alias)
-            .catch(e => message.channel.send('Unable to alias translation. Please, contact bot owner.'))
-            .then(r => message.channel.send('Alias declined!'));
+            .catch(e => { message.channel.send('Unable to alias translation. Please, contact bot owner.'); throw e; })
+            .then(r => message.channel.send('Alias declined!'))
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: alias,
+                arguments: JSON.stringify({ action: action, alias: alias }),
+            }));
     }
 
     const fogh = args[2];
 
     switch (action) {
     case 'clear':
-        aliases.declineAllUnaccepted(fogh)
-            .catch(e => message.channel.send('Unable to clear aliases. Please, contact bot owner.'))
-            .then(r => message.channel.send('Aliases cleared!'));
-        break;
+        return aliases.declineAllUnaccepted(fogh)
+            .catch(e => { message.channel.send('Unable to clear aliases. Please, contact bot owner.'); throw e; })
+            .then(r => message.channel.send('Aliases cleared!'))
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: alias,
+                arguments: JSON.stringify({ action: action, alias: alias, for: fogh }),
+            }));
     case 'list':
-        aliases.list(fogh)
+        return aliases.list(fogh)
             .catch(e => { message.channel.send('Unable to list submitted aliases. Please, contact bot owner.'); throw e; })
             .then(aliasesToEmbeds)
             .then(r => new EmbedsMode()
@@ -93,11 +116,19 @@ const command = (message, args) => {
                 .showPageIndicator(false)
                 .setDisabledNavigationEmojis(['JUMP'])
                 .build()
-            ).catch(e => console.log(e));
-        break;
+            )
+            .then(m => ({
+                status_code: cmdResult.SUCCESS,
+                target: alias,
+                arguments: JSON.stringify({ action: action, alias: alias, for: fogh }),
+            }));
     default: return message.channel
         .send('Unknown action!')
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'action',
+            arguments: JSON.stringify({ action: action, alias: alias, for: fogh }),
+        }));
     }
 };
 

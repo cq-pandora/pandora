@@ -4,22 +4,26 @@ const {
     fileDb: { factionsFuzzy, factions, heroes, translate },
     functions: { getPrefix, imageUrl, splitText },
     categories,
+    cmdResult,
 } = require('../util');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const msg = {
         title: `${prefix}faction [<name>]`,
-        fields: [{
-            name: '<name>',
-            value: `Get faction data.\n*e.g. ${prefix}faction han*`
-        }
+        fields: [
+            {
+                name: '<name>',
+                value: `Get faction data.\n*e.g. ${prefix}faction han*`
+            }
         ]
     };
 
     return message.channel
         .send({ embed: msg })
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -30,7 +34,10 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Faction not found!')
-            .catch(error => console.log(error));
+
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+            }));
     }
 
     const faction = factions[candidates[0].path];
@@ -49,7 +56,11 @@ const command = (message, args) => {
 
     return message.channel
         .send(msg)
-        .catch(error => console.log(error));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: faction.id,
+            arguments: JSON.stringify({ name: name }),
+        }));
 };
 
 exports.run = (message, args) => {

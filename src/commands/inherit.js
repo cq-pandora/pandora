@@ -3,7 +3,8 @@ const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes, translate, inheritance },
     functions: { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString },
-    categories
+    categories,
+    cmdResult,
 } = require('../util');
 
 const classColors = {
@@ -31,9 +32,10 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
+        }));
 };
 
 const command = (message, args) => {
@@ -45,7 +47,9 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Hero not found!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_NOT_FOUND,
+            }));
     }
 
     const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
@@ -54,7 +58,9 @@ const command = (message, args) => {
     if (!form) {
         return message.channel
             .send('Hero cannot be inherited!')
-            .catch(error => console.log(error));
+            .then(m => ({
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+            }));
     }
 
     const levels = (iLvl || iLvl === 0) ? [iLvl] : [0, 5, 10, 15, 20];
@@ -78,7 +84,12 @@ const command = (message, args) => {
         .showPageIndicator(false)
         .setDisabledNavigationEmojis(disabledKeys)
         .setColor(classColors[hero.class])
-        .build();
+        .build()
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: hero.id,
+            arguments: JSON.stringify({ name: name, inheritance: iLvl }),
+        }));
 };
 
 exports.run = (message, args) => {

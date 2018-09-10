@@ -1,4 +1,4 @@
-const { categories } = require('../util');
+const { categories, cmdResult } = require('../util');
 
 exports.run = (message, args) => {
     const e = {
@@ -7,9 +7,11 @@ exports.run = (message, args) => {
         }
     };
 
-    message.channel.send({
-        embed: e
-    });
+    return message.channel.send({ embed: e })
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: 'fergus',
+        }));
 };
 
 exports.category = categories.MISC;
