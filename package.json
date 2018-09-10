@@ -48,16 +48,21 @@
   "dependencies": {
     "axios": "^0.18.0",
     "compare-versions": "^3.4.0",
+    "db-migrate": "^0.11.3",
+    "db-migrate-mysql": "^1.1.10",
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
     "erlpack": "github:discordapp/erlpack",
     "fuse.js": "^3.2.1",
     "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
+    "manage-database": "^0.2.1",
     "mathjs": "^5.1.1",
     "mysql": "^2.16.0"
   },
   "scripts": {
+    "migrate-up": "db-migrate up",
+    "init-db": "node src/init-db.js",
     "start": "node src/index.js",
     "test": "eslint src/",
     "lint-fix": "eslint --fix src/"

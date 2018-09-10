@@ -1,11 +1,11 @@
 const mysql = require('mysql');
-const config = require('../config');
+const db = require('../config').db;
 
 const connectionConfig = {
-    host: config.get('db.host'),
-    user: config.get('db.user'),
-    password: config.get('db.password'),
-    database: config.get('db.db')
+    host: db.host,
+    user: db.user,
+    password: db.password,
+    database: db.database
 };
 
 module.exports = () => Promise.resolve(mysql.createConnection(connectionConfig));

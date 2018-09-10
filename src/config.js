@@ -17,6 +17,8 @@ config.get = (path, defauld = null) => {
     return value || defauld;
 };
 
+config.db = require(path.join(process.cwd(), 'database.json')).local;
+
 if (!config.aliases) config.aliases = {};
 if (!config.reverseAliases) config.reverseAliases = {};
 

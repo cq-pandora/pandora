@@ -3,11 +3,5 @@
   "prefix": "!",
   "parsedData": "path/to/information/files/cq-data-parse",
   "imagePrefix": "",
-  "imageSuffix": "",
-  "db": {
-  	"host": "localhost",
-  	"user": "pandora",
-  	"password": "supersecretpassword",
-  	"db": "cq-translations"
-  }
+  "imageSuffix": ""
 }
