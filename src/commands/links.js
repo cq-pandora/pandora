@@ -19,7 +19,7 @@ exports.run = (message, args) => {
                 inline: true,
             }, {
                 name: 'Challenge',
-                value: `[kamakiller](https://goo.gl/bkC85j)\n[Sigils list](https://bit.ly/cqsigil)`,
+                value: `[kamakiller](https://goo.gl/bkC85j)\n[Sigils list](http://bit.ly/2NCLFu9)`,
                 inline: true,
             }, {
                 name: 'LoPF',
