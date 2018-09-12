@@ -33,7 +33,7 @@ const command = (message, args) => {
             status_code: cmdResult.SUCCESS,
             arguments: JSON.stringify({ alias: alias, for: fogh }),
         }));
-}
+};
 
 exports.run = (message, args) => {
     if (args.length < 2) { return instructions(message); }
