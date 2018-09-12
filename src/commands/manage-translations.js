@@ -1,4 +1,3 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const translations = require('../db/translations');
@@ -7,6 +6,7 @@ const {
     functions: { getPrefix, splitText },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const instructions = (message) => {
@@ -61,12 +61,11 @@ const command = (message, args) => {
         return translations.list()
             .catch(e => { message.channel.send('Unable to list submitted translations. Please, contact bot owner.'); throw e; })
             .then(translationsToEmbeds)
-            .then(r => r.length ? new EmbedsMode()
+            .then(r => r.length ? new PaginationEmbed(message)
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
-                .setDisabledNavigationEmojis(['JUMP'])
                 .build() : message.channel.send('No pending translations!')
             )
             .then(m => ({
@@ -174,12 +173,11 @@ const command = (message, args) => {
         return translations.list(key)
             .catch(e => { message.channel.send('Unable to list submitted translations. Please, contact bot owner.'); throw e; })
             .then(translationsToEmbeds)
-            .then(r => new EmbedsMode()
+            .then(r => new PaginationEmbed(message)
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
-                .setDisabledNavigationEmojis(['JUMP'])
                 .build()
             )
             .then(m => ({

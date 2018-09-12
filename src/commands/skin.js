@@ -1,10 +1,10 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes, translate },
     functions: { getPrefix, imageUrl, parseQuery, statsToString },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const instructions = (message) => {
@@ -49,12 +49,11 @@ const command = (message, args) => {
             .addField('Sell price', skin.cost, true)
     );
 
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(['JUMP'])
         .build()
         .then(m => ({
             status_code: cmdResult.SUCCESS,

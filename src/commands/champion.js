@@ -1,10 +1,10 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { championsFuzzy, champions, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const instructions = (message) => {
@@ -82,14 +82,13 @@ const command = (message, args) => {
         return base;
     });
 
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setDescription(translate(champ.lore))
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .setPage(page)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(['JUMP'])
         .setThumbnail(imageUrl('heroes/' + champ.image))
         .build()
         .then(m => ({

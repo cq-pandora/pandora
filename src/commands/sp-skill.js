@@ -1,10 +1,10 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { spSkillsFuzzy, spSkills, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const classColors = {
@@ -79,13 +79,12 @@ const command = (message, args) => {
             .setFooter(`Page ${idx + 1}/${arr.length}`)
     );
 
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .setPage(page)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[form.class])
         .build()
         .then(m => ({

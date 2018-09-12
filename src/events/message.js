@@ -4,20 +4,10 @@ const stats = require('../db/stats');
 const _ = require('lodash');
 
 module.exports = message => {
-    // uncomment for self bot
-    // if (message.author.id !== message.client.user.id) {
-    //   return;
-    // }
-
     // ignore bot messages
     if (message.author.bot) {
         return;
     }
-
-    // ignore messages not from guild text channels
-    // if (message.channel.type !== 'text') {
-    //   return;
-    // }
 
     const mentionRegExp = RegExp(`^<@!?${message.client.user.id}>`);
     const noPrefix = !prefix || !message.content.startsWith(prefix);

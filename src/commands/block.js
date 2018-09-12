@@ -1,4 +1,3 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const {
@@ -6,6 +5,7 @@ const {
     functions: { getPrefix, splitText, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const classColors = {
@@ -80,13 +80,12 @@ const command = (message, args) => {
                 .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
         ));
 
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .setPage(page)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(['JUMP'])
         .setColor(classColors[hero.class])
         .build()
         .then(m => ({

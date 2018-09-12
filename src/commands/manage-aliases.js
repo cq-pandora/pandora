@@ -1,4 +1,3 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const aliases = require('../db/aliases');
@@ -6,6 +5,7 @@ const {
     functions: { getPrefix },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const instructions = (message) => {
@@ -55,12 +55,11 @@ const command = (message, args) => {
         return aliases.list()
             .catch(e => { message.channel.send('Unable to list aliases. Please, contact bot owner.'); throw e; })
             .then(aliasesToEmbeds)
-            .then(r => r.length ? new EmbedsMode()
+            .then(r => r.length ? new PaginationEmbed(message)
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
-                .setDisabledNavigationEmojis(['JUMP'])
                 .build() : message.channel.send('No pending aliases!')
             )
             .then(m => ({
@@ -109,12 +108,11 @@ const command = (message, args) => {
         return aliases.list(fogh)
             .catch(e => { message.channel.send('Unable to list submitted aliases. Please, contact bot owner.'); throw e; })
             .then(aliasesToEmbeds)
-            .then(r => new EmbedsMode()
+            .then(r => new PaginationEmbed(message)
                 .setArray(r)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
-                .setDisabledNavigationEmojis(['JUMP'])
                 .build()
             )
             .then(m => ({

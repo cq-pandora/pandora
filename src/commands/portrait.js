@@ -1,10 +1,10 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes },
     functions: { getPrefix, imageUrl },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const instructions = (message) => {
@@ -56,12 +56,11 @@ const command = (message, args) => {
             .setFooter(`Page ${idx + 1}/${arr.length}`)
     );
 
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(['JUMP'])
         .build()
         .then(m => ({
             status_code: cmdResult.SUCCESS,

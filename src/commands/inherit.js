@@ -1,10 +1,10 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, heroes, translate, inheritance },
     functions: { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString },
     categories,
     cmdResult,
+    PaginationEmbed,
 } = require('../util');
 
 const classColors = {
@@ -75,14 +75,11 @@ const command = (message, args) => {
         .setFooter(`Page ${idx + 1}/${arr.length}`)
     );
 
-    const disabledKeys = embeds.length > 1 ? [ 'JUMP' ] : [ 'JUMP', 'BACK', 'FORWARD' ];
-
-    return new EmbedsMode()
+    return new PaginationEmbed(message)
         .setArray(embeds)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
         .showPageIndicator(false)
-        .setDisabledNavigationEmojis(disabledKeys)
         .setColor(classColors[hero.class])
         .build()
         .then(m => ({
