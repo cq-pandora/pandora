@@ -7,10 +7,10 @@ const instructions = (message) => {
         title: `${prefix}alias <alias> <for>`,
         fields: [{
             name: '<alias>',
-            value: `Suggested alias. **Important**: alias should not contain space`
+            value: `Suggested alias. **Important**: alias can be single word only`
         }, {
             name: '<for>',
-            value: `Alias target.\n**Important**: this should be single word, so test if bot can find what you want to alias by that word`
+            value: `Alias target`
         }
         ],
         footer: { text: 'Argument order matters!' }
@@ -22,15 +22,18 @@ const instructions = (message) => {
         }));
 };
 
-const command = (message, args) => aliases.submit(args[0], args[1])
-    .catch(e => { message.channel.send('Unable to submit your alias. Please, contact bot owner.'); throw e; })
-    .then(r => message.channel.send('Alias request submitted'))
-    .then(m => ({
-        target_entity: args[1],
-        status_code: cmdResult.SUCCESS,
-        arguments: JSON.stringify({ alias: args[0], for: args[1] }),
-    }));
-;
+const command = (message, args) => {
+    const alias = args.shift();
+    const fogh = args.join(' ');
+    return aliases.submit(alias, fogh)
+        .catch(e => { message.channel.send('Unable to submit your alias. Please, contact bot owner.'); throw e; })
+        .then(r => message.channel.send('Alias request submitted'))
+        .then(m => ({
+            target: fogh,
+            status_code: cmdResult.SUCCESS,
+            arguments: JSON.stringify({ alias: alias, for: fogh }),
+        }));
+}
 
 exports.run = (message, args) => {
     if (args.length < 2) { return instructions(message); }
