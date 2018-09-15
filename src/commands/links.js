@@ -6,8 +6,13 @@ exports.run = (message, args) => {
         description: 'Visit the [Crusaders Quest Database (cqdb)](https://goo.gl/fdg6M8)!',
         fields: [
             {
+                name: 'Guides',
+                value: '[Hero skills/builds list](http://bit.ly/2NNDlbg)',
+                inline: true,
+            },
+            {
                 name: 'Tier Lists',
-                value: `[kamakiller's SS2 Overview ](https://goo.gl/yPrKBR)\n[IRC](https://goo.gl/oNQ2iF)\n[TISTORY](https://goo.gl/nOC3NK)\n[INVEN](https://goo.gl/k5PlhB)`,
+                value: `[kamakiller's SS2 Overview](https://goo.gl/yPrKBR)\n[TISTORY](https://goo.gl/nOC3NK)\n[INVEN](https://goo.gl/k5PlhB)`,
                 inline: true,
             }, {
                 name: 'Champions',
