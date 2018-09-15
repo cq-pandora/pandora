@@ -33,7 +33,7 @@ const instructions = (message) => {
 
     return message.channel.send({ embed: e })
         .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_PERMISSIONS,
+            status_code: cmdResult.NOT_ENOUGH_ARGS,
         }));
 };
 
