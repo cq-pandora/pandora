@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { spSkillsFuzzy, spSkills, translate },
+    fileDb: { spSkillsFuzzy, followPath, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
@@ -50,7 +50,7 @@ const command = (message, args) => {
             }));
     }
 
-    const skill = spSkills[candidates.map(c => c.path)[0]];
+    const skill = followPath(candidates[0].path);
 
     let form = null;
 

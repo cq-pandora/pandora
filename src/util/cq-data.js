@@ -4,7 +4,7 @@ const Fuse = require('fuse.js');
 
 const requireFile = (f) => require(path.resolve(config.parsedData, f + '.json'));
 
-const fuzzyIndicies = requireFile('translations_indicies');
+const fuzzyIndices = requireFile('translations_indices');
 const fuzzyOptions = {
     threshold: 0.2,
     location: 0,
@@ -24,27 +24,34 @@ const aliasFuse = (fuse) => {
     return fuse;
 };
 
+const followPath = function (path) {
+    const parts = path.split('.');
+    return this[parts[0]][parts[1]];
+};
+
 module.exports = {
     berries: requireFile('berries'),
     breads: requireFile('breads'),
     weapons: requireFile('generic_weapons'),
-    heroes: requireFile('heroes_forms_with_sbw_and_skins'),
+    heroes: requireFile('heroes'),
     sigils: requireFile('sigils'),
     goddesses: requireFile('goddesses'),
     factions: requireFile('factions'),
     inheritance: requireFile('inheritance'),
-    keysDescriptions: requireFile('heroes_translations_indicies'),
+    keysDescriptions: requireFile('heroes_translations_indices'),
     champions: requireFile('champions'),
-    spSkills: requireFile('sp_skills'),
+    sp_skills: requireFile('sp_skills'),
     translations: translations,
-    translate: (key) => (translations[key] ? (translations[key].text || '') : key).replace(/@|#|\$|\^/g, ''),
-    fuzzyIndicies: fuzzyIndicies,
-    heroesFuzzy: aliasFuse(new Fuse(fuzzyIndicies.heroes, fuzzyOptions)),
-    championsFuzzy: aliasFuse(new Fuse(fuzzyIndicies.champions, fuzzyOptions)),
-    spSkillsFuzzy: aliasFuse(new Fuse(fuzzyIndicies.sp_skills, fuzzyOptions)),
-    breadsFuzzy: new Fuse(fuzzyIndicies.breads, fuzzyOptions),
-    berriesFuzzy: new Fuse(fuzzyIndicies.berries, fuzzyOptions),
-    sigilsFuzzy: new Fuse(fuzzyIndicies.sigils, fuzzyOptions),
-    goddessesFuzzy: new Fuse(fuzzyIndicies.goddesses, fuzzyOptions),
-    factionsFuzzy: new Fuse(fuzzyIndicies.factions, fuzzyOptions)
+    translate: (key) => (translations[key] ? (translations[key].text || '') : key).replace(/[@#$^]/g, ''),
+    fuzzyIndices: fuzzyIndices,
+    heroesFuzzy: aliasFuse(new Fuse(fuzzyIndices.heroes, fuzzyOptions)),
+    championsFuzzy: aliasFuse(new Fuse(fuzzyIndices.champions, fuzzyOptions)),
+    spSkillsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sp_skills, fuzzyOptions)),
+    breadsFuzzy: new Fuse(fuzzyIndices.breads, fuzzyOptions),
+    berriesFuzzy: new Fuse(fuzzyIndices.berries, fuzzyOptions),
+    sigilsFuzzy: new Fuse(fuzzyIndices.sigils, fuzzyOptions),
+    goddessesFuzzy: new Fuse(fuzzyIndices.goddesses, fuzzyOptions),
+    factionsFuzzy: new Fuse(fuzzyIndices.factions, fuzzyOptions)
 };
+
+module.exports.followPath = followPath.bind(module.exports);

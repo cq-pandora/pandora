@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, heroes, translate, inheritance },
+    fileDb: { heroesFuzzy, followPath, translate, inheritance },
     functions: { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString },
     categories,
     cmdResult,
@@ -52,7 +52,7 @@ const command = (message, args) => {
             }));
     }
 
-    const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
+    const hero = followPath(candidates[0].path);
     const form = hero.forms.filter(f => f.star === 6)[0];
 
     if (!form) {

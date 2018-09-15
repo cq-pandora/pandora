@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, heroes },
+    fileDb: { heroesFuzzy, followPath },
     functions: { getPrefix, imageUrl },
     categories,
     cmdResult,
@@ -38,7 +38,7 @@ const command = (message, args) => {
             }));
     }
 
-    const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
+    const hero = followPath(candidates[0].path);
 
     if (!hero.portraits.length) {
         return message.channel

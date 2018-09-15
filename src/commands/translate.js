@@ -1,6 +1,6 @@
 const translations = require('../db/translations');
 const {
-    fileDb: { heroesFuzzy, heroes },
+    fileDb: { heroesFuzzy, followPath },
     functions: { getPrefix },
     categories,
     cmdResult,
@@ -49,7 +49,7 @@ const command = (message, args) => {
             }));
     }
 
-    const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
+    const hero = followPath(candidates[0].path);
 
     let form = null; let sbw = null;
 

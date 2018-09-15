@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { championsFuzzy, champions, translate },
+    fileDb: { championsFuzzy, followPath, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
@@ -42,7 +42,7 @@ const command = (message, args) => {
             }));
     }
 
-    const champ = champions[candidates.map(c => parseInt(c.path))[0]];
+    const champ = followPath(candidates[0].path);
 
     let form = null;
 

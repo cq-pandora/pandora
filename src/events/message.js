@@ -66,12 +66,12 @@ module.exports = message => {
                 .catch(e => console.log(e));
         }
     } catch (error) {
-        message.channel.send('Error while executing command!')
+        msg = message.channel.send('Error while executing command!')
             .then(m => ({
                 status_code: cmdResult.FATAL,
             }));
         console.log(error);
     }
 
-    msg.then(stat => stats.submit(_.defaults(stat, meta)));
+    msg.then(stat => stats.submit(_.defaults(stat, meta))).catch(e => console.log('Unable to submit stats: ', e));
 };

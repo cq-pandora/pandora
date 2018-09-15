@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { goddessesFuzzy, goddesses, translate },
+    fileDb: { goddessesFuzzy, followPath, translate },
     functions: { getPrefix, imageUrl },
     categories,
     cmdResult,
@@ -38,7 +38,7 @@ const command = (message, args) => {
             }));
     }
 
-    const goddess = goddesses[candidates[0].path];
+    const goddess = followPath(candidates[0].path);
 
     const msg = new MessageEmbed()
         .setTitle(translate(goddess.name))

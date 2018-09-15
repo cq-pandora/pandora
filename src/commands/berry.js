@@ -1,5 +1,5 @@
 const {
-    fileDb: { berriesFuzzy, berries, translate },
+    fileDb: { berriesFuzzy, followPath, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
@@ -43,8 +43,8 @@ const command = (message, args) => {
             }));
     }
 
-    const berry = grade ? candidates.map(c => berries[c.path]).filter(b => b.grade === grade)[0]
-        : berries[candidates[0].path];
+    const berry = grade ? candidates.map(c => followPath(c.path)).filter(b => b.grade === grade)[0]
+        : followPath(candidates[0].path);
 
     if (!berry) {
         return message.channel

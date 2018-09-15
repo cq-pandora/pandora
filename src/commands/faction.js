@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const {
-    fileDb: { factionsFuzzy, factions, heroes, translate },
+    fileDb: { factionsFuzzy, followPath, heroes, translate },
     functions: { getPrefix, imageUrl, splitText },
     categories,
     cmdResult,
@@ -40,7 +40,7 @@ const command = (message, args) => {
             }));
     }
 
-    const faction = factions[candidates[0].path];
+    const faction = followPath(candidates[0].path);
 
     const description = heroes
         .filter(h => h.domain === faction.ingame_id)

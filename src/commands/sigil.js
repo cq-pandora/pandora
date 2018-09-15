@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { sigilsFuzzy, sigils, translate },
+    fileDb: { sigilsFuzzy, followPath, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, statsToString },
     categories,
     cmdResult,
@@ -44,8 +44,8 @@ const command = (message, args) => {
             }));
     }
 
-    const sigil = grade ? candidates.map(c => sigils[c.path]).filter(b => b.grade === grade)[0]
-        : sigils[candidates[0].path];
+    const sigil = grade ? candidates.map(c => followPath(c.path)).filter(b => b.grade === grade)[0]
+        : followPath(candidates[0].path);
 
     if (!sigil) {
         return message.channel
