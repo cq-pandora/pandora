@@ -63,7 +63,7 @@ module.exports = message => {
                 }));
         } else {
             msg = executable.run(message, args)
-                .catch(e => console.log(e));
+                .catch(e => { console.log(e); return { status_code: cmdResult.FATAL }; });
         }
     } catch (error) {
         msg = message.channel.send('Error while executing command!')
