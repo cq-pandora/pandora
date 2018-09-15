@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { sigilsFuzzy, followPath, translate },
+    fileDb: { sigilsFuzzy, followPath, sigils, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery, statsToString },
     categories,
     cmdResult,
