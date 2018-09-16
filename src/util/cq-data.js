@@ -35,6 +35,9 @@ const followPath = function (path, outputArray) {
     return outputArray ? ids.map(id => this[parts[0]][id]) : this[parts[0]][ids[0]];
 };
 
+const fishingGear = requireFile('fishing_gear');
+const fishingGearArray = Object.keys(fishingGear).map(k => fishingGear[k]);
+
 module.exports = {
     bosses: requireFile('bosses'),
     berries: requireFile('berries'),
@@ -48,6 +51,12 @@ module.exports = {
     keysDescriptions: requireFile('heroes_translations_indices'),
     champions: requireFile('champions'),
     sp_skills: requireFile('sp_skills'),
+    fishes: requireFile('fishes'),
+    fishing_gear: fishingGear,
+    baits: fishingGearArray.filter(g => g.type === 'bait'),
+    rods: fishingGearArray.filter(g => g.type === 'rod'),
+    floats: fishingGearArray.filter(g => g.type === 'float'),
+    fishing_ponds: requireFile('fishing_ponds'),
     translations: translations,
     translate: (key) => (translations[key] ? (translations[key].text || '') : key).replace(/[@#$^]/g, ''),
     fuzzyIndices: fuzzyIndices,
@@ -59,7 +68,10 @@ module.exports = {
     berriesFuzzy: new Fuse(fuzzyIndices.berries, fuzzyOptions),
     sigilsFuzzy: new Fuse(fuzzyIndices.sigils, fuzzyOptions),
     goddessesFuzzy: new Fuse(fuzzyIndices.goddesses, fuzzyOptions),
-    factionsFuzzy: new Fuse(fuzzyIndices.factions, fuzzyOptions)
+    factionsFuzzy: new Fuse(fuzzyIndices.factions, fuzzyOptions),
+    fishesFuzzy: new Fuse(fuzzyIndices.fishes, fuzzyOptions),
+    fishingGearFuzzy: new Fuse(fuzzyIndices.fishing_gear, fuzzyOptions),
+    fishingPondsFuzzy: new Fuse(fuzzyIndices.fishing_ponds, fuzzyOptions),
 };
 
 module.exports.followPath = followPath.bind(module.exports);
