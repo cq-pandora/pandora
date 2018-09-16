@@ -24,12 +24,19 @@ const aliasFuse = (fuse) => {
     return fuse;
 };
 
-const followPath = function (path) {
+const followPath = function (path, outputArray) {
     const parts = path.split('.');
-    return this[parts[0]][parts[1]];
+    const ids = parts[1].split(',');
+
+    if (ids.length === 1) {
+        return outputArray ? [this[parts[0]][parts[1]]] : this[parts[0]][parts[1]];
+    }
+
+    return outputArray ? ids.map(id => this[parts[0]][id]) : this[parts[0]][ids[0]];
 };
 
 module.exports = {
+    bosses: requireFile('bosses'),
     berries: requireFile('berries'),
     breads: requireFile('breads'),
     weapons: requireFile('generic_weapons'),
@@ -47,6 +54,7 @@ module.exports = {
     heroesFuzzy: aliasFuse(new Fuse(fuzzyIndices.heroes, fuzzyOptions)),
     championsFuzzy: aliasFuse(new Fuse(fuzzyIndices.champions, fuzzyOptions)),
     spSkillsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sp_skills, fuzzyOptions)),
+    bossesFuzzy: aliasFuse(new Fuse(fuzzyIndices.bosses, fuzzyOptions)),
     breadsFuzzy: new Fuse(fuzzyIndices.breads, fuzzyOptions),
     berriesFuzzy: new Fuse(fuzzyIndices.berries, fuzzyOptions),
     sigilsFuzzy: new Fuse(fuzzyIndices.sigils, fuzzyOptions),

@@ -37,7 +37,7 @@ const aliasesToEmbeds = ts => {
 
     const chunks = _.chunk(_.groupBy(ts, 'for'), 10);
 
-    for (var i = 0; i < chunks.length; i++) {
+    for (const i = 0; i < chunks.length; i++) {
         let embed = new MessageEmbed().setFooter(`Page ${i}/${chunks.length}`);
         for (const aliasGroup of chunks[i]) {
             embed.addField(aliasGroup[0], _.truncate(aliasGroup[1].map(a => a.for).join(', '), 1024));
