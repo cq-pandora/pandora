@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { emojis } = require('../config');
 const {
     fileDb: { fishesFuzzy, followPath, translate },
     functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseQuery },
@@ -32,17 +33,17 @@ const command = (message, args) => {
 
     if (!candidates.length) {
         return message.channel
-            .send('Hero not found!')
+            .send('Fish not found!')
             .then(m => ({
                 status_code: cmdResult.ENTITY_NOT_FOUND,
             }));
     }
 
     const rewards = {
-        ITEM_FISHCOIN: 'Fish coin',
-        ITEM_GOLD: 'Gold',
-        RANDOMBOX_EVENT_GOOD_CATBOX: 'Intact Cat Chest',
-        RANDOMBOX_EVENT_NORMAL_CATBOX: 'Mossy Cat Chest',
+        ITEM_FISHCOIN: emojis.fishcoin,
+        ITEM_GOLD: emojis.gold,
+        RANDOMBOX_EVENT_GOOD_CATBOX: emojis.mossy_cat_chest,
+        RANDOMBOX_EVENT_NORMAL_CATBOX: emojis.intact_cat_chest,
     };
 
     const fishes = candidates.map((c, idx, arr) => {
@@ -52,9 +53,9 @@ const command = (message, args) => {
             .setDescription(translate(fish.description))
             .addField('Exp', fish.exp, true)
             .addField('Area type', capitalizeFirstLetter(fish.habitat), true)
-            .addField('Initial range', fish.starts_from, true)
+            .addField('Initial range', `${fish.starts_from}m`, true)
             .addField(`Reward${fish.rewards.length > 1 ? 's': ''}`,
-                fish.rewards.map(r => `${r.amount} x ${rewards[r.type]}`).join('\n'),
+                fish.rewards.map(r => `${r.amount > 1 ? r.amount : ''} ${rewards[r.type]}`).join('\n'),
                 true
             )
             .setFooter(`Page ${idx + 1}/${arr.length}`)
