@@ -1,23 +1,19 @@
 const {
     fileDb: { berriesFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseQuery },
     categories,
     cmdResult,
 } = require('../util');
-const { MessageEmbed } = require('discord.js');
+const BerriesListEmbed = require('../embeds/BerriesListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
-        title: `${prefix}berry [<name>] [<star>]`,
+        title: `${prefix}berry <name>`,
         fields: [
             {
                 name: '<name>',
                 value: `Get berry data.\n*e.g. ${prefix}berry almighty berry*`
-            },
-            {
-                name: '<star>',
-                value: `Filter berries by <star>.\n*e.g. ${prefix}berry almighty berry 4*`
             }
         ]
     };
@@ -29,8 +25,7 @@ const instructions = (message) => {
 };
 
 const command = (message, args) => {
-    const grade = parseGrade(args);
-    const name = parseQuery(args, [`${grade}`]);
+    const name = parseQuery(args);
 
     const candidates = berriesFuzzy.search(name);
 
@@ -39,34 +34,14 @@ const command = (message, args) => {
             .send('Berry not found!')
             .then(m => ({
                 status_code: cmdResult.ENTITY_NOT_FOUND,
-                arguments: JSON.stringify({ name: name, grade: grade }),
+                arguments: JSON.stringify({ name: name }),
             }));
     }
 
-    const berry = grade ? candidates.map(c => followPath(c.path)).filter(b => b.grade === grade)[0]
-        : followPath(candidates[0].path);
+    const berries = candidates.map(c => followPath(c.path));
 
-    if (!berry) {
-        return message.channel
-            .send('Berry grade not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-                arguments: JSON.stringify({ name: name, grade: grade }),
-            }));
-    }
-
-    const embed = new MessageEmbed()
-        .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
-        .setThumbnail(imageUrl('berries/' + berry.image))
-        .addField('Rarity', capitalizeFirstLetter(berry.rarity), true)
-        .addField('Stat', capitalizeFirstLetter(berry.target_stat), true)
-        .addField('Great rate', `${(100 * berry.great_chance)}%`, true)
-        .addField('Stat value', berry.is_percentage ? `${(100 * berry.value)}%` : berry.value, true)
-        .addField('Sell price', berry.sell_cost, true)
-        .addField('Eat cost', berry.eat_cost, true);
-
-    return message.channel
-        .send(embed)
+    return new BerriesListEmbed(message, berries)
+        .send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: berry.id,
