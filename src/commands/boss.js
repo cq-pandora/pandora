@@ -1,16 +1,16 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { bossesFuzzy, followPath, translate },
-    functions: { getPrefix, statsToString, imageUrl, parseQuery },
+    fileDb: { bossesFuzzy, followPath },
+    functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
     PaginationEmbed,
 } = require('../util');
+const BossesListEmbed = require('../embeds/BossesListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
-        title: `${prefix}bosses <boss name>`,
+        title: `${prefix}boss <boss name>`,
         fields: [
             {
                 name: '<boss name>',
@@ -40,27 +40,7 @@ const command = (message, args) => {
 
     const bosses = candidates.map(c => followPath(c.path));
 
-    if (!bosses.length) {
-        return message.channel
-            .send('There are no bosses on this stage!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-            }));
-    }
-
-    const embeds = bosses.map((boss, idx, arr) => new MessageEmbed()
-        .setTitle(`${translate(boss.name)}`)
-        .setDescription(statsToString(boss))
-        .setThumbnail(imageUrl('heroes/' + boss.image))
-        .setFooter(`Page ${idx + 1}/${arr.length}`)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .showPageIndicator(false)
-        .build()
+    return new BossesListEmbed(message, bosses).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: bosses.map(b => b.id).join(','),
