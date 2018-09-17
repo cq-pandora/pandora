@@ -1,12 +1,11 @@
-const { MessageEmbed } = require('discord.js');
-const { emojis } = require('../config');
 const {
-    fileDb: { fishingGearFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    fileDb: { fishingGearFuzzy, followPath },
+    functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
+
+const BaitListEmbed = require('../embeds/BaitListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -44,21 +43,7 @@ const command = (message, args) => {
         .map(c => followPath(c.path))
         .filter(b => b.type === 'bait');
 
-    const embeds = baits.map((bait, idx, arr) => {
-        const embed = new MessageEmbed()
-            .setTitle(`${translate(bait.name)} (${bait.grade}★)`)
-            .setDescription(translate(bait.description))
-            .addField(`${capitalizeFirstLetter(bait.habitat)} bonus`, bait.habitat_bonus, true)
-            .addField('Bite chance', bait.bite_chance, true)
-            .addField('Big fish chance', bait.big_chance, true)
-            .addField('Price', `${bait.price}${emojis.gold}`, true)
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
-            .setThumbnail(imageUrl('fish/' + bait.image));
-
-        return bait.event_chance ? embed.addField('Event bonus', bait.event_chance) : embed;
-    });
-
-    if (!embeds.length) {
+    if (!baits.length) {
         return message.channel
             .send('Bait not found!')
             .then(m => ({
@@ -67,12 +52,10 @@ const command = (message, args) => {
             }));
     }
 
-    return new PaginationEmbed(message)
-        .setArray(embeds)
+    return new BaitListEmbed(message, baits)
         .setAuthorizedUsers([message.author.id])
         .setChannel(message.channel)
-        .showPageIndicator(false)
-        .build()
+        .send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: baits.map(f => f.id).join(','),

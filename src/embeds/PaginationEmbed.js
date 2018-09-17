@@ -3,7 +3,7 @@ const { Message } = require('discord.js');
 
 class PaginationEmbed extends EmbedsMode {
     constructor (initialMessage) {
-        if (!(initialMessage instanceof Message)) throw new Error('Initial message should be Discord.js Message object');
+        if (initialMessage && !(initialMessage instanceof Message)) throw new Error('Initial message should be Discord.js Message object or null');
         super({
             navigationEmojis: {
                 back: '◀',
@@ -16,13 +16,17 @@ class PaginationEmbed extends EmbedsMode {
         this.setDisabledNavigationEmojis(['JUMP', 'DELETE']);
         this.addFunctionEmoji('🗑', (_, self) => {
             self.clientMessage.message.delete();
-            initialMessage.delete();
+            if (initialMessage) initialMessage.delete();
             this.deleted = true;
         });
     }
 
     _loadList (callNavigation = true) {
         if (!this.deleted) super._loadList(callNavigation);
+    }
+
+    send () {
+        return this.build();
     }
 }
 
