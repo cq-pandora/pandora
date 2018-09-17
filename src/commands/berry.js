@@ -44,7 +44,7 @@ const command = (message, args) => {
         .send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
-            target: berry.id,
+            target: berries.map(b => b.id).join(','),
             arguments: JSON.stringify({ name: name, grade: grade }),
         }));
 };
