@@ -21,10 +21,6 @@ class PaginationEmbed extends EmbedsMode {
         });
     }
 
-    _loadList (callNavigation = true) {
-        if (!this.deleted) super._loadList(callNavigation);
-    }
-
     send () {
         return this.build();
     }
