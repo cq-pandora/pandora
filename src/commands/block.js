@@ -1,21 +1,11 @@
-const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
 const {
-    fileDb: { heroesFuzzy, followPath, translate },
-    functions: { getPrefix, splitText, imageUrl, parseGrade, parseQuery },
+    fileDb: { heroesFuzzy, followPath},
+    functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
     PaginationEmbed,
 } = require('../util');
-
-const classColors = {
-    archer: 0x79B21D,
-    hunter: 0xDAA628,
-    paladin: 0x24A2BF,
-    priest: 0xF163B3,
-    warrior: 0xB43026,
-    wizard: 0x985ED5
-};
+const HeroBlockEmbed = require('../embeds/HeroBlockEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -70,24 +60,7 @@ const command = (message, args) => {
 
     const page = hero.forms.indexOf(form) + 1;
 
-    const embeds = hero.forms.map((form, idx, arr) =>
-        _.reduce(form.passive_name ? splitText(translate(form.passive_description)) : [],
-            (res, chunk, idx) => res.addField(idx ? '\u200b' : translate(form.passive_name), chunk),
-            new MessageEmbed()
-                .setTitle(`${translate(form.name)} (${form.star}★)`)
-                .setThumbnail(imageUrl('skills/' + form.block_image))
-                .setFooter(`Page ${idx + 1}/${arr.length}`)
-                .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
-        ));
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .setPage(page)
-        .showPageIndicator(false)
-        .setColor(classColors[hero.class])
-        .build()
+    return new HeroBlockEmbed(message, hero, page).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
