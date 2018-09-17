@@ -1,7 +1,6 @@
 const config = require('../config');
 const path = require('path');
 const Fuse = require('fuse.js');
-const keyReducer = require('./functions/arrayToObjectWithIdAsKeyReducer');
 
 const requireFile = (f) => require(path.resolve(config.parsedData, f + '.json'));
 

@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
     fileDb: { fishingGearFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseQuery },
     categories,
     cmdResult,
     PaginationEmbed,

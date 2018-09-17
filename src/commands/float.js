@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
     fileDb: { fishingGearFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseQuery },
     categories,
     cmdResult,
     PaginationEmbed,
@@ -52,15 +52,15 @@ const command = (message, args) => {
         .filter(b => b.type === 'float');
 
     const embeds = floats.map((float, idx, arr) => new MessageEmbed()
-            .setTitle(`${translate(float.name)} (${float.grade}★)`)
-            .setDescription(translate(float.description))
-            .addField(`${capitalizeFirstLetter(float.habitat)} bonus`, float.habitat_bonus, true)
-            .addField('Bite chance', float.bite_chance, true)
-            .addField('Big fish chance', float.big_chance, true)
-            .addField('Price', `${float.price}${currencies[float.currency]}`, true)
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
-            .setThumbnail(imageUrl('fish/' + float.image))
-        );
+        .setTitle(`${translate(float.name)} (${float.grade}★)`)
+        .setDescription(translate(float.description))
+        .addField(`${capitalizeFirstLetter(float.habitat)} bonus`, float.habitat_bonus, true)
+        .addField('Bite chance', float.bite_chance, true)
+        .addField('Big fish chance', float.big_chance, true)
+        .addField('Price', `${float.price}${currencies[float.currency]}`, true)
+        .setFooter(`Page ${idx + 1}/${arr.length}`)
+        .setThumbnail(imageUrl('fish/' + float.image))
+    );
 
     if (!floats.length) {
         return message.channel

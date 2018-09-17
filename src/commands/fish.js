@@ -54,12 +54,12 @@ const command = (message, args) => {
             .addField('Exp', fish.exp, true)
             .addField('Area type', capitalizeFirstLetter(fish.habitat), true)
             .addField('Initial range', `${fish.starts_from}m`, true)
-            .addField(`Reward${fish.rewards.length > 1 ? 's': ''}`,
+            .addField(`Reward${fish.rewards.length > 1 ? 's' : ''}`,
                 fish.rewards.map(r => `${r.amount > 1 ? r.amount : ''} ${rewards[r.type]}`).join('\n'),
                 true
             )
             .setFooter(`Page ${idx + 1}/${arr.length}`)
-            .setThumbnail(imageUrl('fish/' + fish.image))
+            .setThumbnail(imageUrl('fish/' + fish.image));
     });
 
     return new PaginationEmbed(message)
@@ -71,7 +71,7 @@ const command = (message, args) => {
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: fishes.map(f => f.id).join(','),
-            arguments: JSON.stringify({ name: name}),
+            arguments: JSON.stringify({ name: name }),
         }));
 };
 

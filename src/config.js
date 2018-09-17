@@ -20,7 +20,6 @@ config.get = (path, defauld = null) => {
 config.db = require(path.join(process.cwd(), 'database.json')).local;
 config.emojis = require(path.join(process.cwd(), 'emojis.json'));
 
-
 if (!config.aliases) config.aliases = {};
 if (!config.reverseAliases) config.reverseAliases = {};
 
