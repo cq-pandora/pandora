@@ -11,7 +11,7 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, berries) {
         super(initialMessage);
 
-        if (!berries.length) { throw new EmptyListException('Nothing to do with empty baits list'); }
+        if (!berries.length) { throw new EmptyListException('Nothing to do with empty berries list'); }
 
         const embeds = berries.map((berry, idx, arr) => new MessageEmbed()
             .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
