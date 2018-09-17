@@ -2,8 +2,9 @@ const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { Message } = require('discord.js');
 
 class PaginationEmbed extends EmbedsMode {
-    constructor (initialMessage) {
+    constructor (initialMessage, doNotPaginate = false) {
         if (initialMessage && !(initialMessage instanceof Message)) throw new Error('Initial message should be Discord.js Message object or null');
+
         super({
             navigationEmojis: {
                 back: '◀',
@@ -13,6 +14,7 @@ class PaginationEmbed extends EmbedsMode {
             }
         });
 
+        this.doNotPaginate = doNotPaginate;
         this.setDisabledNavigationEmojis(['JUMP', 'DELETE']);
         this.addFunctionEmoji('🗑', (_, self) => {
             self.clientMessage.message.delete();
@@ -23,6 +25,14 @@ class PaginationEmbed extends EmbedsMode {
             this.setAuthorizedUsers([initialMessage.author.id]);
             this.setChannel(initialMessage.channel);
         }
+    }
+
+    setArray (arr) {
+        if (arr.length > 1 && !this.doNotPaginate) {
+            return super.setArray(arr.map((e, idx) => e.setFooter(`Page ${idx + 1}/${arr.length}`)));
+        }
+
+        return super.setArray(arr);
     }
 
     send () {

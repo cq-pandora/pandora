@@ -9,11 +9,10 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, bosses) {
         super(initialMessage);
 
-        const embeds = bosses.map((boss, idx, arr) => new MessageEmbed()
+        const embeds = bosses.map(boss => new MessageEmbed()
             .setTitle(`${translate(boss.name)}`)
             .setDescription(statsToString(boss))
             .setThumbnail(imageUrl('heroes/' + boss.image))
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
         );
 
         this.setArray(embeds)

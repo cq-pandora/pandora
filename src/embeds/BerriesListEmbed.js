@@ -19,7 +19,6 @@ class BerriesListEmbed extends PaginationEmbed {
             .addField('Stat value', berry.is_percentage ? `${(100 * berry.value)}%` : berry.value, true)
             .addField('Sell price', `${berry.sell_cost}${emojis.gold}`, true)
             .addField('Eat cost', `${berry.eat_cost}${emojis.gold}`, true)
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
         );
 
         this.setArray(embeds).showPageIndicator(false);

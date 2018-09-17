@@ -1,5 +1,4 @@
 const PaginationEmbed = require('./PaginationEmbed');
-const EmptyListException = require('../exceptions/EmptyListException');
 const { MessageEmbed } = require('discord.js');
 const {
     functions: { imageUrl },
@@ -10,10 +9,9 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, champion, page) {
         super(initialMessage);
 
-        const embeds = champion.forms.map((form, idx, arr) => {
+        const embeds = champion.forms.map(form => {
             let base = new MessageEmbed()
-                .setTitle(`${translate(champion.name)} (Lvl. ${form.grade})`)
-                .setFooter(`Page ${idx + 1}/${arr.length}`);
+                .setTitle(`${translate(champion.name)} (Lvl. ${form.grade})`);
 
             if (form.active) {
                 base = base.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
@@ -35,8 +33,7 @@ class BerriesListEmbed extends PaginationEmbed {
             .setThumbnail(imageUrl('heroes/' + champion.image))
             .setDescription(translate(champion.lore));
 
-        if (page)
-            this.setPage(page);
+        if (page) { this.setPage(page); }
     }
 }
 

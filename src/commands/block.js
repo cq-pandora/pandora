@@ -1,9 +1,8 @@
 const {
-    fileDb: { heroesFuzzy, followPath},
+    fileDb: { heroesFuzzy, followPath },
     functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
 const HeroBlockEmbed = require('../embeds/HeroBlockEmbed');
 

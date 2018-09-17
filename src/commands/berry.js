@@ -1,6 +1,6 @@
 const {
-    fileDb: { berriesFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseQuery },
+    fileDb: { berriesFuzzy, followPath },
+    functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
 } = require('../util');

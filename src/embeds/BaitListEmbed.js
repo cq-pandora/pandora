@@ -10,7 +10,7 @@ class BaitListEmbed extends PaginationEmbed {
     constructor (initialMessage, baits) {
         super(initialMessage);
 
-        const embeds = baits.map((bait, idx, arr) => {
+        const embeds = baits.map(bait => {
             const embed = new MessageEmbed()
                 .setTitle(`${translate(bait.name)} (${bait.grade}★)`)
                 .setDescription(translate(bait.description))
@@ -18,7 +18,6 @@ class BaitListEmbed extends PaginationEmbed {
                 .addField('Bite chance', bait.bite_chance, true)
                 .addField('Big fish chance', bait.big_chance, true)
                 .addField('Price', `${bait.price}${emojis.gold}`, true)
-                .setFooter(`Page ${idx + 1}/${arr.length}`)
                 .setThumbnail(imageUrl('fish/' + bait.image));
 
             return bait.event_chance ? embed.addField('Event bonus', bait.event_chance) : embed;

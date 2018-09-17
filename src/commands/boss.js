@@ -3,7 +3,6 @@ const {
     functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
 const BossesListEmbed = require('../embeds/BossesListEmbed');
 

@@ -19,15 +19,14 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, page) {
         super(initialMessage);
 
-        const embeds = hero.forms.map((form, idx, arr) =>
+        const embeds = hero.forms.map(form =>
             _.reduce(form.passive_name ? splitText(translate(form.passive_description)) : [],
                 (res, chunk, idx) => res.addField(idx ? '\u200b' : translate(form.passive_name), chunk),
                 new MessageEmbed()
                     .setTitle(`${translate(form.name)} (${form.star}★)`)
                     .setThumbnail(imageUrl('skills/' + form.block_image))
-                    .setFooter(`Page ${idx + 1}/${arr.length}`)
                     .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
-        ));
+            ));
 
         this.setArray(embeds)
             .showPageIndicator(false)

@@ -1,6 +1,6 @@
 const {
-    fileDb: { championsFuzzy, followPath, translate },
-    functions: { getPrefix, imageUrl, parseGrade, parseQuery },
+    fileDb: { championsFuzzy, followPath },
+    functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
 } = require('../util');
