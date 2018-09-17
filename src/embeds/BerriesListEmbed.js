@@ -1,5 +1,4 @@
 const PaginationEmbed = require('./PaginationEmbed');
-const EmptyListException = require('../exceptions/EmptyListException');
 const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
@@ -10,8 +9,6 @@ const {
 class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, berries) {
         super(initialMessage);
-
-        if (!berries.length) { throw new EmptyListException('Nothing to do with empty berries list'); }
 
         const embeds = berries.map((berry, idx, arr) => new MessageEmbed()
             .setTitle(`${translate(berry.name)} (${berry.grade}★)`)

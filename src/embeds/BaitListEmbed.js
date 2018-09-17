@@ -1,5 +1,4 @@
 const PaginationEmbed = require('./PaginationEmbed');
-const EmptyListException = require('../exceptions/EmptyListException');
 const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
@@ -10,8 +9,6 @@ const {
 class BaitListEmbed extends PaginationEmbed {
     constructor (initialMessage, baits) {
         super(initialMessage);
-
-        if (!baits.length) { throw new EmptyListException('Nothing to do with empty baits list'); }
 
         const embeds = baits.map((bait, idx, arr) => {
             const embed = new MessageEmbed()

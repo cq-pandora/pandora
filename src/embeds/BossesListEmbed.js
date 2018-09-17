@@ -1,7 +1,5 @@
 const PaginationEmbed = require('./PaginationEmbed');
-const EmptyListException = require('../exceptions/EmptyListException');
 const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
 const {
     functions: { statsToString, imageUrl },
     fileDb: { translate },
@@ -10,8 +8,6 @@ const {
 class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, bosses) {
         super(initialMessage);
-
-        if (!bosses.length) { throw new EmptyListException('Nothing to do without bosses'); }
 
         const embeds = bosses.map((boss, idx, arr) => new MessageEmbed()
             .setTitle(`${translate(boss.name)}`)

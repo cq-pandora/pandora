@@ -1,5 +1,4 @@
 const PaginationEmbed = require('./PaginationEmbed');
-const EmptyListException = require('../exceptions/EmptyListException');
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const {
@@ -19,8 +18,6 @@ const classColors = {
 class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, page) {
         super(initialMessage);
-
-        if (!hero) { throw new EmptyListException('Nothing to do without a hero'); }
 
         const embeds = hero.forms.map((form, idx, arr) =>
             _.reduce(form.passive_name ? splitText(translate(form.passive_description)) : [],
