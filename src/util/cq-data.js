@@ -1,6 +1,7 @@
 const config = require('../config');
 const path = require('path');
 const Fuse = require('fuse.js');
+const keyReducer = require('./functions/arrayToObjectWithIdAsKeyReducer');
 
 const requireFile = (f) => require(path.resolve(config.parsedData, f + '.json'));
 
@@ -35,9 +36,6 @@ const followPath = function (path, outputArray) {
     return outputArray ? ids.map(id => this[parts[0]][id]) : this[parts[0]][ids[0]];
 };
 
-const fishingGear = requireFile('fishing_gear');
-const fishingGearArray = Object.keys(fishingGear).map(k => fishingGear[k]);
-
 module.exports = {
     bosses: requireFile('bosses'),
     berries: requireFile('berries'),
@@ -52,10 +50,7 @@ module.exports = {
     champions: requireFile('champions'),
     sp_skills: requireFile('sp_skills'),
     fishes: requireFile('fishes'),
-    fishing_gear: fishingGear,
-    baits: fishingGearArray.filter(g => g.type === 'bait'),
-    rods: fishingGearArray.filter(g => g.type === 'rod'),
-    floats: fishingGearArray.filter(g => g.type === 'float'),
+    fishing_gear: requireFile('fishing_gear'),
     fishing_ponds: requireFile('fishing_ponds'),
     translations: translations,
     translate: (key) => (translations[key] ? (translations[key].text || '') : key).replace(/[@#$^]/g, ''),
