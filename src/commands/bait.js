@@ -53,8 +53,6 @@ const command = (message, args) => {
     }
 
     return new BaitListEmbed(message, baits)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
         .send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,

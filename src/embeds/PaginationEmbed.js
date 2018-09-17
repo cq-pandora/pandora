@@ -17,8 +17,12 @@ class PaginationEmbed extends EmbedsMode {
         this.addFunctionEmoji('🗑', (_, self) => {
             self.clientMessage.message.delete();
             if (initialMessage) initialMessage.delete();
-            this.deleted = true;
         });
+
+        if (initialMessage) {
+            this.setAuthorizedUsers([initialMessage.author.id]);
+            this.setChannel(initialMessage.channel);
+        }
     }
 
     send () {
