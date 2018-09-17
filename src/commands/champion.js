@@ -1,16 +1,15 @@
-const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { championsFuzzy, followPath, translate },
     functions: { getPrefix, imageUrl, parseGrade, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
+const ChampionEmbed = require('../embeds/ChampionEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
-        title: `${prefix}champion [<name>] [<grade>]`,
+        title: `${prefix}champion <name> [<grade>]`,
         fields: [
             {
                 name: '<name>',
@@ -62,35 +61,7 @@ const command = (message, args) => {
 
     const page = champ.forms.indexOf(form) + 1;
 
-    const embeds = champ.forms.map((form, idx, arr) => {
-        let base = new MessageEmbed()
-            .setTitle(`${translate(champ.name)} (Lvl. ${form.grade})`)
-            .setFooter(`Page ${idx + 1}/${arr.length}`);
-
-        if (form.active) {
-            base = base.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
-        }
-
-        if (form.passive) {
-            base = base.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
-        }
-
-        if (form.exclusive) {
-            base = base.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
-        }
-
-        return base;
-    });
-
-    return new PaginationEmbed(message)
-        .setDescription(translate(champ.lore))
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .setPage(page)
-        .showPageIndicator(false)
-        .setThumbnail(imageUrl('heroes/' + champ.image))
-        .build()
+    return new ChampionEmbed(message, champ, page).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: champ.id,
