@@ -1,20 +1,10 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, followPath, translate },
-    functions: { getPrefix, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    fileDb: { heroesFuzzy, followPath },
+    functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
-
-const classColors = {
-    archer: 0x79B21D,
-    hunter: 0xDAA628,
-    paladin: 0x24A2BF,
-    priest: 0xF163B3,
-    warrior: 0xB43026,
-    wizard: 0x985ED5
-};
+const HeroFormsEmbed = require('../embeds/HeroFormsEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -71,25 +61,7 @@ const command = (message, args) => {
 
     const page = hero.forms.indexOf(form) + 1;
 
-    const embeds = hero.forms.map((form, idx, arr) => new MessageEmbed()
-        .setTitle(`${translate(form.name)} (${form.star}★)`)
-        .setDescription(translate(form.lore))
-        .setThumbnail(imageUrl('heroes/' + form.image))
-        .setFooter(`Page ${idx + 1}/${arr.length}`)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .setPage(page)
-        .showPageIndicator(false)
-        .setColor(classColors[hero.class])
-        .addField('Class', capitalizeFirstLetter(hero.class), true)
-        .addField('Type', capitalizeFirstLetter(hero.type), true)
-        .addField('Faction', (!hero.domain || hero.domain === 'NONEGROUP') ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
-        .addField('Gender', capitalizeFirstLetter(hero.gender), true)
-        .build()
+    return new HeroFormsEmbed(message, hero, page).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
