@@ -1,20 +1,10 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, followPath, translate, inheritance },
-    functions: { getPrefix, imageUrl, parseQuery, parseInheritance, sumStats, statsToString },
+    fileDb: { heroesFuzzy, followPath },
+    functions: { getPrefix, parseQuery, parseInheritance },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
-
-const classColors = {
-    archer: 0x79B21D,
-    hunter: 0xDAA628,
-    paladin: 0x24A2BF,
-    priest: 0xF163B3,
-    warrior: 0xB43026,
-    wizard: 0x985ED5
-};
+const HeroInheritanceEmbed = require('../embeds/HeroInheritanceEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -64,24 +54,8 @@ const command = (message, args) => {
     }
 
     const levels = (iLvl || iLvl === 0) ? [iLvl] : [0, 5, 10, 15, 20];
-    const maxBerry = sumStats(form.max_berries, form);
 
-    const embeds = levels.map((inheritLvl, idx, arr) => new MessageEmbed()
-        .setTitle(`${translate(form.name)} (${inheritLvl === 0 ? '+MAXBERRY' : `Lv. ${inheritLvl}`})`)
-        .setDescription(statsToString(
-            inheritLvl !== 0 ? sumStats(inheritance[hero.class][inheritLvl], maxBerry) : maxBerry
-        ))
-        .setThumbnail(imageUrl('heroes/' + form.image))
-        .setFooter(`Page ${idx + 1}/${arr.length}`)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .showPageIndicator(false)
-        .setColor(classColors[hero.class])
-        .build()
+    return new HeroInheritanceEmbed(message, hero, levels).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
