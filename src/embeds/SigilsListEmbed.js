@@ -2,7 +2,7 @@ const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
-    functions: { statsToString, imageUrl, capitalizeFirstLetter },
+    functions: { statsToString, imageUrl, capitalizeFirstLetter, toClearNumber },
     fileDb: { translate, sigils: sigilz },
 } = require('../util');
 
@@ -49,8 +49,8 @@ class SigilsListEmbed extends PaginationEmbed {
             }
 
             return embed.addBlankField()
-                .addField('Sell price', `${sigil.sell_cost}${emojis.gold}`, true)
-                .addField('Extract cost', `${sigil.extract_cost}${emojis.gold}`, true)
+                .addField('Sell price', `${toClearNumber(sigil.sell_cost)}${emojis.gold}`, true)
+                .addField('Extract cost', `${toClearNumber(sigil.extract_cost)}${emojis.gold}`, true)
                 .addField('Rarity', capitalizeFirstLetter(sigil.rarity), true);
         });
 

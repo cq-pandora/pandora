@@ -2,7 +2,7 @@ const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
-    functions: { capitalizeFirstLetter, imageUrl },
+    functions: { capitalizeFirstLetter, imageUrl, toClearNumber },
     fileDb: { translate },
 } = require('../util');
 
@@ -25,7 +25,7 @@ class FishListEmbed extends PaginationEmbed {
                 .addField('Area type', capitalizeFirstLetter(fish.habitat), true)
                 .addField('Initial range', `${fish.starts_from}m`, true)
                 .addField(`Reward${fish.rewards.length > 1 ? 's' : ''}`,
-                    fish.rewards.map(r => `${r.amount > 1 ? r.amount : ''} ${rewards[r.type]}`).join('\n'),
+                    fish.rewards.map(r => `${r.amount > 1 ? toClearNumber(r.amount) : ''} ${rewards[r.type]}`).join('\n'),
                     true
                 )
                 .setThumbnail(imageUrl('fish/' + fish.image))

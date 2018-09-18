@@ -2,7 +2,7 @@ const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
-    functions: { capitalizeFirstLetter, imageUrl },
+    functions: { capitalizeFirstLetter, imageUrl, toClearNumber },
     fileDb: { translate },
 } = require('../util');
 
@@ -24,7 +24,7 @@ class FishingGearListEmbed extends PaginationEmbed {
                 .addField(`${capitalizeFirstLetter(gear.habitat)} bonus`, gear.habitat_bonus, true)
                 .addField('Bite chance', gear.bite_chance, true)
                 .addField('Big fish chance', gear.big_chance, true)
-                .addField('Price', `${gear.price}${currencies[gear.currency]}`, true)
+                .addField('Price', `${toClearNumber(gear.price)}${currencies[gear.currency]}`, true)
                 .setThumbnail(imageUrl('fish/' + gear.image));
 
             return gear.event_chance ? embed.addField('Event bonus', gear.event_chance) : embed;
