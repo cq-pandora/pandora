@@ -5,7 +5,7 @@ const {
     cmdResult,
 } = require('../util');
 
-const BaitListEmbed = require('../embeds/FishingGearListEmbed');
+const BaitListEmbed = require('../embeds/FishingGearsEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

@@ -4,7 +4,7 @@ const {
     categories,
     cmdResult,
 } = require('../util');
-const PortraitsListEmbed = require('../embeds/PortraitsListEmbed');
+const PortraitsListEmbed = require('../embeds/PortraitsEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

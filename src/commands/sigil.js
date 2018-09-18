@@ -4,7 +4,7 @@ const {
     categories,
     cmdResult,
 } = require('../util');
-const SigilsListEmbed = require('../embeds/SigilsListEmbed');
+const SigilsListEmbed = require('../embeds/SigilsEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

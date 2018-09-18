@@ -5,9 +5,12 @@ const {
     fileDb: { translate },
 } = require('../util');
 
-class GoddessesListEmbed extends PaginationEmbed {
+class GoddessesEmbed extends PaginationEmbed {
     constructor (initialMessage, goddesses) {
         super(initialMessage);
+
+        if (!Array.isArray(goddesses))
+            goddesses = [goddesses];
 
         const embeds = goddesses.map(goddess => new MessageEmbed()
             .setTitle(translate(goddess.name))
@@ -19,4 +22,4 @@ class GoddessesListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = GoddessesListEmbed;
+module.exports = GoddessesEmbed;

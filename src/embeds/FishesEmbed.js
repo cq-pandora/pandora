@@ -13,9 +13,12 @@ const rewards = {
     RANDOMBOX_EVENT_NORMAL_CATBOX: emojis.intact_cat_chest,
 };
 
-class FishListEmbed extends PaginationEmbed {
+class FishesEmbed extends PaginationEmbed {
     constructor (initialMessage, fishes) {
         super(initialMessage);
+
+        if (!Array.isArray(fishes))
+            fishes = [fishes];
 
         const embeds = fishes.map(fish =>
             new MessageEmbed()
@@ -35,4 +38,4 @@ class FishListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = FishListEmbed;
+module.exports = FishesEmbed;

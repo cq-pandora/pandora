@@ -6,9 +6,12 @@ const {
     fileDb: { translate, sigils: sigilz },
 } = require('../util');
 
-class SigilsListEmbed extends PaginationEmbed {
+class SigilsEmbed extends PaginationEmbed {
     constructor (initialMessage, sigils) {
         super(initialMessage);
+
+        if (!Array.isArray(sigils))
+            sigils = [sigils];
 
         const embeds = sigils.map(sigil => {
             let embed = new MessageEmbed()
@@ -58,4 +61,4 @@ class SigilsListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = SigilsListEmbed;
+module.exports = SigilsEmbed;

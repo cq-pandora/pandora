@@ -18,6 +18,9 @@ class HeroBlockEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, inherits) {
         super(initialMessage);
 
+        if (!Array.isArray(inherits))
+            inherits = [inherits];
+
         const form = hero.forms.filter(f => f.star === 6)[0];
         const maxBerry = sumStats(form.max_berries, form);
 

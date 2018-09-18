@@ -6,9 +6,12 @@ const {
     fileDb: { translate },
 } = require('../util');
 
-class BerriesListEmbed extends PaginationEmbed {
+class BerriesEmbed extends PaginationEmbed {
     constructor (initialMessage, berries) {
         super(initialMessage);
+
+        if (!Array.isArray(berries))
+            berries = [berries];
 
         const embeds = berries.map(berry => new MessageEmbed()
             .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
@@ -25,4 +28,4 @@ class BerriesListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = BerriesListEmbed;
+module.exports = BerriesEmbed;

@@ -4,9 +4,12 @@ const {
     functions: { imageUrl },
 } = require('../util');
 
-class PortraitsListEmbed extends PaginationEmbed {
+class PortraitsEmbed extends PaginationEmbed {
     constructor (initialMessage, portraits, page) {
         super(initialMessage);
+
+        if (!Array.isArray(portraits))
+            portraits = [portraits];
 
         const embeds = portraits.map(portrait =>
             new MessageEmbed()
@@ -22,4 +25,4 @@ class PortraitsListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = PortraitsListEmbed;
+module.exports = PortraitsEmbed;

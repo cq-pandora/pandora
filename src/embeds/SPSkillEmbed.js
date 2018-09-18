@@ -14,7 +14,7 @@ const classColors = {
     wizard: 0x985ED5
 };
 
-class HeroBlockEmbed extends PaginationEmbed {
+class SPSkillEmbed extends PaginationEmbed {
     constructor (initialMessage, skill, page) {
         super(initialMessage);
 
@@ -35,4 +35,4 @@ class HeroBlockEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = HeroBlockEmbed;
+module.exports = SPSkillEmbed;

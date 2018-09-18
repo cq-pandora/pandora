@@ -4,7 +4,7 @@ const {
     categories,
     cmdResult,
 } = require('../util');
-const GoddessesListEmbed = require('../embeds/GoddessesListEmbed');
+const GoddessesListEmbed = require('../embeds/GoddessesEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);

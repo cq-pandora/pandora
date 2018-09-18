@@ -13,9 +13,12 @@ const currencies = {
     ITEM_JEWEL: emojis.gem,
 };
 
-class FishingGearListEmbed extends PaginationEmbed {
+class FishingGearsEmbed extends PaginationEmbed {
     constructor (initialMessage, gears) {
         super(initialMessage);
+
+        if (!Array.isArray(gears))
+            gears = [gears];
 
         const embeds = gears.map(gear => {
             const embed = new MessageEmbed()
@@ -34,4 +37,4 @@ class FishingGearListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = FishingGearListEmbed;
+module.exports = FishingGearsEmbed;
