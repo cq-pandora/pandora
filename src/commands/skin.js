@@ -1,21 +1,21 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, followPath, translate },
-    functions: { getPrefix, imageUrl, parseQuery, statsToString },
+    fileDb: { heroesFuzzy, followPath },
+    functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
+const HeroSkinsEmbed = require('../embeds/HeroSkinsEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
         title: `${prefix}skin [<name>]`,
-        fields: [{
-            name: '<name>',
-            value: `Get skin data.\n*e.g. ${prefix}skin lee*`
-        }
-        ]
+        fields: [
+            {
+                name: '<name>',
+                value: `Get skin data.\n*e.g. ${prefix}skin lee*`
+            }
+        ],
     };
 
     return message.channel.send({ embed: e })
@@ -25,8 +25,7 @@ const instructions = (message) => {
 };
 
 const command = (message, args) => {
-    const name = parseQuery(args, []);
-
+    const name = parseQuery(args);
     const candidates = heroesFuzzy.search(name);
 
     if (!candidates.length) {
@@ -40,21 +39,7 @@ const command = (message, args) => {
 
     const hero = followPath(candidates[0].path);
 
-    const embeds = hero.skins.map((skin, idx, arr) =>
-        new MessageEmbed()
-            .setTitle(translate(skin.name))
-            .setDescription(statsToString(skin.stats))
-            .setThumbnail(imageUrl('heroes/' + skin.image))
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
-            .addField('Sell price', skin.cost, true)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .showPageIndicator(false)
-        .build()
+    return new HeroSkinsEmbed(message, hero).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
