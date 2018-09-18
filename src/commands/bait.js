@@ -5,7 +5,7 @@ const {
     cmdResult,
 } = require('../util');
 
-const BaitListEmbed = require('../embeds/BaitListEmbed');
+const BaitListEmbed = require('../embeds/FishingGearListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -29,16 +29,6 @@ const command = (message, args) => {
     const name = parseQuery(args);
 
     const candidates = fishingGearFuzzy.search(name);
-
-    if (!candidates.length) {
-        return message.channel
-            .send('Bait not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                target: 'bait',
-            }));
-    }
-
     const baits = candidates
         .map(c => followPath(c.path))
         .filter(b => b.type === 'bait');
