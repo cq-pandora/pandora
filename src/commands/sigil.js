@@ -43,7 +43,7 @@ const command = (message, args) => {
     return new SigilsListEmbed(message, sigils).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
-            target: sigil.id,
+            target: sigils.map(s => s.id).join(','),
             arguments: JSON.stringify({ name: name, grade: grade }),
         }));
 };
