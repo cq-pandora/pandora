@@ -15,7 +15,7 @@ const classColors = {
     wizard: 0x985ED5
 };
 
-class BerriesListEmbed extends PaginationEmbed {
+class HeroBlockEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, page) {
         super(initialMessage);
 
@@ -38,4 +38,4 @@ class BerriesListEmbed extends PaginationEmbed {
     }
 }
 
-module.exports = BerriesListEmbed;
+module.exports = HeroBlockEmbed;
