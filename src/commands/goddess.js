@@ -1,10 +1,10 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { goddessesFuzzy, followPath, translate },
-    functions: { getPrefix, imageUrl },
+    fileDb: { goddessesFuzzy, followPath },
+    functions: { getPrefix },
     categories,
     cmdResult,
 } = require('../util');
+const GoddessesListEmbed = require('../embeds/GoddessesListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -38,18 +38,12 @@ const command = (message, args) => {
             }));
     }
 
-    const goddess = followPath(candidates[0].path);
+    const goddesses = candidates.map(c => followPath(c.path));
 
-    const msg = new MessageEmbed()
-        .setTitle(translate(goddess.name))
-        .addField(translate(goddess.skill_name), translate(goddess.skill_description))
-        .setThumbnail(imageUrl('heroes/' + goddess.image));
-
-    return message.channel
-        .send(msg)
+    return new GoddessesListEmbed(message, goddesses).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
-            target: goddess.id,
+            target: goddesses.map(g => g.id).join(','),
             arguments: JSON.stringify({ input: args.join(' ') }),
         }));
 };
