@@ -1,0 +1,18 @@
+module.exports = {
+    BerriesEmbed: require('./BerriesEmbed'),
+    FishingGearsEmbed: require('./FishingGearsEmbed'),
+    HeroInheritanceEmbed: require('./HeroInheritanceEmbed'),
+    PaginationEmbed: require('./PaginationEmbed'),
+    BossesEmbed: require('./BossesEmbed'),
+    GoddessesEmbed: require('./GoddessesEmbed'),
+    HeroSBWBlockEmbed: require('./HeroSBWBlockEmbed'),
+    PortraitsEmbed: require('./PortraitsEmbed'),
+    ChampionEmbed: require('./ChampionEmbed'),
+    HeroBlockEmbed: require('./HeroBlockEmbed'),
+    HeroSBWEmbed: require('./HeroSBWEmbed'),
+    SPSkillEmbed: require('./SPSkillEmbed'),
+    FishesEmbed: require('./FishesEmbed'),
+    HeroFormsEmbed: require('./HeroFormsEmbed'),
+    HeroSkinsEmbed: require('./HeroSkinsEmbed'),
+    SigilsEmbed: require('./SigilsEmbed'),
+};
