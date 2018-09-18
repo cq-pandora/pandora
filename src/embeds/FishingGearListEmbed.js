@@ -6,6 +6,13 @@ const {
     fileDb: { translate },
 } = require('../util');
 
+const currencies = {
+    ITEM_FISHCOIN: emojis.fishcoin,
+    ITEM_GOLD: emojis.gold,
+    ITEM_HONOR: emojis.honor,
+    ITEM_JEWEL: emojis.gem,
+};
+
 class FishingGearListEmbed extends PaginationEmbed {
     constructor (initialMessage, gears) {
         super(initialMessage);
@@ -17,7 +24,7 @@ class FishingGearListEmbed extends PaginationEmbed {
                 .addField(`${capitalizeFirstLetter(gear.habitat)} bonus`, gear.habitat_bonus, true)
                 .addField('Bite chance', gear.bite_chance, true)
                 .addField('Big fish chance', gear.big_chance, true)
-                .addField('Price', `${gear.price}${emojis.gold}`, true)
+                .addField('Price', `${gear.price}${currencies[gear.currency]}`, true)
                 .setThumbnail(imageUrl('fish/' + gear.image));
 
             return gear.event_chance ? embed.addField('Event bonus', gear.event_chance) : embed;
