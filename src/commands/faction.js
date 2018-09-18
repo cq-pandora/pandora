@@ -1,11 +1,10 @@
-const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
 const {
-    fileDb: { factionsFuzzy, followPath, heroes, translate },
-    functions: { getPrefix, imageUrl, splitText },
+    fileDb: { factionsFuzzy, followPath },
+    functions: { getPrefix },
     categories,
     cmdResult,
 } = require('../util');
+const { FactionsEmbed } = require('../embeds');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -34,31 +33,17 @@ const command = (message, args) => {
     if (!candidates.length) {
         return message.channel
             .send('Faction not found!')
-
             .then(m => ({
                 status_code: cmdResult.ENTITY_NOT_FOUND,
             }));
     }
 
-    const faction = followPath(candidates[0].path);
+    const factions = candidates.map(c => followPath(c.path));
 
-    const description = heroes
-        .filter(h => h.domain === faction.ingame_id)
-        .map(h => translate(h.forms[0].name));
-
-    const msg = _.reduce(
-        splitText(description),
-        (msg, chunk) => msg.addField('\u200b', chunk),
-        new MessageEmbed()
-            .setTitle(translate(faction.name))
-            .setThumbnail(imageUrl('common/' + faction.image))
-    );
-
-    return message.channel
-        .send(msg)
+    return new FactionsEmbed(message, factions).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
-            target: faction.id,
+            target: factions.map(f => f.id).join(','),
             arguments: JSON.stringify({ name: name }),
         }));
 };
