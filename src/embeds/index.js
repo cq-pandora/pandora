@@ -15,4 +15,5 @@ module.exports = {
     HeroFormsEmbed: require('./HeroFormsEmbed'),
     HeroSkinsEmbed: require('./HeroSkinsEmbed'),
     SigilsEmbed: require('./SigilsEmbed'),
+    FactionsEmbed: require('./FactionsEmbed'),
 };
