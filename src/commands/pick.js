@@ -77,11 +77,12 @@ const instructions = (message) => {
         embed:
             {
                 title: `${prefix}pick <collection>`,
+                description: 'Pick one entity from selected collection.',
                 fields: [
                     {
                         name: '<collection>',
-                        value: `Pick one entity from selected collection. 
-                Can be on of ${Object.keys(pickMapping).join(', ')}`,
+                        value: `Collection to pick from. 
+                        Can be one of \`${Object.keys(pickMapping).join(', ')}\``,
                     }
                 ]
             }
