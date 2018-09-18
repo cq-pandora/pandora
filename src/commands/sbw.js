@@ -1,20 +1,10 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { heroesFuzzy, followPath, translate },
-    functions: { getPrefix, splitText, capitalizeFirstLetter, imageUrl, parseGrade, parseQuery },
+    fileDb: { heroesFuzzy, followPath },
+    functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
-
-const classColors = {
-    archer: 0x79B21D,
-    hunter: 0xDAA628,
-    paladin: 0x24A2BF,
-    priest: 0xF163B3,
-    warrior: 0xB43026,
-    wizard: 0x985ED5
-};
+const HeroSBWEmbed = require('../embeds/HeroSBWEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -73,32 +63,7 @@ const command = (message, args) => {
 
     const page = hero.sbws.indexOf(sbw) + 1;
 
-    const embeds = hero.sbws.map((sbw, idx, arr) => {
-        const abilityChunks = splitText(translate(sbw.ability));
-        let embed = new MessageEmbed()
-            .setTitle(`${translate(sbw.name)} (${sbw.star}★)`)
-            .setThumbnail(imageUrl('weapons/' + sbw.image))
-            .setFooter(`Page ${idx + 1}/${arr.length}`);
-
-        for (const i in abilityChunks) {
-            embed = embed.addField('\u200b', abilityChunks[i]);
-        }
-
-        return embed
-            .addField('Class', capitalizeFirstLetter(sbw.class), true)
-            // .addField('Range', capitalizeFirstLetter(sb.range), true)
-            .addField('Attack power', sbw.atk_power, true)
-            .addField('Attack speed', sbw.atk_speed, true);
-    });
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .setPage(page)
-        .showPageIndicator(false)
-        .setColor(classColors[hero.class])
-        .build()
+    return new HeroSBWEmbed(message, hero, page).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
