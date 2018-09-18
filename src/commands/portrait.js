@@ -1,11 +1,11 @@
-const { MessageEmbed } = require('discord.js');
 const {
     fileDb: { heroesFuzzy, followPath },
-    functions: { getPrefix, imageUrl },
+    functions: { getPrefix },
     categories,
     cmdResult,
     PaginationEmbed,
 } = require('../util');
+const PortraitsListEmbed = require('../embeds/PortraitsListEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
@@ -50,18 +50,7 @@ const command = (message, args) => {
             }));
     }
 
-    const embeds = hero.portraits.map((portrait, idx, arr) =>
-        new MessageEmbed()
-            .setImage(imageUrl('portraits/' + portrait))
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .showPageIndicator(false)
-        .build()
+    return new PortraitsListEmbed(message, hero.portraits).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: hero.id,
