@@ -3,7 +3,6 @@ const {
     functions: { getPrefix },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
 const PortraitsListEmbed = require('../embeds/PortraitsListEmbed');
 

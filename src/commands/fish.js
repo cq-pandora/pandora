@@ -3,7 +3,6 @@ const {
     functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
 
 const FishListEmbed = require('../embeds/FishListEmbed');

@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
     functions: { statsToString, imageUrl, capitalizeFirstLetter },
-    fileDb: { translate, sigils:sigilz },
+    fileDb: { translate, sigils: sigilz },
 } = require('../util');
 
 class SigilsListEmbed extends PaginationEmbed {

@@ -1,9 +1,7 @@
 const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
 const {
-    functions: { splitText, imageUrl },
-    fileDb: { translate },
+    functions: { imageUrl },
 } = require('../util');
 
 class PortraitsListEmbed extends PaginationEmbed {

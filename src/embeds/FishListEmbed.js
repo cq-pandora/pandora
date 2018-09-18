@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { emojis } = require('../config');
 const {
     functions: { capitalizeFirstLetter, imageUrl },
-    fileDb: { translate, followPath },
+    fileDb: { translate },
 } = require('../util');
 
 const rewards = {
