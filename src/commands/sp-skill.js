@@ -1,25 +1,15 @@
-const { MessageEmbed } = require('discord.js');
 const {
-    fileDb: { spSkillsFuzzy, followPath, translate },
-    functions: { getPrefix, imageUrl, parseGrade, parseQuery },
+    fileDb: { spSkillsFuzzy, followPath },
+    functions: { getPrefix, parseGrade, parseQuery },
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
-
-const classColors = {
-    archer: 0x79B21D,
-    hunter: 0xDAA628,
-    paladin: 0x24A2BF,
-    priest: 0xF163B3,
-    warrior: 0xB43026,
-    wizard: 0x985ED5
-};
+const SPSkillEmbed = require('../embeds/SPSkillEmbed');
 
 const instructions = (message) => {
     const prefix = getPrefix(message);
     const e = {
-        title: `${prefix}sp-skill [<name>] [<level>]`,
+        title: `${prefix}sp-skill <name> [<level>]`,
         fields: [{
             name: '<name>',
             value: `Get special skill data.`
@@ -71,22 +61,7 @@ const command = (message, args) => {
 
     const page = skill.forms.indexOf(form) + 1;
 
-    const embeds = skill.forms.map((form, idx, arr) =>
-        new MessageEmbed()
-            .setTitle(`${translate(skill.name)} Lvl. ${form.level}`)
-            .setDescription(translate(form.description))
-            .setThumbnail(imageUrl('skills/' + form.image))
-            .setFooter(`Page ${idx + 1}/${arr.length}`)
-    );
-
-    return new PaginationEmbed(message)
-        .setArray(embeds)
-        .setAuthorizedUsers([message.author.id])
-        .setChannel(message.channel)
-        .setPage(page)
-        .showPageIndicator(false)
-        .setColor(classColors[form.class])
-        .build()
+    return new SPSkillEmbed(message, skill, page).send()
         .then(m => ({
             status_code: cmdResult.SUCCESS,
             target: skill.id,
