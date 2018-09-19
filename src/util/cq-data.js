@@ -16,11 +16,11 @@ const fuzzyOptions = {
 
 const translations = requireFile('translations');
 
-const alias = (key) => config.aliases[key] || key;
+const alias = (key) => key ? (config.aliases[key.toLowerCase()] || key) : '';
 
 const aliasFuse = (fuse) => {
     const oldSearch = fuse.search;
-    fuse.search = function (a) { return oldSearch.call(fuse, (alias(a) || '').toLowerCase()); };
+    fuse.search = function (a) { return oldSearch.call(fuse, alias(a)); };
     return fuse;
 };
 
