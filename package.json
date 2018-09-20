@@ -1,6 +1,6 @@
 {
   "name": "cq-pandora",
-  "version": "0.1.1",
+  "version": "0.3.1",
   "main": "./src/index.js",
   "license": "MIT",
   "private": true,
@@ -53,6 +53,7 @@
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
     "fuse.js": "^3.2.1",
+    "jimp": "^0.5.0",
     "js-beautify": "^1.7.5",
     "lodash": "^4.17.10",
     "manage-database": "^0.2.1",
