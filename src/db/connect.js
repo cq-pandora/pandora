@@ -5,7 +5,10 @@ const connectionConfig = {
     host: db.host,
     user: db.user,
     password: db.password,
-    database: db.database
+    database: db.database,
+    connectionLimit: 200,
 };
 
-module.exports = () => Promise.resolve(mysql.createConnection(connectionConfig));
+const pool = mysql.createPool(connectionConfig);
+
+module.exports = () => Promise.resolve(pool);
