@@ -33,6 +33,9 @@ module.exports = message => {
             .trim()
             .split(' ')
             .filter(t => !!t);
+
+        if (!args.length) return;
+
         command = args.shift().toLowerCase();
     }
 
