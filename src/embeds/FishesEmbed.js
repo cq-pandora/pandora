@@ -17,8 +17,7 @@ class FishesEmbed extends PaginationEmbed {
     constructor (initialMessage, fishes) {
         super(initialMessage);
 
-        if (!Array.isArray(fishes))
-            fishes = [fishes];
+        if (!Array.isArray(fishes)) { fishes = [fishes]; }
 
         const embeds = fishes.map(fish =>
             new MessageEmbed()

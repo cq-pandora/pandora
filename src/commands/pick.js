@@ -39,10 +39,11 @@ class Picker {
     constructor (collection, embed, processor = null) {
         this.collection = collection;
         this.embed = embed;
-        this.processor = (processor || function() { return this.collection[random(0, this.collection.length - 1)]; }).bind(this);
+        this.processor = (processor || function () { return this.collection[random(0, this.collection.length - 1)]; }).bind(this);
     }
 
-    pick(message, args = []) {
+    pick (message, args = []) {
+        // eslint-disable-next-line new-cap
         return new this.embed(message, this.processor(args));
     }
 }
@@ -102,15 +103,15 @@ const pickItem = (message, args) => {
             .then(m => ({
                 status_code: cmdResult.ENTITY_NOT_FOUND,
                 target: 'collection'
-            }))
+            }));
     }
 
     return picker.pick(message, args).send()
-    .then(m => ({
-        status_code: cmdResult.SUCCESS,
-        target: 'pick',
-        arguments: JSON.stringify({ collection: collection }),
-    }));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: 'pick',
+            arguments: JSON.stringify({ collection: collection }),
+        }));
 };
 
 exports.run = (message, args) => !args.length ? instructions(message) : pickItem(message, args);

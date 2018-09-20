@@ -11,7 +11,7 @@ let starImage = null;
 })();
 
 async function getStarsImage (count) {
-    let container = await createImage(starImage.bitmap.width * count    , starImage.bitmap.height);
+    let container = await createImage(starImage.bitmap.width * count, starImage.bitmap.height);
 
     let x = 0;
     for (let i = 0; i < count; i++) {

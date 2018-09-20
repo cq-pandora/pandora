@@ -9,8 +9,7 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, bosses) {
         super(initialMessage);
 
-        if (!Array.isArray(bosses))
-            bosses = [bosses];
+        if (!Array.isArray(bosses)) { bosses = [bosses]; }
 
         const embeds = bosses.map(boss => new MessageEmbed()
             .setTitle(`${translate(boss.name)}`)

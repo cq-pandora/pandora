@@ -1,5 +1,5 @@
 const {
-    functions: { getPrefix, random, makePullImage, createImage, makeInRange },
+    functions: { random, makePullImage, makeInRange },
     categories,
     cmdResult,
     fileDb: { heroes, translate }
@@ -30,27 +30,6 @@ const sortedForms = [3, 4, 5, 6].map(k => ({
 
 sortedForms.guaranteed = sortedForms[4].filter(f => f.hero.type === 'contract');
 
-const instructions = (message) => {
-    const prefix = getPrefix(message);
-
-    return message.channel.send({
-        embed:
-            {
-                title: `${prefix}pull`,
-                description: 'Perform 10 premium contracts pull.',
-                /*fields: [
-                    {
-                        name: '<collection>',
-                        value: `Collection to pick from.
-                        Can be one of \`${Object.keys(pickMapping).join(', ')}\``,
-                    }
-                ]*/
-            }
-    }).then(m => ({
-        status_code: cmdResult.NOT_ENOUGH_ARGS,
-    }));
-};
-
 const pickItem = async (message, args) => {
     const pull = new Array(makeInRange(parseInt(args[0]) || 10, 1, 20)).fill(0).map((_, idx) => {
         if ((1 + idx) % 10) {
@@ -73,11 +52,11 @@ const pickItem = async (message, args) => {
     );
 
     return message.channel.send({ embed: embed, files: [new MessageAttachment(await canvas.getBufferAsync('image/png'), 'pull.png')] })
-    .then(m => ({
-        status_code: cmdResult.SUCCESS,
-        target: 'pull',
-        arguments: JSON.stringify({ }),
-    }));
+        .then(m => ({
+            status_code: cmdResult.SUCCESS,
+            target: 'pull',
+            arguments: JSON.stringify({ }),
+        }));
 };
 
 exports.run = (message, args) => pickItem(message, args);

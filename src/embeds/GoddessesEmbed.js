@@ -9,8 +9,7 @@ class GoddessesEmbed extends PaginationEmbed {
     constructor (initialMessage, goddesses) {
         super(initialMessage);
 
-        if (!Array.isArray(goddesses))
-            goddesses = [goddesses];
+        if (!Array.isArray(goddesses)) { goddesses = [goddesses]; }
 
         const embeds = goddesses.map(goddess => new MessageEmbed()
             .setTitle(translate(goddess.name))

@@ -8,8 +8,7 @@ class PortraitsEmbed extends PaginationEmbed {
     constructor (initialMessage, portraits, page) {
         super(initialMessage);
 
-        if (!Array.isArray(portraits))
-            portraits = [portraits];
+        if (!Array.isArray(portraits)) { portraits = [portraits]; }
 
         const embeds = portraits.map(portrait =>
             new MessageEmbed()

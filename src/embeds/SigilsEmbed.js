@@ -10,8 +10,7 @@ class SigilsEmbed extends PaginationEmbed {
     constructor (initialMessage, sigils) {
         super(initialMessage);
 
-        if (!Array.isArray(sigils))
-            sigils = [sigils];
+        if (!Array.isArray(sigils)) { sigils = [sigils]; }
 
         const embeds = sigils.map(sigil => {
             let embed = new MessageEmbed()

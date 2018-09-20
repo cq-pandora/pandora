@@ -17,8 +17,7 @@ class FishingGearsEmbed extends PaginationEmbed {
     constructor (initialMessage, gears) {
         super(initialMessage);
 
-        if (!Array.isArray(gears))
-            gears = [gears];
+        if (!Array.isArray(gears)) { gears = [gears]; }
 
         const embeds = gears.map(gear => {
             const embed = new MessageEmbed()

@@ -10,8 +10,7 @@ class BerriesListEmbed extends PaginationEmbed {
     constructor (initialMessage, factions) {
         super(initialMessage);
 
-        if (!Array.isArray(factions))
-            factions = [factions];
+        if (!Array.isArray(factions)) { factions = [factions]; }
 
         const embeds = factions.map(faction => {
             const description = heroes
@@ -24,7 +23,7 @@ class BerriesListEmbed extends PaginationEmbed {
                 new MessageEmbed()
                     .setTitle(translate(faction.name))
                     .setThumbnail(imageUrl('common/' + faction.image))
-            )
+            );
         });
 
         this.setArray(embeds)
