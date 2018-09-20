@@ -36,12 +36,6 @@ async function renderForm (form) {
 async function createRow (sprites, targetSpriteWidth) {
     const height = Math.max(...(sprites.map(s => s.bitmap.height)));
 
-    for (let spriteId in sprites) {
-        if (height - sprites[spriteId].bitmap.height > 35) {
-            sprites[spriteId] = await sprites[spriteId].resize(Jimp.AUTO, height, Jimp.RESIZE_NEAREST_NEIGHBOR);
-        }
-    }
-
     let container = await createImage(WIDTH_GAP * (sprites.length - 1) + targetSpriteWidth * sprites.length, height + 10);
     let x = 0;
 
