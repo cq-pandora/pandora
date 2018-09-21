@@ -7,6 +7,7 @@ const connectionConfig = {
     password: db.password,
     database: db.database,
     connectionLimit: 200,
+    charset : 'utf8mb4',
 };
 
 const pool = mysql.createPool(connectionConfig);
