@@ -52,7 +52,6 @@
     "db-migrate-mysql": "^1.1.10",
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
-    "esm": "^3.0.84",
     "fuse.js": "^3.2.1",
     "jimp": "^0.5.0",
     "js-beautify": "^1.7.5",
@@ -64,7 +63,7 @@
   "scripts": {
     "migrate-up": "db-migrate up",
     "init-db": "node src/init-db.js",
-    "start": "node -r esm src/index.js",
+    "start": "node src/index.js",
     "test": "eslint src/",
     "lint-fix": "eslint --fix src/"
   },
