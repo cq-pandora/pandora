@@ -1,26 +1,32 @@
-const path = require('path');
-const config = require(path.join(process.cwd(), 'config.json'));
 const _ = require('lodash');
 
-config.get = (path, defauld = null) => {
-    if (!path) return defauld;
+const { join: pathJoin } = require('path');
 
-    path = _.toPath(path);
-    let value = config;
+const loadRootConfig = (path) => {
+    path = pathJoin(process.cwd(), path);
 
-    for (let i = 0; i < path.length; i++) {
-        value = value[path[i]];
-
-        if (value === undefined) return defauld;
-    }
-
-    return value || defauld;
+    return require(path);
 };
 
-config.db = require(path.join(process.cwd(), 'database.json')).local;
-config.emojis = require(path.join(process.cwd(), 'emojis.json'));
+const config = loadRootConfig('config.json');
 
-if (!config.aliases) config.aliases = {};
-if (!config.reverseAliases) config.reverseAliases = {};
+config.emojis = loadRootConfig('emojis.json');
+config.db = loadRootConfig('database.json').local;
+
+if (!config.aliases) {
+    config.aliases = {};
+}
+
+if (!config.reverseAliases) {
+    config.reverseAliases = {};
+}
+
+config.get = (path, defaultValue = null) => {
+    if (!path) {
+        return defaultValue;
+    }
+
+    return _.get(config, path, defaultValue);
+};
 
 module.exports = config;
