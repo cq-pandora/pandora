@@ -58,7 +58,7 @@
     "lodash": "^4.17.10",
     "manage-database": "^0.2.1",
     "mathjs": "^5.1.1",
-    "mysql": "^2.16.0"
+    "mysql2": "^1.6.1"
   },
   "scripts": {
     "migrate-up": "db-migrate up",
