@@ -1,5 +1,5 @@
 const config = require('../config');
-const { cmdResult } = require('../util');
+const { cmdResult, categories } = require('../util');
 
 exports.run = (message) => message.channel.send({
     embed: {
@@ -27,3 +27,5 @@ exports.run = (message) => message.channel.send({
     target: 'about',
     status_code: cmdResult.SUCCESS,
 }));
+
+exports.category = categories.BOT;
