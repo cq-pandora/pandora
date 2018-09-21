@@ -64,8 +64,9 @@
     "migrate-up": "db-migrate up",
     "init-db": "node src/init-db.js",
     "start": "node src/index.js",
-    "test": "eslint src/",
-    "lint-fix": "eslint --fix src/"
+    "test": "npm run test:eslint",
+    "test:eslint": "eslint ./src --ignore-path .gitignore .",
+    "test:eslint:fix": "npm run test:eslint -- --fix"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
