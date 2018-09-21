@@ -1,8 +1,6 @@
 const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
-const {
-    functions: { imageUrl },
-} = require('../util');
+const { imageUrl } = require('../functions');
 
 class PortraitsEmbed extends PaginationEmbed {
     constructor (initialMessage, portraits, page) {

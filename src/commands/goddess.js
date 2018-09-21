@@ -1,6 +1,6 @@
+const { getPrefix } = require('../functions');
 const {
     fileDb: { goddessesFuzzy, followPath },
-    functions: { getPrefix },
     categories,
     cmdResult,
 } = require('../util');

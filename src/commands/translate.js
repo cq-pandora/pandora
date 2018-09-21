@@ -1,7 +1,7 @@
 const translations = require('../db/translations');
+const { getPrefix } = require('../functions');
 const {
     fileDb: { heroesFuzzy, followPath },
-    functions: { getPrefix },
     categories,
     cmdResult,
 } = require('../util');

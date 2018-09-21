@@ -1,9 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const translations = require('../db/translations');
+const { getPrefix, splitText } = require('../functions');
 const {
     fileDb: { heroesFuzzy, heroes, keysDescriptions },
-    functions: { getPrefix, splitText },
     categories,
     cmdResult,
     PaginationEmbed,

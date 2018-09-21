@@ -1,5 +1,5 @@
+const { random, makeInRange, makePullImage } = require('../functions');
 const {
-    functions: { random, makePullImage, makeInRange },
     categories,
     cmdResult,
     fileDb: { heroes, translate }

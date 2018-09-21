@@ -1,6 +1,6 @@
+const { getPrefix, parseQuery } = require('../functions');
 const {
     fileDb: { fishesFuzzy, followPath },
-    functions: { getPrefix, parseQuery },
     categories,
     cmdResult,
 } = require('../util');

@@ -1,7 +1,7 @@
 const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+const { capitalizeFirstLetter, imageUrl } = require('../functions');
 const {
-    functions: { capitalizeFirstLetter, imageUrl },
     fileDb: { translate },
 } = require('../util');
 

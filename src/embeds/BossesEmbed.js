@@ -1,7 +1,7 @@
 const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+const { statsToString, imageUrl } = require('../functions');
 const {
-    functions: { statsToString, imageUrl },
     fileDb: { translate },
 } = require('../util');
 

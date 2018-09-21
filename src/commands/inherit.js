@@ -1,6 +1,6 @@
 const {
     fileDb: { heroesFuzzy, followPath },
-    functions: { getPrefix, parseQuery, parseInheritance },
+    const { getPrefix, parseQuery, parseInheritance } = require('
     categories,
     cmdResult,
 } = require('../util');

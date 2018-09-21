@@ -1,4 +1,5 @@
-const { functions: { getPrefix }, categories, cmdResult } = require('../util');
+const { getPrefix } = require('../functions');
+const { categories, cmdResult } = require('../util');
 const aliases = require('../db/aliases');
 
 const instructions = (message) => {

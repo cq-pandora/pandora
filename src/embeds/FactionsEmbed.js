@@ -1,8 +1,8 @@
 const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
+const { splitText, imageUrl } = require('../functions');
 const {
-    functions: { splitText, imageUrl },
     fileDb: { translate, heroes },
 } = require('../util');
 

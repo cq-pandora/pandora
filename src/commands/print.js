@@ -1,5 +1,5 @@
+const { getPrefix } = require('../functions');
 const {
-    functions: { getPrefix },
     categories,
     cmdResult,
 } = require('../util');

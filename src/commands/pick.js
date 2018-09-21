@@ -1,5 +1,5 @@
+const { getPrefix } = require('../functions');
 const {
-    functions: { getPrefix, random },
     categories,
     cmdResult,
     fileDb: {

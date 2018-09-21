@@ -1,8 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const _ = require('lodash');
 const aliases = require('../db/aliases');
+const { getPrefix } = require('../functions');
 const {
-    functions: { getPrefix },
     categories,
     cmdResult,
     PaginationEmbed,
