@@ -5,6 +5,11 @@ const {
     fileDb: { heroes, translate }
 } = require('../util');
 
+const {
+    emojis: { mini_contract, mini_promotable, mini_brown }
+} = require('../config');
+
+
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 
 const _ = require('lodash');
@@ -43,9 +48,9 @@ const pickItem = async (message, args) => {
     const canvas = await makePullImage(pull);
 
     const embed = _.chunk(pull.map((form, idx) => {
-        if (form.star < 4) return `${idx + 1}. ${translate(form.name)} (${form.star}★)`;
-        if (form.hero.type === 'contract') return `**${idx + 1}. ${translate(form.name)} (${form.star}★)${(idx + 1) % 10 ? ' **' : ' (Guaranteed)**'}`;
-        return `*${idx + 1}. ${translate(form.name)} (${form.star}★)*`;
+        if (form.star < 4) return `${mini_brown}${translate(form.name)} (${form.star}★)`;
+        if (form.hero.type === 'contract') return `**${mini_contract}${translate(form.name)} (${form.star}★)${(idx + 1) % 10 ? '**' : ' (Guaranteed)**'}`;
+        return `*${mini_promotable}${translate(form.name)} (${form.star}★)*`;
     }), 10).reduce((e, p) => e.addField('\u200b', p.join('\n')), new MessageEmbed()
         .setAuthor(`${message.author.username}#${message.author.discriminator}`, message.author.avatarURL)
         .setImage('attachment://pull.png')
