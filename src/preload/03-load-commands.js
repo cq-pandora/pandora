@@ -13,6 +13,11 @@ module.exports = () => Promise.resolve(config.commands = _.reduce(fs.readdirSync
     const cmd = require(path.resolve(__dirname, commandsDir, c));
     cmd.name = c.substring(0, c.length - 3).toLowerCase();
 
+    if (!cmd.category) {
+        console.log(`FATAL: No category set for ${cmd.name}!`);
+        process.exit(1);
+    }
+
     res[cmd.name] = cmd;
     return res;
 }, {}));
