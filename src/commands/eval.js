@@ -18,7 +18,6 @@ const evaluate = async (message, args) => {
     try {
         const sandbox = new Script(input);
         const context = createContext(
-            // Custom properties in global
             {},
             {
                 name: 'Eval',
@@ -29,7 +28,7 @@ const evaluate = async (message, args) => {
             }
         );
 
-        output = sandbox.runInContext(input, context);
+        output = await sandbox.runInContext(context);
         output = inspect(output, {
             colors: false,
             compact: false,
