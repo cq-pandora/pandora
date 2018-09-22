@@ -20,6 +20,11 @@ module.exports = async () => {
         const command = require(pathJoin(commandsDir, file));
         command.name = pathBasename(file, EXTENSION).toLowerCase();
 
+        if (!command.category) {
+            console.log(`FATAL: No category set for ${cmd.name}!`);
+            process.exit(1);
+        }
+      
         commands[command.name] = command;
     }
 
