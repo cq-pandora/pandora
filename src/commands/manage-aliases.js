@@ -66,6 +66,7 @@ const actions = {
 
             if (!list.length) {
                 await message.channel.send('No pending aliases!');
+                return;
             }
 
             const embed = new PaginationEmbed(message)

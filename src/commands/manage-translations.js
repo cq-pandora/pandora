@@ -84,6 +84,7 @@ const actions = {
 
             if (!list.length) {
                 await message.channel.send('No pending translations!');
+                return;
             }
 
             const embed = new PaginationEmbed(message)
@@ -139,7 +140,7 @@ actions['list-all'] = actions.list;
 
 const command = async (message, [nameAction, field, name, gradeStr]) => {
     nameAction = nameAction.toLowerCase();
-    const grade = Number(gradeStr[3]) || undefined;
+    const grade = Number(gradeStr) || undefined;
 
     const action = actions[nameAction];
 

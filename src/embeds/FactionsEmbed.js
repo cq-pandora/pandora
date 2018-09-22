@@ -26,6 +26,8 @@ class BerriesListEmbed extends PaginationEmbed {
             for (const chunk of splitText(description)) {
                 embed.addField('\u200b', chunk);
             }
+
+            return embed;
         });
 
         this.setArray(embeds)
