@@ -65,7 +65,9 @@ module.exports = (client) => {
 
                 stat.status_code = cmdResult.NOT_ENOUGH_PERMISSIONS;
             } else {
-                await executable.run(message, args);
+                const response = await executable.run(message, args);
+
+                Object.assign(stat, response);
             }
         } catch (error) {
             await message.channel.send('Error while executing command!');
