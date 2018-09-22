@@ -25,7 +25,7 @@ const readdir = promisify(fs.readdir).bind(fs);
         }
     }
 
-    loadEvents(client);
+    await client.login(config.token);
 
-    client.login(config.token);
+    loadEvents(client);
 })();
