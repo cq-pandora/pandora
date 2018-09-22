@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { emojis } = require('../config');
 const { statsToString, imageUrl, capitalizeFirstLetter, toClearNumber } = require('../functions');
 const {
@@ -10,40 +11,50 @@ class SigilsEmbed extends PaginationEmbed {
     constructor (initialMessage, sigils) {
         super(initialMessage);
 
-        if (!Array.isArray(sigils)) { sigils = [sigils]; }
+        if (!Array.isArray(sigils)) {
+            sigils = [sigils];
+        }
 
         const embeds = sigils.map(sigil => {
-            let embed = new MessageEmbed()
+            const embed = new MessageEmbed()
                 .setDescription(translate(sigil.description))
                 .setTitle(`${translate(sigil.name)} (${sigil.grade}★)`)
-                .setThumbnail(imageUrl('sigils/' + sigil.image));
+                .setThumbnail(imageUrl(`sigils/${sigil.image}`));
 
-            let stats = {}; let totalStats = {};
+            const stats = {};
+            const totalStats = {};
 
-            for (const key in sigil.stats) {
-                if (!sigil.stats[key]) { continue; }
+            for (const key of Object.keys(sigil.stats)) {
+                if (!sigil.stats[key]) {
+                    continue;
+                }
 
                 stats[key] = sigil.stats[key];
                 totalStats[key] = sigil.stats[key];
             }
 
-            embed = embed.addField('Stats', statsToString(stats), true);
+            embed.addField('Stats', statsToString(stats), true);
 
             if (sigil.set) {
-                const otherPiece = sigilz.filter(s => s.ingame_id === sigil.set.pair)[0];
-                let otherStats = {};
+                const otherStats = {};
+                const otherPiece = sigilz.find(s => s.ingame_id === sigil.set.pair);
 
-                for (const key in otherPiece.stats) {
-                    if (!otherPiece.stats[key]) { continue; }
+                for (const key of Object.keys(otherPiece.stats)) {
+                    if (!otherPiece.stats[key]) {
+                        continue;
+                    }
 
-                    if (!totalStats[key]) totalStats[key] = 0;
+                    if (!totalStats[key]) {
+                        totalStats[key] = 0;
+                    }
+
                     totalStats[key] += otherPiece.stats[key];
                     otherStats[key] = otherPiece.stats[key];
                 }
 
                 // FIXME somehow parse total stats with set effect
 
-                embed = embed
+                embed
                     .addField('Set effect', translate(sigil.set.effect), true)
                     .addField('Other piece', translate(otherPiece.name), true)
                     .addField('Other piece stats', statsToString(otherStats), true)

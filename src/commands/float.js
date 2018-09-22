@@ -6,9 +6,10 @@ const {
 } = require('../util');
 const FishingGearListEmbed = require('../embeds/FishingGearsEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}float <name>`,
         fields: [
             {
@@ -18,13 +19,14 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const name = parseQuery(args);
 
     const candidates = fishingGearFuzzy.search(name);
@@ -34,26 +36,29 @@ const command = (message, args) => {
         .filter(b => b.type === 'float');
 
     if (!floats.length) {
-        return message.channel
-            .send('Float not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                target: 'float',
-            }));
+        await message.channel.send('Float not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'float',
+        };
     }
 
-    return new FishingGearListEmbed(message, floats).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: floats.map(f => f.id).join(','),
-            arguments: JSON.stringify({ name: name }),
-        }));
+    const embed = new FishingGearListEmbed(message, floats);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: floats.map(f => f.id).join(','),
+        arguments: JSON.stringify({ name }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

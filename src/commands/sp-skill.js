@@ -6,73 +6,80 @@ const {
 } = require('../util');
 const SPSkillEmbed = require('../embeds/SPSkillEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}sp-skill <name> [<level>]`,
-        fields: [{
-            name: '<name>',
-            value: `Get special skill data.`
-        }, {
-            name: '<level>',
-            value: `Filter skills by Level. If omitted, defaults to highest level`
-        } ]
+        fields: [
+            {
+                name: '<name>',
+                value: `Get special skill data.`
+            },
+            {
+                name: '<level>',
+                value: `Filter skills by Level. If omitted, defaults to highest level`
+            }
+        ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const grade = parseGrade(args);
     const name = parseQuery(args, [`${grade}`]);
 
-    const candidates = spSkillsFuzzy.search(name);
+    const [candidate] = spSkillsFuzzy.search(name);
 
-    if (!candidates.length) {
-        return message.channel
-            .send('Skill not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                target: 'spskill',
-            }));
+    if (!candidate) {
+        await message.channel.send('Skill not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'spskill',
+        };
     }
 
-    const skill = followPath(candidates[0].path);
+    const skill = followPath(candidate.path);
 
     let form = null;
-
     if (grade) {
-        form = skill.forms.filter(f => f.level === grade)[0];
+        form = skill.forms.find(f => f.level === grade);
     } else {
         form = skill.forms[skill.forms.length - 1];
     }
 
     if (!form) {
-        return message.channel
-            .send('No such level for this skill!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-                target: skill.id,
-            }));
+        await message.channel.send('No such level for this skill!');
+
+        return {
+            status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+            target: skill.id,
+        };
     }
 
     const page = skill.forms.indexOf(form) + 1;
 
-    return new SPSkillEmbed(message, skill, page).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: skill.id,
-            arguments: JSON.stringify({ name: name, grade: grade }),
-        }));
+    const embed = new SPSkillEmbed(message, skill, page);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: skill.id,
+        arguments: JSON.stringify({ name, grade }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

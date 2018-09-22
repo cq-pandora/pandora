@@ -1,8 +1,11 @@
-const config = require('../config');
-const path = require('path');
 const Fuse = require('fuse.js');
 
-const requireFile = (f) => require(path.resolve(config.parsedData, f + '.json'));
+const { join: pathJoin, resolve: pathResolve } = require('path');
+
+const { aliases, parsedData } = require('../config');
+
+const parsedDataDir = pathResolve(parsedData);
+const requireFile = path => require(pathJoin(parsedDataDir, `${path}.json`));
 
 const fuzzyIndices = requireFile('translations_indices');
 const fuzzyOptions = {
@@ -11,28 +14,40 @@ const fuzzyOptions = {
     distance: 100,
     maxPatternLength: 32,
     minMatchCharLength: 1,
-    keys: [ 'text' ]
+    keys: ['text']
 };
 
 const translations = requireFile('translations');
 
-const alias = (key) => key ? (config.aliases[key.toLowerCase()] || key) : '';
+const alias = key => (
+    key
+        ? aliases[key.toLowerCase()] || key
+        : ''
+);
 
 const aliasFuse = (fuse) => {
     const oldSearch = fuse.search;
-    fuse.search = function (a) { return oldSearch.call(fuse, alias(a)); };
+
+    fuse.search = (a) => {
+        return oldSearch.call(fuse, alias(a));
+    };
+
     return fuse;
 };
 
 const followPath = function (path, outputArray) {
-    const parts = path.split('.');
-    const ids = parts[1].split(',');
+    const [oneKey, twoKey] = path.split('.');
+    const ids = twoKey.split(',');
 
     if (ids.length === 1) {
-        return outputArray ? [this[parts[0]][parts[1]]] : this[parts[0]][parts[1]];
+        return outputArray
+            ? [this[oneKey][twoKey]]
+            : this[oneKey][twoKey];
     }
 
-    return outputArray ? ids.map(id => this[parts[0]][id]) : this[parts[0]][ids[0]];
+    return outputArray
+        ? ids.map(id => this[oneKey][id])
+        : this[oneKey][ids[0]];
 };
 
 module.exports = {
@@ -52,7 +67,7 @@ module.exports = {
     fishing_gear: requireFile('fishing_gear'),
     fishing_ponds: requireFile('fishing_ponds'),
     translations: translations,
-    translate: (key) => (translations[key] ? (translations[key].text || '') : (key || '')).replace(/[@#$^]/g, ''),
+    translate: key => (translations[key] ? (translations[key].text || '') : (key || '')).replace(/[@#$^]/g, ''),
     fuzzyIndices: fuzzyIndices,
     heroesFuzzy: aliasFuse(new Fuse(fuzzyIndices.heroes, fuzzyOptions)),
     championsFuzzy: aliasFuse(new Fuse(fuzzyIndices.champions, fuzzyOptions)),

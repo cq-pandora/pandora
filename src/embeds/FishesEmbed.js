@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { emojis } = require('../config');
 const { capitalizeFirstLetter, imageUrl, toClearNumber } = require('../functions');
 const {
@@ -17,7 +18,9 @@ class FishesEmbed extends PaginationEmbed {
     constructor (initialMessage, fishes) {
         super(initialMessage);
 
-        if (!Array.isArray(fishes)) { fishes = [fishes]; }
+        if (!Array.isArray(fishes)) {
+            fishes = [fishes];
+        }
 
         const embeds = fishes.map(fish =>
             new MessageEmbed()
@@ -30,7 +33,7 @@ class FishesEmbed extends PaginationEmbed {
                     fish.rewards.map(r => `${r.amount > 1 ? toClearNumber(r.amount) : ''} ${rewards[r.type]}`).join('\n'),
                     true
                 )
-                .setThumbnail(imageUrl('fish/' + fish.image))
+                .setThumbnail(imageUrl(`fish/${fish.image}`))
         );
 
         this.setArray(embeds).showPageIndicator(false);

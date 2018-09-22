@@ -1,6 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { splitText, imageUrl } = require('../functions');
 const {
     fileDb: { translate },
@@ -19,14 +19,25 @@ class HeroBlockEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, page) {
         super(initialMessage);
 
-        const embeds = hero.forms.map(form =>
-            _.reduce(form.passive_name ? splitText(translate(form.passive_description)) : [],
-                (res, chunk, idx) => res.addField(idx ? '\u200b' : translate(form.passive_name), chunk),
-                new MessageEmbed()
-                    .setTitle(`${translate(form.name)} (${form.star}★)`)
-                    .setThumbnail(imageUrl('skills/' + form.block_image))
-                    .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description))
-            ));
+        const embeds = hero.forms.map(form => {
+            const embed = new MessageEmbed()
+                .setTitle(`${translate(form.name)} (${form.star}★)`)
+                .setThumbnail(imageUrl(`skills/${form.block_image}`))
+                .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description));
+
+            const chunks = form.passive_name
+                ? splitText(translate(form.passive_description))
+                : [];
+
+            let atFirst = true;
+            for (const chunk of chunks) {
+                embed.addField(atFirst ? '\u200b' : translate(form.passive_name), chunk);
+
+                atFirst = false;
+            }
+
+            return embed;
+        });
 
         this.setArray(embeds)
             .showPageIndicator(false)

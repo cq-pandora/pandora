@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { statsToString, imageUrl, sumStats } = require('../functions');
 const {
     fileDb: { translate, inheritance },
@@ -18,18 +19,23 @@ class HeroBlockEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, inherits) {
         super(initialMessage);
 
-        if (!Array.isArray(inherits)) { inherits = [inherits]; }
+        if (!Array.isArray(inherits)) {
+            inherits = [inherits];
+        }
 
-        const form = hero.forms.filter(f => f.star === 6)[0];
+        const form = hero.forms.find(f => f.star === 6);
         const maxBerry = sumStats(form.max_berries, form);
 
-        const embeds = inherits.map(inheritLvl => new MessageEmbed()
-            .setTitle(`${translate(form.name)} (${inheritLvl === 0 ? '+Berry' : `Lv. ${inheritLvl}`})`)
-            .setDescription(statsToString(
-                inheritLvl !== 0 ? sumStats(inheritance[hero.class][inheritLvl], maxBerry) : maxBerry
-            ))
-            .setThumbnail(imageUrl('heroes/' + form.image))
-        );
+        const embeds = inherits.map(inheritLvl => (
+            new MessageEmbed()
+                .setTitle(`${translate(form.name)} (${inheritLvl === 0 ? '+Berry' : `Lv. ${inheritLvl}`})`)
+                .setDescription(statsToString(
+                    inheritLvl !== 0
+                        ? sumStats(inheritance[hero.class][inheritLvl], maxBerry)
+                        : maxBerry
+                ))
+                .setThumbnail(imageUrl(`heroes/${form.image}`))
+        ));
 
         this.setArray(embeds)
             .showPageIndicator(false)

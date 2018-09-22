@@ -1,15 +1,16 @@
-const mysql = require('mysql');
-const db = require('../config').db;
+const mysql = require('mysql2/promise');
+
+const { db: dbConfig } = require('../config');
 
 const connectionConfig = {
-    host: db.host,
-    user: db.user,
-    password: db.password,
-    database: db.database,
+    host: dbConfig.host,
+    user: dbConfig.user,
+    password: dbConfig.password,
+    database: dbConfig.database,
     connectionLimit: 200,
-    charset : 'utf8mb4',
+    charset: 'utf8mb4',
 };
 
 const pool = mysql.createPool(connectionConfig);
 
-module.exports = () => Promise.resolve(pool);
+module.exports = pool;

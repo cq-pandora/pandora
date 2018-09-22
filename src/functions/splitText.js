@@ -1,5 +1,4 @@
-module.exports = (str, l) => {
-    l = l || 1024;
+module.exports = (str, l = 1024) => {
     let strs = [];
 
     while (str.length > l) {

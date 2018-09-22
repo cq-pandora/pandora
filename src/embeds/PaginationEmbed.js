@@ -1,9 +1,11 @@
-const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const { Message } = require('discord.js');
+const { Embeds: EmbedsMode } = require('discord-paginationembed');
 
 class PaginationEmbed extends EmbedsMode {
     constructor (initialMessage, doNotPaginate = false) {
-        if (initialMessage && !(initialMessage instanceof Message)) throw new Error('Initial message should be Discord.js Message object or null');
+        if (initialMessage && !(initialMessage instanceof Message)) {
+            throw new Error('Initial message should be Discord.js Message object or null');
+        };
 
         super({
             navigationEmojis: {

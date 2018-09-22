@@ -1,25 +1,35 @@
-const config = require('../config');
 const fs = require('fs');
-const _ = require('lodash');
-const path = require('path');
+const { promisify } = require('util');
+const { join: pathJoin, basename: pathBasename } = require('path');
 
-const commandsDir = '../commands/';
+const config = require('../config');
 
-module.exports = () => Promise.resolve(config.commands = _.reduce(fs.readdirSync(path.resolve(__dirname, commandsDir)), (res, c) => {
-    if (!c.endsWith('.js')) {
-        return res;
+const readdir = promisify(fs.readdir).bind(fs);
+
+const EXTENSION = '.js';
+const commandsDir = pathJoin(__dirname, '../commands/');
+
+module.exports = async () => {
+    const commands = {};
+
+    for (const file of await readdir(commandsDir)) {
+        if (!file.endsWith(EXTENSION)) {
+            continue;
+        }
+
+        const command = require(pathJoin(commandsDir, file));
+        command.name = pathBasename(file, EXTENSION).toLowerCase();
+
+        if (!command.category) {
+            console.log(`FATAL: No category set for ${command.name}!`);
+
+            process.exit(1);
+        }
+
+        commands[command.name] = command;
     }
 
-    const cmd = require(path.resolve(__dirname, commandsDir, c));
-    cmd.name = c.substring(0, c.length - 3).toLowerCase();
-
-    if (!cmd.category) {
-        console.log(`FATAL: No category set for ${cmd.name}!`);
-        process.exit(1);
-    }
-
-    res[cmd.name] = cmd;
-    return res;
-}, {}));
+    config.commands = commands;
+};
 
 module.exports.errorCode = 4;

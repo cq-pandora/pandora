@@ -1,18 +1,31 @@
-const Discord = require('discord.js');
-const config = require('./config');
+const { Client } = require('discord.js');
+
 const fs = require('fs');
-const path = require('path');
+const { promisify } = require('util');
+const { join: pathJoin } = require('path');
 
-(async function main () {
-    const client = new Discord.Client();
+const config = require('./config');
+const loadEvents = require('./util/loadEvents');
 
-    const preloadDir = path.resolve(__dirname, 'preload');
-    for (const file of fs.readdirSync(preloadDir)) {
-        const entry = require(path.resolve(preloadDir, file));
-        await entry(client).catch(e => (console.log('Unable to start app', e), process.exit(entry.errorCode)));
+const readdir = promisify(fs.readdir).bind(fs);
+
+(async () => {
+    const client = new Client();
+
+    const preloadDir = pathJoin(__dirname, 'preload');
+    for (const file of await readdir(preloadDir)) {
+        const entry = require(pathJoin(preloadDir, file));
+
+        try {
+            await entry(client);
+        } catch (e) {
+            console.log('Unable to start app', e);
+
+            process.exit(entry.errorCode);
+        }
     }
 
-    require('./util/loadEvents.js')(client);
+    await client.login(config.token);
 
-    client.login(config.token);
+    loadEvents(client);
 })();

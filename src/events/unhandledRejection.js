@@ -1,5 +1,15 @@
+const { DiscordAPIError, Constants: { APIErrors } } = require('discord.js');
+
+const ERROR_CODES = [
+    APIErrors.UNKNOWN_MESSAGE,
+    APIErrors.MISSING_PERMISSIONS,
+];
+
 module.exports = error => {
     // Ignore discord api errors related to embed
-    if (error && error.name === 'DiscordAPIError' && (error.message === 'Unknown Message' || error.message === 'Missing Permissions')) return;
+    if (error instanceof DiscordAPIError && ERROR_CODES.includes(error.code)) {
+        return;
+    }
+
     console.log(error);
 };

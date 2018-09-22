@@ -17,4 +17,5 @@ module.exports = {
     localImagePath: require('./localImagePath'),
     createImage: require('./createImage'),
     makeInRange: require('./makeInRange'),
-}
+    pickGrade: require('./pickGrade')
+};

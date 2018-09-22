@@ -1,11 +1,12 @@
 const createDbManager = require('manage-database');
-const config = require('./config');
+
+const { db: dbConfig } = require('./config');
 
 const dbManager = createDbManager({
-    user: config.db.user,
-    password: config.db.password,
-    host: config.db.host,
-    port: config.db.port,
+    user: dbConfig.user,
+    password: dbConfig.password,
+    host: dbConfig.host,
+    port: dbConfig.port,
     dialect: 'mysql'
 });
 

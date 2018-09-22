@@ -6,9 +6,9 @@ const {
 } = require('../util');
 const HeroInheritanceEmbed = require('../embeds/HeroInheritanceEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+    const embed = {
         title: `${prefix}inherit [<name>] [<inheritance level>]`,
         fields: [
             {
@@ -22,51 +22,57 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const iLvl = parseInheritance(args);
     const name = parseQuery(args, [iLvl]);
 
-    const candidates = heroesFuzzy.search(name);
+    const [candidate] = heroesFuzzy.search(name);
 
-    if (!candidates.length) {
-        return message.channel
-            .send('Hero not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-            }));
+    if (!candidate) {
+        await message.channel.send('Hero not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+        };
     }
 
-    const hero = followPath(candidates[0].path);
-    const form = hero.forms.filter(f => f.star === 6)[0];
+    const hero = followPath(candidate.path);
+    const form = hero.forms.find(f => f.star === 6);
 
     if (!form) {
-        return message.channel
-            .send('Hero cannot be inherited!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-            }));
+        await message.channel.send('Hero cannot be inherited!');
+
+        return {
+            status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+        };
     }
 
-    const levels = (iLvl || iLvl === 0) ? [iLvl] : [0, 5, 10, 15, 20];
+    const levels = (iLvl || iLvl === 0)
+        ? [iLvl]
+        : [0, 5, 10, 15, 20];
 
-    return new HeroInheritanceEmbed(message, hero, levels).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: hero.id,
-            arguments: JSON.stringify({ name: name, inheritance: iLvl }),
-        }));
+    const embed = new HeroInheritanceEmbed(message, hero, levels);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: hero.id,
+        arguments: JSON.stringify({ name, inheritance: iLvl }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+const PaginationEmbed = require('./PaginationEmbed');
+
 const { emojis } = require('../config');
 const { capitalizeFirstLetter, imageUrl, toClearNumber } = require('../functions');
 const {
@@ -10,11 +11,13 @@ class BerriesEmbed extends PaginationEmbed {
     constructor (initialMessage, berries) {
         super(initialMessage);
 
-        if (!Array.isArray(berries)) { berries = [berries]; }
+        if (!Array.isArray(berries)) {
+            berries = [berries];
+        }
 
         const embeds = berries.map(berry => new MessageEmbed()
             .setTitle(`${translate(berry.name)} (${berry.grade}★)`)
-            .setThumbnail(imageUrl('berries/' + berry.image))
+            .setThumbnail(imageUrl(`berries/${berry.image}`))
             .addField('Rarity', capitalizeFirstLetter(berry.rarity), true)
             .addField('Stat', capitalizeFirstLetter(berry.target_stat), true)
             .addField('Great rate', `${(100 * berry.great_chance)}%`, true)

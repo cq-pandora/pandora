@@ -58,14 +58,15 @@
     "lodash": "^4.17.10",
     "manage-database": "^0.2.1",
     "mathjs": "^5.1.1",
-    "mysql": "^2.16.0"
+    "mysql2": "^1.6.1"
   },
   "scripts": {
     "migrate-up": "db-migrate up",
     "init-db": "node src/init-db.js",
     "start": "node src/index.js",
-    "test": "eslint src/",
-    "lint-fix": "eslint --fix src/"
+    "test": "npm run test:eslint",
+    "test:eslint": "eslint ./src",
+    "test:eslint:fix": "npm run test:eslint -- --fix"
   },
   "devDependencies": {
     "eslint": "^5.5.0",

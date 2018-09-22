@@ -6,9 +6,9 @@ const {
 } = require('../util');
 const HeroFormsEmbed = require('../embeds/HeroFormsEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+    const embed = {
         title: `${prefix}hero [<name>] [<star>]`,
         fields: [
             {
@@ -21,58 +21,61 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const grade = parseGrade(args);
     const name = parseQuery(args, [`${grade}`]);
 
-    const candidates = heroesFuzzy.search(name);
+    const [candidate] = heroesFuzzy.search(name);
 
-    if (!candidates.length) {
-        return message.channel
-            .send('Hero not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-            }));
+    if (!candidate) {
+        await message.channel.send('Hero not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+        };
     }
 
-    const hero = followPath(candidates[0].path);
+    const hero = followPath(candidate.path);
 
     let form = null;
-
     if (grade) {
-        form = hero.forms.filter(f => f.star === grade)[0];
+        form = hero.forms.find(f => f.star === grade);
     } else {
         form = hero.forms[hero.forms.length - 1];
     }
 
     if (!form) {
-        return message.channel
-            .send('Hero grade not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-            }));
+        await message.channel.send('Hero grade not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+        };
     }
 
     const page = hero.forms.indexOf(form) + 1;
 
-    return new HeroFormsEmbed(message, hero, page).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: hero.id,
-            arguments: JSON.stringify({ name: name, grade: grade }),
-        }));
+    const embed = new HeroFormsEmbed(message, hero, page);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: hero.id,
+        arguments: JSON.stringify({ name, grade }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

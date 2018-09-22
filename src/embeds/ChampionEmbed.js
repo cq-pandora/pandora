@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { imageUrl } = require('../functions');
 const {
     fileDb: { translate },
@@ -10,30 +11,32 @@ class BerriesListEmbed extends PaginationEmbed {
         super(initialMessage);
 
         const embeds = champion.forms.map(form => {
-            let base = new MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle(`${translate(champion.name)} (Lvl. ${form.grade})`);
 
             if (form.active) {
-                base = base.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
+                embed.addField(`${translate(form.active.name)} (Active)`, translate(form.active.description));
             }
 
             if (form.passive) {
-                base = base.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
+                embed.addField(`${translate(form.passive.name)} (Passive)`, translate(form.passive.description));
             }
 
             if (form.exclusive) {
-                base = base.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
+                embed.addField(`${translate(form.exclusive.name)} (Exclusive)`, translate(form.exclusive.description));
             }
 
-            return base;
+            return embed;
         });
 
         this.setArray(embeds)
             .showPageIndicator(false)
-            .setThumbnail(imageUrl('heroes/' + champion.image))
+            .setThumbnail(imageUrl(`heroes/${champion.image}`))
             .setDescription(translate(champion.lore));
 
-        if (page) { this.setPage(page); }
+        if (page) {
+            this.setPage(page);
+        }
     }
 }
 

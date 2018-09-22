@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { statsToString, imageUrl } = require('../functions');
 const {
     fileDb: { translate },
@@ -19,13 +20,13 @@ class HeroBlockEmbed extends PaginationEmbed {
     constructor (initialMessage, hero) {
         super(initialMessage);
 
-        const embeds = hero.skins.map(skin =>
+        const embeds = hero.skins.map(skin => (
             new MessageEmbed()
                 .setTitle(translate(skin.name))
                 .setDescription(statsToString(skin.stats))
-                .setThumbnail(imageUrl('heroes/' + skin.image))
+                .setThumbnail(imageUrl(`heroes/${skin.image}`))
                 .addField('Sell price', `${skin.cost}${emojis.gold}`, true)
-        );
+        ));
 
         this.setArray(embeds)
             .showPageIndicator(false)
