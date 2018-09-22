@@ -1,4 +1,9 @@
-const _ = require('lodash');
+module.exports = (stat1, stat2) => {
+    const stats = {};
 
-module.exports = (stat1, stat2) => _(stat1 || {}).keys()
-    .reduce((res, stat) => { res[stat] = (stat1[stat] || 0) + (stat2[stat] || 0); return res; }, {});
+    for (const stat of Object.keys(stat1 || {})) {
+        stats[stat] = (stat1[stat] || 0) + (stat2[stat] || 0);
+    }
+
+    return stats;
+};

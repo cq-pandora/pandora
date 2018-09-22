@@ -16,5 +16,5 @@ module.exports = {
     makePullImage: require('./makePullImage'),
     localImagePath: require('./localImagePath'),
     createImage: require('./createImage'),
-    makeInRange: require('./makeInRange'),
-}
+    makeInRange: require('./makeInRange')
+};
