@@ -1,4 +1,6 @@
-const { getPrefix } = require('../functions');
+const _ = require('lodash');
+
+const { getPrefix, random } = require('../functions');
 const {
     categories,
     cmdResult,
@@ -15,8 +17,6 @@ const {
         sigils,
     }
 } = require('../util');
-
-const _ = require('lodash');
 
 const {
     BerriesEmbed,
@@ -39,7 +39,11 @@ class Picker {
     constructor (collection, embed, processor = null) {
         this.collection = collection;
         this.embed = embed;
-        this.processor = (processor || function () { return this.collection[random(0, this.collection.length - 1)]; }).bind(this);
+        this.processor = !processor
+            ? () => {
+                return this.collection[random(0, this.collection.length - 1)];
+            }
+            : processor;
     }
 
     pick (message, args = []) {
@@ -48,8 +52,8 @@ class Picker {
     }
 }
 
-const fishingGear = Object.keys(fishing_gear).map(k => fishing_gear[k]);
-const fishez = Object.keys(fishes).map(k => fishes[k]);
+const fishez = Object.values(fishes);
+const fishingGear = Object.values(fishing_gear);
 
 const pickMapping = {
     berry: new Picker(berries, BerriesEmbed),
@@ -71,10 +75,10 @@ const pickMapping = {
     skill: new Picker(sp_skills, SPSkillEmbed),
 };
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
 
-    return message.channel.send({
+    await message.channel.send({
         embed:
             {
                 title: `${prefix}pick <collection>`,
@@ -82,38 +86,45 @@ const instructions = (message) => {
                 fields: [
                     {
                         name: '<collection>',
-                        value: `Collection to pick from. 
+                        value: `Collection to pick from.
                         Can be one of \`${Object.keys(pickMapping).join(', ')}\``,
                     }
                 ]
             }
-    }).then(m => ({
+    });
+
+    return {
         status_code: cmdResult.NOT_ENOUGH_ARGS,
-    }));
+    };
 };
 
-const pickItem = (message, args) => {
+const command = async (message, args) => {
     const collection = args.shift();
 
     const picker = pickMapping[collection];
 
     if (!picker) {
-        return message.channel
-            .send('Collection not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                target: 'collection'
-            }));
+        await message.channel.send('Collection not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'collection'
+        };
     }
 
-    return picker.pick(message, args).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: 'pick',
-            arguments: JSON.stringify({ collection: collection }),
-        }));
+    await picker.pick(message, args).send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: 'pick',
+        arguments: JSON.stringify({ collection }),
+    };
 };
 
-exports.run = (message, args) => !args.length ? instructions(message) : pickItem(message, args);
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.MISC;

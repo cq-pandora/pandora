@@ -21,10 +21,11 @@ module.exports = async () => {
         command.name = pathBasename(file, EXTENSION).toLowerCase();
 
         if (!command.category) {
-            console.log(`FATAL: No category set for ${cmd.name}!`);
+            console.log(`FATAL: No category set for ${command.name}!`);
+
             process.exit(1);
         }
-      
+
         commands[command.name] = command;
     }
 

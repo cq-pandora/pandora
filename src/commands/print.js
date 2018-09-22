@@ -4,39 +4,42 @@ const {
     cmdResult,
 } = require('../util');
 
-const printInstructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
 
-    return message.channel.send({
+    const embed = {
         title: `${prefix}print [<text>]`,
-        fields: [{
-            name: '<text>',
-            value: `Print <text> anonymously.\n*e.g. ${prefix}print hello world*`
-        } ]
-    }).then(m => ({
-        embed: {
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }
-    }));
+        fields: [
+            {
+                name: '<text>',
+                value: `Print <text> anonymously.\n*e.g. ${prefix}print hello world*`
+            }
+        ]
+    };
+
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const printMessage = (message, args) => {
-    message.delete();
+const command = async (message, args) => {
+    await message.delete();
+
     const text = args.join(' ');
 
-    return message.channel.send({
+    await message.channel.send({
         embed: {
             description: text
         }
-    }).then(m => ({
-        status_code: cmdResult.SUCCESS,
-        target: 'print',
-        arguments: JSON.stringify({ text: text }),
-    }));
+    });
 };
 
-exports.run = (message, args) => {
-    return !args.length ? printInstructions(message) : printMessage(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.MISC;

@@ -6,9 +6,10 @@ const {
 } = require('../util');
 const BossesListEmbed = require('../embeds/BossesEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}boss <boss name>`,
         fields: [
             {
@@ -18,39 +19,43 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const name = parseQuery(args);
 
     const candidates = bossesFuzzy.search(name);
 
     if (!candidates.length) {
-        return message.channel
-            .send('Boss not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-            }));
+        await message.channel.send('Boss not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+        };
     }
 
     const bosses = candidates.map(c => followPath(c.path));
 
-    return new BossesListEmbed(message, bosses).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: bosses.map(b => b.id).join(','),
-            arguments: JSON.stringify({ name: name }),
-        }));
+    const embed = new BossesListEmbed(message, bosses);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: bosses.map(b => b.id).join(','),
+        arguments: JSON.stringify({ name }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

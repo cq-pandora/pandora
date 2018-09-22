@@ -1,18 +1,12 @@
-const beautify = require('js-beautify').js_beautify;
+const { js_beautify: beautify } = require('js-beautify');
+
+const { inspect } = require('util');
+const { Script, createContext } = require('vm');
+
 const { categories, cmdResult } = require('../util');
 
-const evaluate = (message, args) => {
+const evaluate = async (message, args) => {
     let input = args.join(' ');
-
-    if (input.toLowerCase().includes('token') || input.toLowerCase().includes('eval')) {
-        return message.channel.send({
-            description: 'This is a bad idea.'
-        }).then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_PERMISSIONS,
-            target: 'script',
-            arguments: JSON.stringify({ input: args.join(' ') }),
-        }));
-    }
 
     input = beautify(input, {
         indent_size: 2
@@ -22,24 +16,53 @@ const evaluate = (message, args) => {
     let err = false;
 
     try {
-        output = eval(input); // eslint-disable-line no-eval
+        const sandbox = new Script(input);
+        const context = createContext(
+            // Custom properties in global
+            {},
+            {
+                name: 'Eval',
+                codeGeneration: {
+                    strings: false,
+                    wasm: false
+                }
+            }
+        );
+
+        output = sandbox.runInContext(input, context);
+        output = inspect(output, {
+            colors: false,
+            compact: false,
+            maxArrayLength: 30
+        });
     } catch (error) {
-        err = output = error;
+        err = true;
+
+        output = String(error);
     }
 
-    return message.channel.send({
-        fields: [{
-            name: 'Input',
-            value: '```js\n' + input + '```'
-        }, {
-            name: 'Output',
-            value: '```\n' + output + '```'
-        } ]
-    }).then(m => ({
-        status_code: err ? cmdResult.UNKNOWN_ERROR : cmdResult.SUCCESS,
+    await message.channel.send({
+        embed: {
+            fields: [
+                {
+                    name: 'Input',
+                    value: `\`\`\`js\n${input}\`\`\``
+                },
+                {
+                    name: 'Output',
+                    value: `\`\`\`js\n${output}\`\`\``
+                }
+            ]
+        }
+    });
+
+    return {
+        status_code: err
+            ? cmdResult.UNKNOWN_ERROR
+            : cmdResult.SUCCESS,
         target: 'script',
         arguments: JSON.stringify({ input: args.join(' ') }),
-    }));
+    };
 };
 
 exports.run = evaluate;

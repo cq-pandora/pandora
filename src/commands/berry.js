@@ -6,9 +6,10 @@ const {
 } = require('../util');
 const BerriesListEmbed = require('../embeds/BerriesEmbed');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}berry <name>`,
         fields: [
             {
@@ -18,41 +19,44 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const name = parseQuery(args);
 
     const candidates = berriesFuzzy.search(name);
 
     if (!candidates.length) {
-        return message.channel
-            .send('Berry not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                arguments: JSON.stringify({ name: name }),
-            }));
+        await message.channel.send('Berry not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            arguments: JSON.stringify({ name }),
+        };
     }
 
     const berries = candidates.map(c => followPath(c.path));
 
-    return new BerriesListEmbed(message, berries)
-        .send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: berries.map(b => b.id).join(','),
-            arguments: JSON.stringify({ name: name }),
-        }));
+    const embed = new BerriesListEmbed(message, berries);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: berries.map(b => b.id).join(','),
+        arguments: JSON.stringify({ name }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

@@ -1,15 +1,16 @@
 const { categories, cmdResult } = require('../util');
 
-exports.run = (message, args) => {
-    const e = {
+exports.run = async (message, args) => {
+    const embed = {
         description: '( ͡° ͜ʖ ͡°)'
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: 'lenny',
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: 'lenny',
+    };
 };
 
 exports.category = categories.MISC;

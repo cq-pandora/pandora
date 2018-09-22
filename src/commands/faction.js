@@ -6,9 +6,10 @@ const {
 } = require('../util');
 const { FactionsEmbed } = require('../embeds');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const msg = {
+
+    const embed = {
         title: `${prefix}faction [<name>]`,
         fields: [
             {
@@ -18,40 +19,43 @@ const instructions = (message) => {
         ]
     };
 
-    return message.channel
-        .send({ embed: msg })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const name = args.join(' ');
 
     const candidates = factionsFuzzy.search(name);
 
     if (!candidates.length) {
-        return message.channel
-            .send('Faction not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-            }));
+        await message.channel.send('Faction not found!');
+
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+        };
     }
 
     const factions = candidates.map(c => followPath(c.path));
 
-    return new FactionsEmbed(message, factions).send()
-        .then(m => ({
-            status_code: cmdResult.SUCCESS,
-            target: factions.map(f => f.id).join(','),
-            arguments: JSON.stringify({ name: name }),
-        }));
+    const embed = new FactionsEmbed(message, factions);
+
+    await embed.send();
+
+    return {
+        status_code: cmdResult.SUCCESS,
+        target: factions.map(f => f.id).join(','),
+        arguments: JSON.stringify({ name }),
+    };
 };
 
-exports.run = (message, args) => {
-    if (!args.length) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    !args.length
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.DB;

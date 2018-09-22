@@ -9,139 +9,207 @@ const {
     PaginationEmbed,
 } = require('../util');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}manage-translations <action> [<field>] [<name>] [<grade>] [<id>]`,
-        fields: [{
-            name: '<action>',
-            value: `Action to perform.\nCan be accept, decline, clear, list or list-all`
-        }, {
-            name: '<field>',
-            value: `Field to translate.\nCan be block-name, block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability`
-        }, {
-            name: '<name>',
-            value: `Hero name.\n**Important**: this should be single word, so test if bot can find what you want to translate by that word`
-        }, {
-            name: '<grade>',
-            value: `SBW or hero grade`
-        }, {
-            name: '<id>',
-            value: `ID of translations to accept or decline`
-        }
+        fields: [
+            {
+                name: '<action>',
+                value: `Action to perform.\nCan be accept, decline, clear, list or list-all`
+            },
+            {
+                name: '<field>',
+                value: `Field to translate.\nCan be block-name, block-description, passive-name, passive-description, lore, name, sbw-name or sbw-ability`
+            },
+            {
+                name: '<name>',
+                value: `Hero name.\n**Important**: this should be single word, so test if bot can find what you want to translate by that word`
+            },
+            {
+                name: '<grade>',
+                value: `SBW or hero grade`
+            },
+            {
+                name: '<id>',
+                value: `ID of translations to accept or decline`
+            }
         ],
         footer: { text: 'Argument order matters!' }
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
 const translationsToEmbeds = ts => {
-    let embeds = [];
-    const chunks = _.chunk(ts, 10);
+    const embeds = [];
 
-    for (var i = 0; i < chunks.length; i++) {
-        let embed = new MessageEmbed().setFooter(`Translations ${i * 10 + 1}-${i * 10 + chunks[i].length}/${ts.length}`);
-        for (const translation of chunks[i]) {
-            _.reduce(splitText(translation.text), (res, chunk, idx) => res.addField(idx ? '\u200b' : `${keysDescriptions[translation.key]}, ID: ${translation.id}`, chunk), embed);
+    let i = 0;
+    for (const translations of _.chunk(ts, 10)) {
+        const embed = new MessageEmbed()
+            .setFooter(`Translations ${i * 10 + 1}-${i * 10 + translations.length}/${ts.length}`);
+
+        for (const translation of translations) {
+            let atFirst = true;
+
+            for (const chunk of splitText(translation.text)) {
+                embed.addField(
+                    atFirst
+                        ? `${keysDescriptions[translation.key]}, ID: ${translation.id}`
+                        : '\u200b',
+                    chunk
+                );
+
+                atFirst = false;
+            }
         }
+
         embeds.push(embed);
+
+        i += 1;
     }
 
     return embeds;
 };
 
-const command = (message, args) => {
-    const action = args[0].toLowerCase();
+const actions = {
+    list: async (message, { key }) => {
+        try {
+            const list = translationsToEmbeds(await translations.list(key));
 
-    if (action === 'list-all') {
-        return translations.list()
-            .catch(e => { message.channel.send('Unable to list submitted translations. Please, contact bot owner.'); throw e; })
-            .then(translationsToEmbeds)
-            .then(r => r.length ? new PaginationEmbed(message)
-                .setArray(r)
+            if (!list.length) {
+                await message.channel.send('No pending translations!');
+            }
+
+            const embed = new PaginationEmbed(message)
+                .setArray(list)
                 .setAuthorizedUsers([message.author.id])
                 .setChannel(message.channel)
                 .showPageIndicator(false)
-                .build() : message.channel.send('No pending translations!')
-            )
-            .then(m => ({
-                status_code: cmdResult.SUCCESS,
-                target: '*',
-                arguments: JSON.stringify({ action: action }),
-            }));
+                .build();
+
+            await embed;
+        } catch (error) {
+            await message.channel.send('Unable to list submitted translations. Please, contact bot owner.');
+
+            throw error;
+        }
+    },
+    accept: async (message, { field }) => {
+        try {
+            await translations.accept(field);
+
+            await message.channel.send('Translation accepted!');
+        } catch (error) {
+            await message.channel.send('Unable to accept translation. Please, contact bot owner.');
+
+            throw error;
+        }
+    },
+    decline: async (message, { field }) => {
+        try {
+            await translations.decline(field);
+
+            await message.channel.send('Translation declined!');
+        } catch (error) {
+            await message.channel.send('Unable to decline translation. Please, contact bot owner.');
+
+            throw error;
+        }
+    },
+    clear: async (message, { key }) => {
+        try {
+            await translations.declineAllUnaccepted(key);
+
+            await message.channel.send('Translation cleared!');
+        } catch (error) {
+            await message.channel.send('Unable to clear translations. Please, contact bot owner.');
+
+            throw error;
+        }
+    }
+};
+
+actions['list-all'] = actions.list;
+
+const command = async (message, [nameAction, field, name, gradeStr]) => {
+    nameAction = nameAction.toLowerCase();
+    const grade = Number(gradeStr[3]) || undefined;
+
+    const action = actions[nameAction];
+
+    if (!action) {
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'action',
+            arguments: JSON.stringify({
+                action: nameAction,
+                field,
+                name,
+                grade
+            }),
+        };
     }
 
-    const field = args[1];
+    if (['accept', 'decline', 'list-all'].includes(nameAction)) {
+        await action(message, {
+            action: nameAction,
+            field
+        });
 
-    switch (action) {
-    case 'accept':
-        return translations.accept(field)
-            .catch(e => { message.channel.send('Unable to accept translation. Please, contact bot owner.'); throw e; })
-            .then(m => ({
-                status_code: cmdResult.SUCCESS,
-                target: field,
-                arguments: JSON.stringify({ action: action, field: field }),
-            }))
-            .then(r => message.channel.send('Translation accepted!'));
-    case 'decline':
-        return translations.decline(field)
-            .catch(e => { message.channel.send('Unable to decline translation. Please, contact bot owner.'); throw e; })
-            .then(m => ({
-                status_code: cmdResult.SUCCESS,
-                target: field,
-                arguments: JSON.stringify({ action: action, field: field }),
-            }))
-            .then(r => message.channel.send('Translation declined!'));
+        return {
+            status_code: cmdResult.SUCCESS,
+            target: field,
+            arguments: JSON.stringify({
+                action: nameAction,
+                field
+            }),
+        };
     }
 
-    const name = args[2];
-    const grade = parseInt(args[3]);
+    const [candidate] = heroesFuzzy.search(name);
 
-    const candidates = heroesFuzzy.search(name);
-
-    if (!candidates.length) {
-        return message.channel
-            .send('Hero not found!')
-            .then(m => ({
-                status_code: cmdResult.ENTITY_NOT_FOUND,
-                target: 'hero',
-            }));
+    if (!candidate) {
+        return {
+            status_code: cmdResult.ENTITY_NOT_FOUND,
+            target: 'hero',
+        };
     }
 
-    const hero = heroes[candidates.map(c => parseInt(c.path.split('.')[0]))[0]];
+    const hero = heroes[Number(candidate.path.split('.')[0])];
 
-    let form = null; let sbw = null;
-
+    let form = null;
+    let sbw = null;
     if (action.includes('sbw')) {
-        sbw = hero.sbws.filter(f => f.star === grade)[0];
+        sbw = hero.sbws.find(f => f.star === grade);
 
         if (!sbw) {
-            return message.channel
-                .send('Soulbound weapon grade not found!')
-                .then(m => ({
-                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-                    target: 'sbw',
-                }));
+            await message.channel.send('Soulbound weapon grade not found!');
+
+            return {
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                target: 'sbw',
+            };
         }
     } else {
-        form = hero.forms.filter(f => f.star === grade)[0];
+        form = hero.forms.find(f => f.star === grade);
 
         if (!form) {
-            return message.channel
-                .send('Hero grade not found!')
-                .then(m => ({
-                    status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
-                    target: 'hero',
-                }));
+            await message.channel.send('Hero grade not found!');
+
+            return {
+                status_code: cmdResult.ENTITY_GRADE_NOT_FOUND,
+                target: 'hero',
+            };
         }
     }
 
-    let key = null;
-
+    let key;
     switch (field) {
     case 'block-name': key = form.block_name; break;
     case 'block-description': key = form.block_description; break;
@@ -151,55 +219,41 @@ const command = (message, args) => {
     case 'name': key = form.name; break;
     case 'sbw-name': key = sbw.name; break;
     case 'sbw-ability': key = sbw.ability; break;
-    default: return message.channel
-        .send('Unknown field!')
-        .then(m => ({
+    }
+
+    if (!key) {
+        await message.channel.send('Unknown field!');
+
+        return {
             status_code: cmdResult.ENTITY_NOT_FOUND,
             target: 'field',
-        }));
+        };
     }
 
-    switch (action) {
-    case 'clear':
-        return translations.declineAllUnaccepted(key)
-            .catch(e => { message.channel.send('Unable to clear translations. Please, contact bot owner.'); throw e; })
-            .then(r => message.channel.send('Translation accepted!'))
-            .then(m => ({
-                status_code: cmdResult.SUCCESS,
-                target: key,
-                arguments: JSON.stringify({ action: action, field: field }),
-            }));
-    case 'list':
-        return translations.list(key)
-            .catch(e => { message.channel.send('Unable to list submitted translations. Please, contact bot owner.'); throw e; })
-            .then(translationsToEmbeds)
-            .then(r => new PaginationEmbed(message)
-                .setArray(r)
-                .setAuthorizedUsers([message.author.id])
-                .setChannel(message.channel)
-                .showPageIndicator(false)
-                .build()
-            )
-            .then(m => ({
-                status_code: cmdResult.SUCCESS,
-                target: key,
-                arguments: JSON.stringify({ action: action, field: field, key: key }),
-            }));
-    default: return message.channel
-        .send('Unknown action!')
-        .then(m => ({
-            status_code: cmdResult.ENTITY_NOT_FOUND,
-            target: 'action',
-            arguments: JSON.stringify({ action: action, field: field }),
-        }));
+    if (['list', 'clear'].includes(nameAction)) {
+        await action(message, {
+            action: nameAction,
+            field,
+            key
+        });
+
+        return {
+            status_code: cmdResult.SUCCESS,
+            target: key,
+            arguments: JSON.stringify({
+                action: nameAction,
+                field,
+                key
+            })
+        };
     }
 };
 
-exports.run = (message, args) => {
-    if (args.length < 1) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    args.length < 1
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.protected = true;
 exports.category = categories.PROTECTED;

@@ -1,45 +1,57 @@
+const aliases = require('../db/aliases');
 const { getPrefix } = require('../functions');
 const { categories, cmdResult } = require('../util');
-const aliases = require('../db/aliases');
 
-const instructions = (message) => {
+const instructions = async (message) => {
     const prefix = getPrefix(message);
-    const e = {
+
+    const embed = {
         title: `${prefix}alias <alias> <for>`,
-        fields: [{
-            name: '<alias>',
-            value: `Suggested alias. **Important**: alias can be single word only`
-        }, {
-            name: '<for>',
-            value: `Alias target`
-        }
+        fields: [
+            {
+                name: '<alias>',
+                value: `Suggested alias. **Important**: alias can be single word only`
+            },
+            {
+                name: '<for>',
+                value: `Alias target`
+            }
         ],
         footer: { text: 'Argument order matters!' }
     };
 
-    return message.channel.send({ embed: e })
-        .then(m => ({
-            status_code: cmdResult.NOT_ENOUGH_ARGS,
-        }));
+    await message.channel.send({ embed });
+
+    return {
+        status_code: cmdResult.NOT_ENOUGH_ARGS,
+    };
 };
 
-const command = (message, args) => {
+const command = async (message, args) => {
     const alias = args.shift();
     const fogh = args.join(' ');
-    return aliases.submit(alias, fogh)
-        .catch(e => { message.channel.send('Unable to submit your alias. Please, contact bot owner.'); throw e; })
-        .then(r => message.channel.send('Alias request submitted'))
-        .then(m => ({
-            target: fogh,
-            status_code: cmdResult.SUCCESS,
-            arguments: JSON.stringify({ alias: alias, for: fogh }),
-        }));
+
+    try {
+        await aliases.submit(alias, fogh);
+    } catch (error) {
+        await message.channel.send('Unable to submit your alias. Please, contact bot owner.');
+
+        throw error;
+    }
+
+    await message.channel.send('Alias request submitted');
+
+    return {
+        target: fogh,
+        status_code: cmdResult.SUCCESS,
+        arguments: JSON.stringify({ alias, for: fogh })
+    };
 };
 
-exports.run = (message, args) => {
-    if (args.length < 2) { return instructions(message); }
-
-    return command(message, args);
-};
+exports.run = (message, args) => (
+    args.length < 2
+        ? instructions(message)
+        : command(message, args)
+);
 
 exports.category = categories.UTIL;
