@@ -1,9 +1,19 @@
-const config = require('../config');
-const aliases = require('../db/aliases');
 const _ = require('lodash');
+const config = require('../config');
+const { get: getAliases } = require('../db/aliases');
 
-module.exports = () => aliases.get()
-    .then(ts => (_.reduce(ts, (r, t) => { r[(t.alias || '').toLocaleLowerCase()] = t.for; return r; }, config.aliases), ts))
-    .then(ts => _(ts).groupBy('for').entries().reduce((res, [fogh, aliases]) => { res[fogh] = aliases.map(a => a.alias); return res; }, config.reverseAliases));
+module.exports = async () => {
+    const databaseAliases = await getAliases();
+
+    for (const { for: aliasFor, alias = '' } of databaseAliases) {
+        config.aliases[alias.toLowerCase()] = aliasFor;
+    }
+
+    const aliasesGroupByFor = _.groupBy(databaseAliases, 'for');
+
+    for (const [fogh, aliases] of Object.entries(aliasesGroupByFor)) {
+        config.reverseAliases[fogh] = aliases.map(item => item.alias);
+    }
+};
 
 module.exports.errorCode = 3;

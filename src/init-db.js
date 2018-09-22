@@ -1,4 +1,5 @@
 const createDbManager = require('manage-database');
+
 const { db: dbConfig } = require('./config');
 
 const dbManager = createDbManager({
