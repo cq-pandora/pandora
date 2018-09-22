@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { imageUrl } = require('../functions');
 const {
     fileDb: { translate },
@@ -18,12 +19,12 @@ class SPSkillEmbed extends PaginationEmbed {
     constructor (initialMessage, skill, page) {
         super(initialMessage);
 
-        const embeds = skill.forms.map(form =>
+        const embeds = skill.forms.map(form => (
             new MessageEmbed()
                 .setTitle(`${translate(skill.name)} Lvl. ${form.level}`)
                 .setDescription(translate(form.description))
-                .setThumbnail(imageUrl('skills/' + form.image))
-        );
+                .setThumbnail(imageUrl(`skills/${form.image}`))
+        ));
 
         this.setArray(embeds)
             .showPageIndicator(false)

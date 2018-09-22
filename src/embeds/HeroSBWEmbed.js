@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { capitalizeFirstLetter, imageUrl, splitText } = require('../functions');
 const {
     fileDb: { translate },
@@ -19,13 +20,14 @@ class HeroFormsEmbed extends PaginationEmbed {
         super(initialMessage);
 
         const embeds = hero.sbws.map(sbw => {
-            const abilityChunks = splitText(translate(sbw.ability));
-            let embed = new MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle(`${translate(sbw.name)} (${sbw.star}★)`)
-                .setThumbnail(imageUrl('weapons/' + sbw.image));
+                .setThumbnail(imageUrl(`weapons/${sbw.image}`));
 
-            for (const i in abilityChunks) {
-                embed = embed.addField('\u200b', abilityChunks[i]);
+            const abilityChunks = splitText(translate(sbw.ability));
+
+            for (const abilityChunk of abilityChunks) {
+                embed.addField('\u200b', abilityChunk);
             }
 
             return embed

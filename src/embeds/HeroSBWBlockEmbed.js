@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { imageUrl, splitText } = require('../functions');
 const {
     fileDb: { translate },
@@ -19,26 +20,27 @@ class HeroFormsEmbed extends PaginationEmbed {
         super(initialMessage);
 
         const embeds = hero.sbws.map(sbw => {
-            const form = hero.forms.filter(f => f.star === sbw.star)[0];
-            let embed = new MessageEmbed()
+            const form = hero.forms.find(f => f.star === sbw.star);
+
+            const embed = new MessageEmbed()
                 .setTitle(`${translate(form.name)} (${form.star}★)`)
-                .setThumbnail(imageUrl('skills/' + form.block_image))
+                .setThumbnail(imageUrl(`skills/${form.block_image}`))
                 .addField(`${translate(form.block_name)} (Lv. ${form.skill_lvl})`, translate(form.block_description));
 
             const abilityChunks = splitText(translate(form.passive_description));
 
             embed.addField(translate(form.passive_name), abilityChunks[0]);
 
-            for (let i = 1; i < abilityChunks.length; i++) {
-                embed = embed.addField('\u200b', abilityChunks[i]);
+            for (const abilityChunk of abilityChunks) {
+                embed.addField('\u200b', abilityChunk);
             }
 
             const sbwChunks = splitText(translate(sbw.ability));
 
             embed.addField('SBW effect', sbwChunks[0]);
 
-            for (let i = 1; i < sbwChunks.length; i++) {
-                embed = embed.addField('\u200b', sbwChunks[i]);
+            for (const sbwChunk of abilityChunks) {
+                embed.addField('\u200b', sbwChunk);
             }
 
             return embed;

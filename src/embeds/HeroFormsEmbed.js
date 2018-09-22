@@ -1,5 +1,6 @@
-const PaginationEmbed = require('./PaginationEmbed');
 const { MessageEmbed } = require('discord.js');
+
+const PaginationEmbed = require('./PaginationEmbed');
 const { capitalizeFirstLetter, imageUrl } = require('../functions');
 const {
     fileDb: { translate },
@@ -18,19 +19,23 @@ class HeroFormsEmbed extends PaginationEmbed {
     constructor (initialMessage, hero, page) {
         super(initialMessage);
 
-        const embeds = hero.forms.map(form =>
+        const embeds = hero.forms.map(form => (
             new MessageEmbed()
                 .setTitle(`${translate(form.name)} (${form.star}★)`)
                 .setDescription(translate(form.lore))
-                .setThumbnail(imageUrl('heroes/' + form.image))
-        );
+                .setThumbnail(imageUrl(`heroes/${form.image}`))
+        ));
+
+        const faction = (!hero.domain || hero.domain === 'NONEGROUP')
+            ? '-'
+            : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`);
 
         this.setArray(embeds)
             .showPageIndicator(false)
             .setColor(classColors[hero.class])
             .addField('Class', capitalizeFirstLetter(hero.class), true)
             .addField('Type', capitalizeFirstLetter(hero.type), true)
-            .addField('Faction', (!hero.domain || hero.domain === 'NONEGROUP') ? '-' : translate(`TEXT_CHAMPION_DOMAIN_${hero.domain}`), true)
+            .addField('Faction', faction, true)
             .addField('Gender', capitalizeFirstLetter(hero.gender), true);
 
         if (page) {
