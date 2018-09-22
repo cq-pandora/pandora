@@ -65,7 +65,7 @@
     "init-db": "node src/init-db.js",
     "start": "node src/index.js",
     "test": "npm run test:eslint",
-    "test:eslint": "eslint ./src --ignore-path .gitignore .",
+    "test:eslint": "eslint ./src",
     "test:eslint:fix": "npm run test:eslint -- --fix"
   },
   "devDependencies": {
