@@ -1,0 +1,12 @@
+{
+    "defaultEnv": "local",
+    "local": {
+        "host":  {"ENV": "PANDORA_DB_HOST"},
+        "user": {"ENV": "PANDORA_DB_USER"},
+        "password": {"ENV": "PANDORA_DB_PASSWORD"},
+        "database": {"ENV": "PANDORA_DB_DATABASE"},
+        "port": {"ENV": "PANDORA_DB_PORT"},
+        "driver": "mysql",
+        "multipleStatements": true
+    }
+}

@@ -1,13 +1,11 @@
 # packages
 node_modules
 
-# privy to me
-config.json
-
-database.json
-
 .gitignore
 .data
 
 .vscode/
 .idea/
+yarn-error.log
+
+.env

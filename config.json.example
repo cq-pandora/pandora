@@ -1,8 +1,0 @@
-{
-  "token": "",
-  "prefix": "!",
-  "localImagePrefix": "path/to/images/dirs/cq-data-parse",
-  "parsedData": "path/to/information/files/cq-data-parse",
-  "imagePrefix": "",
-  "imageSuffix": ""
-}

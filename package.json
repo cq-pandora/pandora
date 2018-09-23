@@ -1,6 +1,6 @@
 {
   "name": "cq-pandora",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "main": "./src/index.js",
   "license": "MIT",
   "private": true,
@@ -57,6 +57,7 @@
     "db-migrate-mysql": "^1.1.10",
     "discord-paginationembed": "github:gazmull/discord-paginationembed",
     "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^6.0.0",
     "fuse.js": "^3.2.1",
     "jimp": "^0.5.0",
     "js-beautify": "^1.7.5",
@@ -66,12 +67,14 @@
     "mysql2": "^1.6.1"
   },
   "scripts": {
-    "migrate-up": "db-migrate up",
-    "init-db": "node src/init-db.js",
-    "start": "node src/index.js",
-    "test": "npm run test:eslint",
+    "db:init": "node src/init-db.js",
+    "db:migrate": "yarn run db:migrate:up",
+    "db:migrate:up": "db-migrate up",
+    "db:migrate:down": "db-migrate down",
+    "start": "node --require dotenv/config src/index.js",
+    "test": "yarn run test:eslint",
     "test:eslint": "eslint ./src",
-    "test:eslint:fix": "npm run test:eslint -- --fix"
+    "test:eslint:fix": "yarn run test:eslint -- --fix"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
