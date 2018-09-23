@@ -5,7 +5,7 @@ const { join: pathJoin } = require('path');
 const Config = require('./Config');
 
 const loadRootConfig = (path) => {
-    path = pathJoin(process.cwd(), path);
+    path = pathJoin(__dirname, '../../', path);
 
     return require(path);
 };
