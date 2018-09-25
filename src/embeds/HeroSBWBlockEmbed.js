@@ -29,7 +29,7 @@ class HeroFormsEmbed extends PaginationEmbed {
 
             const abilityChunks = splitText(translate(form.passive_description));
 
-            embed.addField(translate(form.passive_name), abilityChunks[0]);
+            embed.addField(translate(form.passive_name), abilityChunks.shift());
 
             for (const abilityChunk of abilityChunks) {
                 embed.addField('\u200b', abilityChunk);
@@ -37,9 +37,9 @@ class HeroFormsEmbed extends PaginationEmbed {
 
             const sbwChunks = splitText(translate(sbw.ability));
 
-            embed.addField('SBW effect', sbwChunks[0]);
+            embed.addField('SBW effect', sbwChunks.shift());
 
-            for (const sbwChunk of abilityChunks) {
+            for (const sbwChunk of sbwChunks) {
                 embed.addField('\u200b', sbwChunk);
             }
 
