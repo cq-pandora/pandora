@@ -50,9 +50,8 @@ module.exports = (client) => {
 
         if (!(
             message.guild === null ||
-            message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true }) ||
             getPermittedCommands(message).includes(executable.name)
-        )) {
+        ) && !message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true })) {
             await message.channel.send('This command is forbidden here!');
             return;
         }

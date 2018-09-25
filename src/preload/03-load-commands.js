@@ -10,7 +10,7 @@ const EXTENSION = '.js';
 const commandsDir = pathJoin(__dirname, '../commands/');
 
 module.exports = async () => {
-    const commands = {};
+    const commands = config.commands;
 
     for (const file of await readdir(commandsDir)) {
         if (!file.endsWith(EXTENSION)) {
