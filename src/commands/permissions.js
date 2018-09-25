@@ -1,13 +1,9 @@
-const _ = require('lodash');
-const { MessageEmbed } = require('discord.js');
-
 const { permissions } = require('../config');
-const { set:setPermissions, clear:clearPermissions } = require('../db/permissions');
+const { set: setPermissions, clear: clearPermissions } = require('../db/permissions');
 const { getPrefix, extractMentions, parseQuery } = require('../functions');
 const {
     categories,
     cmdResult,
-    PaginationEmbed,
 } = require('../util');
 
 const instructions = async (message) => {
@@ -28,8 +24,7 @@ const instructions = async (message) => {
                 value: `Anything that is not mention and not fist argument is treated as command.
                 If not specified, list will be cleared`
             }
-        ],
-        footer: { text: 'Argument order matters!' }
+        ]
     };
 
     await message.channel.send({ embed });
@@ -37,28 +32,6 @@ const instructions = async (message) => {
     return {
         status_code: cmdResult.NOT_ENOUGH_ARGS,
     };
-};
-
-const aliasesToEmbeds = ts => {
-    const embeds = [];
-
-    const chunks = _.chunk(_.groupBy(ts, 'for'), 10);
-
-    let i = 0;
-    for (const chunk of chunks) {
-        const embed = new MessageEmbed()
-            .setFooter(`Page ${i}/${chunks.length}`);
-
-        for (const [key, value] of chunk) {
-            embed.addField(key, _.truncate(value.map(a => a.for).join(', '), 1024));
-        }
-
-        embeds.push(embed);
-
-        i += 1;
-    }
-
-    return embeds;
 };
 
 const modes = {
@@ -73,7 +46,15 @@ const command = async (message, args) => {
 
         return {
             status_code: cmdResult.WRONG_CHANNEL_TYPE,
-        }
+        };
+    }
+
+    if (!message.member.hasPermission('MANAGE_GUILD', { checkAdmin: true, checkOwner: true })) {
+        await message.channel.send('You must be able to manage server in order to edit permissions!');
+
+        return {
+            status_code: cmdResult.NOT_ENOUGH_PERMISSIONS,
+        };
     }
 
     const modeName = args.shift().toLowerCase();
@@ -86,7 +67,7 @@ const command = async (message, args) => {
         return {
             status_code: cmdResult.ENTITY_NOT_FOUND,
             target: 'mode',
-            arguments: JSON.stringify({ mode: modeName}),
+            arguments: JSON.stringify({ mode: modeName }),
         };
     }
 
@@ -107,7 +88,7 @@ const command = async (message, args) => {
         await setPermissions(message.guild.id, shouldBeSet);
     }
 
-    if (shouldBeCleared.length){
+    if (shouldBeCleared.length) {
         await clearPermissions(shouldBeCleared);
     }
 
@@ -125,11 +106,9 @@ const command = async (message, args) => {
 };
 
 exports.run = (message, args) => (
-    args.length < 2
+    args.length < 1
         ? instructions(message)
         : command(message, args)
 );
-
-exports.protected = true;
 
 exports.category = categories.PROTECTED;

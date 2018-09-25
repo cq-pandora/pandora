@@ -25,6 +25,8 @@ const readdir = promisify(fs.readdir).bind(fs);
         }
     }
 
+    client.on('ready', () => require('./events/ready')(client));
+
     await client.login(config.token);
 
     loadEvents(client);

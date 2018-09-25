@@ -33,7 +33,7 @@ root.commands = {};
 root.aliases = {};
 root.reverseAliases = {};
 
-/*{
+/* {
     '<server_id>': {
         users: {
             '<user_id>': {
@@ -64,11 +64,11 @@ const defaultPriorities = {
     role: 1,
 };
 
-root.permissions.set = (function (normalizedPermission) {
+root.permissions.set = function (normalizedPermission) {
     const [serverId, targetType, targetID, mode, commands, priority] = normalizedPermission;
 
     const serverPermissions = this[serverId] || {};
-    const { users = {}, channels = {}, roles = {}} = serverPermissions;
+    const { users = {}, channels = {}, roles = {} } = serverPermissions;
 
     const collection = ({
         user: users,
@@ -87,9 +87,9 @@ root.permissions.set = (function (normalizedPermission) {
     serverPermissions.roles = roles;
 
     this[serverId] = serverPermissions;
-}).bind(root.permissions);
+}.bind(root.permissions);
 
-root.permissions.merge = (function (normalizedPermission) {
+root.permissions.merge = function (normalizedPermission) {
     const [serverID, targetType, targetID, mode, rawCommands, priority] = normalizedPermission;
 
     if (!rawCommands.length) {
@@ -105,7 +105,7 @@ root.permissions.merge = (function (normalizedPermission) {
     const commands = rawCommands.filter(c => commandNames.includes(c));
 
     const serverPermissions = this[serverID] || {};
-    const { users = {}, channels = {}, roles = {}} = serverPermissions;
+    const { users = {}, channels = {}, roles = {} } = serverPermissions;
 
     const collection = ({
         user: users,
@@ -114,9 +114,9 @@ root.permissions.merge = (function (normalizedPermission) {
     })[targetType];
 
     const {
-        mode:currentMode = null,
-        commands:currentCommands = [],
-        priority:currentPriority = defaultPriorities[targetType]
+        mode: currentMode = null,
+        commands: currentCommands = [],
+        priority: currentPriority = defaultPriorities[targetType]
     } = collection[targetID] || {};
 
     let merged;
@@ -149,7 +149,7 @@ root.permissions.merge = (function (normalizedPermission) {
         commands: merged.commands,
         priority: merged.priority
     };
-}).bind(root.permissions);
+}.bind(root.permissions);
 
 root.get = (path, defaultValue = null) => {
     if (!path) {

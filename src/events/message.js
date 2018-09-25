@@ -9,10 +9,10 @@ function getPermittedCommands (message) {
         return Object.keys(commands);
     }
 
-    const { users = {}, channels = {}, roles = {}} = serverPermissions;
+    const { users = {}, channels = {}, roles = {} } = serverPermissions;
 
     const userList = users[message.member.id];
-    const channelList= channels[message.channel.id];
+    const channelList = channels[message.channel.id];
     const rolesLists = message.member.roles.map(r => roles[r.id]);
 
     const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => list.priority);
@@ -72,7 +72,11 @@ module.exports = (client) => {
             return;
         }
 
-        if (!(message.guild === null || getPermittedCommands(message).includes(executable.name))) {
+        if (!(
+            message.guild === null ||
+            message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true }) ||
+            getPermittedCommands(message).includes(executable.name)
+        )) {
             await message.channel.send('This command is forbidden here!');
             return;
         }

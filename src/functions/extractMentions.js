@@ -10,12 +10,13 @@ module.exports = (messageText) => {
     for (const mentionType in regexes) {
         let match;
 
+        // eslint-disable-next-line no-cond-assign
         while (match = regexes[mentionType].exec(messageText)) {
             res.push({
                 type: mentionType,
                 id: match[1],
                 text: match[0],
-            })
+            });
         }
     }
 

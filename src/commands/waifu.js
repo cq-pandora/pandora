@@ -11,14 +11,14 @@ exports.run = async (message) => {
     const hero = heroes[random(0, heroes.length - 1)];
 
     await message.channel.send({
-       embed: {
-           image: {
-               url: imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`),
-           },
-           footer: {
-               text: `${message.author.username}#${message.author.discriminator}`,
-           }
-       }
+        embed: {
+            image: {
+                url: imageUrl(`heroes/${hero.forms[hero.forms.length - 1].image}`),
+            },
+            footer: {
+                text: `${message.author.username}#${message.author.discriminator}`,
+            }
+        }
     });
 
     return {
