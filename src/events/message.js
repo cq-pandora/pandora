@@ -1,6 +1,23 @@
 const stats = require('../db/stats');
 const { cmdResult, categories } = require('../util');
-const { prefix, aliases, commands, owner_id: ownerId } = require('../config');
+const { prefix, aliases, commands, owner_id: ownerId, permissions } = require('../config');
+
+function getPermittedCommands (message) {
+    const serverPermissions = permissions[message.guild.id];
+
+    if (!serverPermissions) return Object.keys(commands);
+
+    const userList = serverPermissions.users[message.member.id];
+    const channelList= (serverPermissions.channels || {})[message.channel.id];
+    const rolesLists = message.member.roles.map(r => (serverPermissions.roles || {})[r.id]);
+
+    const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => -list.priority);
+
+    return sortedLists.reduce(
+        (res, list) => list.mode ? list.commands : res.filter(cmd => list.includes(cmd)),
+        sortedLists[0].mode ? sortedLists[0].commands : Object.keys(commands),
+    );
+}
 
 module.exports = (client) => {
     const mentionRe = new RegExp(`^<@!?${client.user.id}>`);
@@ -44,6 +61,11 @@ module.exports = (client) => {
 
         if (!executable) {
             // message.channel.send('Command not found!');
+            return;
+        }
+
+        if (!(message.guild === null || getPermittedCommands(message).includes(executable.name))) {
+            await message.channel.send('This command is forbidden here!');
             return;
         }
 

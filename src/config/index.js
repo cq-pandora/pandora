@@ -32,6 +32,31 @@ root.emojis = loadRootConfig('emojis.json');
 root.aliases = {};
 root.reverseAliases = {};
 
+/*{
+    '<server_id>': {
+        users: {
+            '<user_id>': {
+                mode: 1, // 0 for blacklist
+                commands: ['help'],
+            }
+        },
+        roles: {
+            'roles_id': {
+                mode: 0, // 1 for whitelist
+                commands: ['about'],
+            }
+        },
+        channels: {
+            'channel_id': {
+                mode: 0, // 1 for whitelist
+                commands: ['pull'],
+            }
+        }
+    }
+}
+ */
+root.permissions = {};
+
 root.get = (path, defaultValue = null) => {
     if (!path) {
         return defaultValue;
