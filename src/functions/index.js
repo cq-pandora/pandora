@@ -19,4 +19,5 @@ module.exports = {
     makeInRange: require('./makeInRange'),
     pickGrade: require('./pickGrade'),
     extractMentions: require('./extractMentions'),
+    getPermittedCommands: require('./getPermittedCommands'),
 };
