@@ -69,7 +69,7 @@ module.exports = (client) => {
         };
 
         try {
-            if ((executable.protected || executable.category === categories.PROTECTED) && message.author.id !== ownerId) {
+            if (executable.protected && message.author.id !== ownerId) {
                 await message.channel.send('No enough permissions!');
 
                 stat.status_code = cmdResult.NOT_ENOUGH_PERMISSIONS;
