@@ -13,7 +13,7 @@ const instructions = async (message) => {
         fields: [
             {
                 name: '<mode>',
-                value: `Filter mode. Can be whitelist, blacklist or remove`
+                value: `Filter mode. Can be **w**hitelist, **b**lacklist or **r**emove`
             },
             {
                 name: '<targets>',
@@ -35,6 +35,9 @@ const instructions = async (message) => {
 };
 
 const modes = {
+    w: 1,
+    b: 0,
+    r: -1,
     whitelist: 1,
     blacklist: 0,
     remove: -1,
