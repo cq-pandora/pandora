@@ -15,6 +15,10 @@ module.exports = (message) => {
 
     const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => list.priority);
 
+    if (!sortedLists.length) {
+        return Object.keys(commands);
+    }
+
     return sortedLists.reduce(
         (res, list) => list.mode
             ? list.commands
