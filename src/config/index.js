@@ -29,6 +29,7 @@ root.db = new Config({
 }, 'PANDORA_DB_');
 
 root.emojis = loadRootConfig('emojis.json');
+root.commands = {};
 root.aliases = {};
 root.reverseAliases = {};
 
@@ -56,6 +57,99 @@ root.reverseAliases = {};
 }
  */
 root.permissions = {};
+
+const defaultPriorities = {
+    user: 3,
+    channel: 2,
+    role: 1,
+};
+
+root.permissions.set = (function (normalizedPermission) {
+    const [serverId, targetType, targetID, mode, commands, priority] = normalizedPermission;
+
+    const serverPermissions = this[serverId] || {};
+    const { users = {}, channels = {}, roles = {}} = serverPermissions;
+
+    const collection = ({
+        user: users,
+        channel: channels,
+        role: roles,
+    })[targetType];
+
+    collection[targetID] = {
+        mode: mode,
+        commands: commands.split(','),
+        priority: priority || defaultPriorities[targetType],
+    };
+
+    serverPermissions.users = users;
+    serverPermissions.channels = channels;
+    serverPermissions.roles = roles;
+
+    this[serverId] = serverPermissions;
+}).bind(root.permissions);
+
+root.permissions.merge = (function (normalizedPermission) {
+    const [serverID, targetType, targetID, mode, rawCommands, priority] = normalizedPermission;
+
+    if (!rawCommands.length) {
+        return {
+            serverID: serverID,
+            targetType,
+            targetID,
+            commands: [],
+        };
+    }
+
+    const commandNames = Object.keys(root.commands);
+    const commands = rawCommands.filter(c => commandNames.includes(c));
+
+    const serverPermissions = this[serverID] || {};
+    const { users = {}, channels = {}, roles = {}} = serverPermissions;
+
+    const collection = ({
+        user: users,
+        channel: channels,
+        role: roles,
+    })[targetType];
+
+    const {
+        mode:currentMode = null,
+        commands:currentCommands = [],
+        priority:currentPriority = defaultPriorities[targetType]
+    } = collection[targetID] || {};
+
+    let merged;
+
+    if (currentMode === mode) {
+        merged = {
+            mode: mode,
+            priority: priority || currentPriority,
+            commands: _.uniq(currentCommands.concat(commands)),
+        };
+    } else if (mode < 0) {
+        merged = {
+            mode: currentMode,
+            priority: currentPriority,
+            commands: _.pullAll(currentCommands, commands),
+        };
+    } else {
+        merged = {
+            mode: mode,
+            priority: priority || defaultPriorities[targetType],
+            commands: commands,
+        };
+    }
+
+    return {
+        serverId: serverID,
+        targetType,
+        targetID,
+        mode: merged.mode,
+        commands: merged.commands,
+        priority: merged.priority
+    };
+}).bind(root.permissions);
 
 root.get = (path, defaultValue = null) => {
     if (!path) {

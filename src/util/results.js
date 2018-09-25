@@ -7,4 +7,5 @@ module.exports = {
     ENTITY_GRADE_NOT_FOUND: 4,
     UNKNOWN_ERROR: 5,
     SUBENTITY_NOT_FOUND: 6,
+    WRONG_CHANNEL_TYPE: 7,
 };

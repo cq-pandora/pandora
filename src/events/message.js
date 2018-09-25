@@ -5,17 +5,25 @@ const { prefix, aliases, commands, owner_id: ownerId, permissions } = require('.
 function getPermittedCommands (message) {
     const serverPermissions = permissions[message.guild.id];
 
-    if (!serverPermissions) return Object.keys(commands);
+    if (!serverPermissions) {
+        return Object.keys(commands);
+    }
 
-    const userList = serverPermissions.users[message.member.id];
-    const channelList= (serverPermissions.channels || {})[message.channel.id];
-    const rolesLists = message.member.roles.map(r => (serverPermissions.roles || {})[r.id]);
+    const { users = {}, channels = {}, roles = {}} = serverPermissions;
 
-    const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => -list.priority);
+    const userList = users[message.member.id];
+    const channelList= channels[message.channel.id];
+    const rolesLists = message.member.roles.map(r => roles[r.id]);
+
+    const sortedLists = [userList, channelList, ...rolesLists].filter(Boolean).sort(list => list.priority);
 
     return sortedLists.reduce(
-        (res, list) => list.mode ? list.commands : res.filter(cmd => list.includes(cmd)),
-        sortedLists[0].mode ? sortedLists[0].commands : Object.keys(commands),
+        (res, list) => list.mode
+            ? list.commands
+            : res.filter(cmd => !list.commands.includes(cmd)),
+        sortedLists[0].mode
+            ? sortedLists[0].commands
+            : Object.keys(commands),
     );
 }
 
