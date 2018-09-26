@@ -5,27 +5,27 @@ const { join: pathJoin } = require('path');
 const Config = require('./Config');
 
 const loadRootConfig = (path) => {
-    path = pathJoin(__dirname, '../../', path);
+	path = pathJoin(__dirname, '../../', path);
 
-    return require(path);
+	return require(path);
 };
 
 const root = new Config({
-    TOKEN: 'token',
-    PREFIX: 'prefix',
-    CQ_NORMALIZED_DATA_PATH: 'parsedData',
-    LOCAL_IMAGES_PREFIX: 'localImagePrefix',
-    URL_IMAGES_PREFIX: 'imagePrefix',
-    IMAGES_SUFFIX: 'imageSuffix',
-    OWNER_ID: 'owner_id',
+	TOKEN: 'token',
+	PREFIX: 'prefix',
+	CQ_NORMALIZED_DATA_PATH: 'parsedData',
+	LOCAL_IMAGES_PREFIX: 'localImagePrefix',
+	URL_IMAGES_PREFIX: 'imagePrefix',
+	IMAGES_SUFFIX: 'imageSuffix',
+	OWNER_ID: 'owner_id',
 }, 'PANDORA_');
 
 root.db = new Config({
-    USER: 'user',
-    PASSWORD: 'password',
-    HOST: 'host',
-    PORT: 'port',
-    DATABASE: 'database',
+	USER: 'user',
+	PASSWORD: 'password',
+	HOST: 'host',
+	PORT: 'port',
+	DATABASE: 'database',
 }, 'PANDORA_DB_');
 
 root.emojis = loadRootConfig('emojis.json');
@@ -59,104 +59,107 @@ root.reverseAliases = {};
 root.permissions = {};
 
 const defaultPriorities = {
-    user: 3,
-    channel: 2,
-    role: 1,
+	user: 3,
+	channel: 2,
+	role: 1,
 };
 
-root.permissions.set = function (normalizedPermission) {
-    const [serverId, targetType, targetID, mode, commands, priority] = normalizedPermission;
+function setPermission(normalizedPermission) {
+	const [serverId, targetType, targetID, mode, commands, priority] = normalizedPermission;
 
-    const serverPermissions = this[serverId] || {};
-    const { users = {}, channels = {}, roles = {} } = serverPermissions;
+	const serverPermissions = this[serverId] || {};
+	const { users = {}, channels = {}, roles = {} } = serverPermissions;
 
-    const collection = ({
-        user: users,
-        channel: channels,
-        role: roles,
-    })[targetType];
+	const collection = ({
+		user: users,
+		channel: channels,
+		role: roles,
+	})[targetType];
 
-    collection[targetID] = {
-        mode: mode,
-        commands: commands.split(','),
-        priority: priority || defaultPriorities[targetType],
-    };
+	collection[targetID] = {
+		mode,
+		commands: commands.split(','),
+		priority: priority || defaultPriorities[targetType],
+	};
 
-    serverPermissions.users = users;
-    serverPermissions.channels = channels;
-    serverPermissions.roles = roles;
+	serverPermissions.users = users;
+	serverPermissions.channels = channels;
+	serverPermissions.roles = roles;
 
-    this[serverId] = serverPermissions;
-}.bind(root.permissions);
+	this[serverId] = serverPermissions;
+}
 
-root.permissions.merge = function (normalizedPermission) {
-    const [serverID, targetType, targetID, mode, rawCommands, priority] = normalizedPermission;
+function mergePermissions(normalizedPermission) {
+	const [serverID, targetType, targetID, mode, rawCommands, priority] = normalizedPermission;
 
-    if (!rawCommands.length) {
-        return {
-            serverID: serverID,
-            targetType,
-            targetID,
-            commands: [],
-        };
-    }
+	if (!rawCommands.length) {
+		return {
+			serverID,
+			targetType,
+			targetID,
+			commands: [],
+		};
+	}
 
-    const commandNames = Object.keys(root.commands);
-    const commands = rawCommands.filter(c => commandNames.includes(c));
+	const commandNames = Object.keys(root.commands);
+	const commands = rawCommands.filter(c => commandNames.includes(c));
 
-    const serverPermissions = this[serverID] || {};
-    const { users = {}, channels = {}, roles = {} } = serverPermissions;
+	const serverPermissions = this[serverID] || {};
+	const { users = {}, channels = {}, roles = {} } = serverPermissions;
 
-    const collection = ({
-        user: users,
-        channel: channels,
-        role: roles,
-    })[targetType];
+	const collection = ({
+		user: users,
+		channel: channels,
+		role: roles,
+	})[targetType];
 
-    const {
-        mode: currentMode = null,
-        commands: currentCommands = [],
-        priority: currentPriority = defaultPriorities[targetType]
-    } = collection[targetID] || {};
+	const {
+		mode: currentMode = null,
+		commands: currentCommands = [],
+		priority: currentPriority = defaultPriorities[targetType]
+	} = collection[targetID] || {};
 
-    let merged;
+	let merged;
 
-    if (currentMode === mode) {
-        merged = {
-            mode: mode,
-            priority: priority || currentPriority,
-            commands: _.uniq(currentCommands.concat(commands)),
-        };
-    } else if (mode < 0) {
-        merged = {
-            mode: currentMode,
-            priority: currentPriority,
-            commands: _.pullAll(currentCommands, commands),
-        };
-    } else {
-        merged = {
-            mode: mode,
-            priority: priority || defaultPriorities[targetType],
-            commands: commands,
-        };
-    }
+	if (currentMode === mode) {
+		merged = {
+			mode,
+			priority: priority || currentPriority,
+			commands: _.uniq(currentCommands.concat(commands)),
+		};
+	} else if (mode < 0) {
+		merged = {
+			mode: currentMode,
+			priority: currentPriority,
+			commands: _.pullAll(currentCommands, commands),
+		};
+	} else {
+		merged = {
+			mode,
+			priority: priority || defaultPriorities[targetType],
+			commands,
+		};
+	}
 
-    return {
-        serverId: serverID,
-        targetType,
-        targetID,
-        mode: merged.mode,
-        commands: merged.commands,
-        priority: merged.priority
-    };
-}.bind(root.permissions);
+	return {
+		serverId: serverID,
+		targetType,
+		targetID,
+		mode: merged.mode,
+		commands: merged.commands,
+		priority: merged.priority
+	};
+}
+
+root.permissions.set = setPermission.bind(root.permissions);
+root.permissions.merge = mergePermissions.bind(root.permissions);
 
 root.get = (path, defaultValue = null) => {
-    if (!path) {
-        return defaultValue;
-    }
+	if (!path) {
+		return defaultValue;
+	}
 
-    return _.get(root, path, defaultValue);
+	return _.get(root, path, defaultValue);
 };
 
 module.exports = root;

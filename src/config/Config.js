@@ -1,11 +1,11 @@
-const env = process.env;
+const { env } = process;
 
 module.exports = class Config {
-    constructor (envKeyMap, prefix) {
-        prefix = prefix || '';
+	constructor(envKeyMap, prefix) {
+		prefix = prefix || '';
 
-        for (const envKey of Object.keys(envKeyMap)) {
-            this[envKeyMap[envKey]] = env[`${prefix}${envKey}`];
-        }
-    }
+		for (const envKey of Object.keys(envKeyMap)) {
+			this[envKeyMap[envKey]] = env[`${prefix}${envKey}`];
+		}
+	}
 };

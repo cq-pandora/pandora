@@ -1,5 +1,5 @@
 module.exports = (res, v) => {
-    res[v.id] = v;
+	res[v.id] = v;
 
-    return res;
+	return res;
 };

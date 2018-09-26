@@ -1,59 +1,57 @@
 const connect = require('./connect');
 const { permissions } = require('../config');
 
-const SET_PERMISSIONS =
-`INSERT INTO color_lists (server_id, target_type, target_id, mode, commands, priority) VALUES ? 
+const SET_PERMISSIONS = `INSERT INTO color_lists (server_id, target_type, target_id, mode, commands, priority) VALUES ? 
     ON DUPLICATE KEY UPDATE commands = VALUES(commands), mode = VALUES(mode), priority = VALUES(priority);`;
 const CLEAR_PERMISSIONS = 'DELETE FROM color_lists WHERE (`server_id`, `target_id`, `target_type`) IN (?);';
 const GET_ALL_PERMISSIONS = 'SELECT `server_id`, `target_type`, `target_id`, `mode`, `commands`, `priority` FROM color_lists;';
 const GET_FOR_SERVER = 'SELECT `server_id`, `target_type`, `target_id`, `mode`, `commands`, `priority` FROM color_lists WHERE `server_id` = ?';
 
 exports.set = async (serverId, toInsert) => {
-    try {
-        const normalizedPermissions = toInsert.map(p =>
-            [serverId, p.targetType, p.targetID, p.mode, p.commands.join(','), p.priority]
-        );
+	try {
+		const normalizedPermissions = toInsert.map(
+			p => [serverId, p.targetType, p.targetID, p.mode, p.commands.join(','), p.priority]
+		);
 
-        await connect.query(SET_PERMISSIONS, [normalizedPermissions]);
+		await connect.query(SET_PERMISSIONS, [normalizedPermissions]);
 
-        normalizedPermissions.forEach(permissions.set);
-    } catch (err) {
-        console.log('Error setting permissions:', permissions);
-        console.log(err);
+		normalizedPermissions.forEach(permissions.set);
+	} catch (err) {
+		console.log('Error setting permissions:', permissions);
+		console.log(err);
 
-        throw err;
-    }
+		throw err;
+	}
 };
 
 exports.clear = async (toClear) => {
-    try {
-        await connect.query(CLEAR_PERMISSIONS, [toClear.map(p => [p.serverID, p.targetID, p.targetType])]);
+	try {
+		await connect.query(CLEAR_PERMISSIONS, [toClear.map(p => [p.serverID, p.targetID, p.targetType])]);
 
-        toClear.map(p => permissions.set([p.serverID, p.targetType, p.targetID, 0, '']));
-    } catch (err) {
-        console.log(`Error clearing permissions for ${toClear.map(p => `${p.targetID}@${p.targetType}`)}`);
-        console.log(err);
+		toClear.map(p => permissions.set([p.serverID, p.targetType, p.targetID, 0, '']));
+	} catch (err) {
+		console.log(`Error clearing permissions for ${toClear.map(p => `${p.targetID}@${p.targetType}`)}`);
+		console.log(err);
 
-        throw err;
-    }
+		throw err;
+	}
 };
 
 exports.list = async (serverID = null) => {
-    try {
-        const sql = serverID
-            ? GET_FOR_SERVER
-            : GET_ALL_PERMISSIONS;
+	try {
+		const sql = serverID
+			? GET_FOR_SERVER
+			: GET_ALL_PERMISSIONS;
 
-        const [rows] = await connect.query(sql, [serverID]);
+		const [rows] = await connect.query(sql, [serverID]);
 
-        return rows;
-    } catch (err) {
-        console.log(serverID
-            ? `Error getting permissions for ${serverID}@server`
-            : 'Error getting all permissions list'
-        );
-        console.log(err);
+		return rows;
+	} catch (err) {
+		console.log(serverID
+			? `Error getting permissions for ${serverID}@server`
+			: 'Error getting all permissions list');
+		console.log(err);
 
-        throw err;
-    }
+		throw err;
+	}
 };

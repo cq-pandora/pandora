@@ -1,9 +1,9 @@
 module.exports = (stat1, stat2) => {
-    const stats = {};
+	const stats = {};
 
-    for (const stat of Object.keys(stat1 || {})) {
-        stats[stat] = (stat1[stat] || 0) + (stat2[stat] || 0);
-    }
+	for (const stat of Object.keys(stat1 || {})) {
+		stats[stat] = (stat1[stat] || 0) + (stat2[stat] || 0);
+	}
 
-    return stats;
+	return stats;
 };
