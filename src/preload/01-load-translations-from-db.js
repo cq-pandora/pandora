@@ -1,5 +1,6 @@
 const compare = require('compare-versions');
 
+const logger = require('../logger');
 const data = require('../util/cq-data');
 const { get: getTranslation } = require('../db/translations');
 
@@ -13,7 +14,7 @@ module.exports = async () => {
 		if (compare(version, accumulatorVersion) >= 0) {
 			translations[key] = translation;
 		} else {
-			console.log(`Ignoring outdated translation for key ${key} (${version} < ${accumulatorVersion})`);
+			logger.warn(`Ignoring outdated translation for key ${key} (${version} < ${accumulatorVersion})`);
 		}
 	}
 };

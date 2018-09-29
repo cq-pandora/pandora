@@ -3,9 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const PaginationEmbed = require('./PaginationEmbed');
 const { emojis } = require('../config');
 const { capitalizeFirstLetter, imageUrl, toClearNumber } = require('../functions');
-const {
-	fileDb: { translate },
-} = require('../util');
+const { fileDb: { translate } } = require('../util');
 
 const currencies = {
 	ITEM_FISHCOIN: emojis.fishcoin,

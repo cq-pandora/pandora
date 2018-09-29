@@ -2,9 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 const PaginationEmbed = require('./PaginationEmbed');
 const { splitText, imageUrl } = require('../functions');
-const {
-	fileDb: { translate, heroes },
-} = require('../util');
+const { fileDb: { translate, heroes } } = require('../util');
 
 class BerriesListEmbed extends PaginationEmbed {
 	constructor(initialMessage, factions) {

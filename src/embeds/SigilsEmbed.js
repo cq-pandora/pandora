@@ -2,12 +2,8 @@ const { MessageEmbed } = require('discord.js');
 
 const PaginationEmbed = require('./PaginationEmbed');
 const { emojis } = require('../config');
-const {
-	statsToString, imageUrl, capitalizeFirstLetter, toClearNumber
-} = require('../functions');
-const {
-	fileDb: { translate, sigils: sigilz },
-} = require('../util');
+const { statsToString, imageUrl, capitalizeFirstLetter, toClearNumber } = require('../functions');
+const { fileDb: { translate, sigils: sigilz } } = require('../util');
 
 class SigilsEmbed extends PaginationEmbed {
 	constructor(initialMessage, sigils) {

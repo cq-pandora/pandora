@@ -2,9 +2,7 @@ const { random, imageUrl } = require('../functions');
 const {
 	categories,
 	cmdResult,
-	fileDb: {
-		heroes,
-	}
+	fileDb: { heroes }
 } = require('../util');
 
 exports.run = async (message) => {

@@ -1,5 +1,7 @@
 const { DiscordAPIError, Constants: { APIErrors } } = require('discord.js');
 
+const logger = require('../logger');
+
 const ERROR_CODES = [
 	APIErrors.UNKNOWN_MESSAGE,
 	APIErrors.MISSING_PERMISSIONS,
@@ -11,5 +13,5 @@ module.exports = (error) => {
 		return;
 	}
 
-	console.log(error);
+	logger.error(error);
 };

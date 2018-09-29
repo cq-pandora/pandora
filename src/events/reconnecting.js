@@ -1,5 +1,5 @@
 const logger = require('../logger');
 
 module.exports = (client) => {
-	logger.info(`Logged in as ${client.user.tag}`);
+	logger.warn('Connection to Discord interrupted. Reconnecting...');
 };

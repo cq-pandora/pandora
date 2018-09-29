@@ -1,6 +1,7 @@
 const connect = require('./connect');
 const data = require('../util/cq-data');
 const config = require('../config');
+const { db: logger } = require('../logger');
 
 const SUBMIT_TRANSLATION = 'INSERT INTO translations (`key`, `text`, `version`) VALUES (?, ?, ?)';
 const ACCEPT_TRANSLATION = 'UPDATE translations SET `status` = 1 WHERE `id` = ?';
@@ -23,8 +24,7 @@ exports.submit = async (key, translation) => {
 	try {
 		await connect.query(SUBMIT_TRANSLATION, [key, translation, config.game_version]);
 	} catch (err) {
-		console.log(`Error submitting translation for review: ${key} = ${translation}`);
-		console.log(err);
+		logger.error(`Error submitting translation for review: ${key} = ${translation}`);
 
 		throw err;
 	}
@@ -40,8 +40,7 @@ exports.accept = async (id) => {
 
 		return row;
 	} catch (err) {
-		console.log(`Error accepting translation: ${id}`);
-		console.log(err);
+		logger.error(`Error accepting translation: ${id}`);
 
 		throw err;
 	}
@@ -51,8 +50,7 @@ exports.decline = async (id) => {
 	try {
 		await connect.query(DECLINE_TRANSLATION, [id]);
 	} catch (err) {
-		console.log(`Error declining translation: ${id}`);
-		console.log(err);
+		logger.error(`Error declining translation: ${id}`);
 
 		throw err;
 	}
@@ -62,8 +60,7 @@ exports.declineAllUnaccepted = async (key) => {
 	try {
 		await connect.query(DECLINE_ALL_UNACCEPTED_TRANSLATIONS, [key]);
 	} catch (err) {
-		console.log(`Error declining translations for key ${key}`);
-		console.log(err);
+		logger.error(`Error declining translations for key ${key}`);
 
 		throw err;
 	}
@@ -79,8 +76,7 @@ exports.list = async (key = null) => {
 
 		return rows;
 	} catch (err) {
-		console.log(`Error getting translations: ${key}`);
-		console.log(err);
+		logger.error(`Error getting translations: ${key}`);
 
 		throw err;
 	}
@@ -96,8 +92,7 @@ exports.get = async (key) => {
 
 		return rows;
 	} catch (err) {
-		console.log(`Error getting translations: ${key}`);
-		console.log(err);
+		logger.error(`Error getting translations: ${key}`);
 
 		throw err;
 	}

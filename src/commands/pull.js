@@ -1,9 +1,7 @@
 const _ = require('lodash');
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 
-const {
-	random, makeInRange, makePullImage, pickGrade
-} = require('../functions');
+const { random, makeInRange, makePullImage, pickGrade } = require('../functions');
 const {
 	categories,
 	cmdResult,

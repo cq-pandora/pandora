@@ -2,9 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 const PaginationEmbed = require('./PaginationEmbed');
 const { imageUrl } = require('../functions');
-const {
-	fileDb: { translate },
-} = require('../util');
+const { fileDb: { translate } } = require('../util');
 
 const classColors = {
 	archer: 0x79B21D,

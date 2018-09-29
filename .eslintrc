@@ -15,6 +15,7 @@
         "no-tabs": 0,
         "global-require": 0,
         "import/no-dynamic-require": 0,
+        "object-curly-newline": ["error", { "ObjectPattern": { "multiline": true } }],
         "max-len": ["error", { "code": 120, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
         "no-unreachable": 2,
         "no-unused-vars": ["error", { "vars": "all", "args": "none", "argsIgnorePattern": "_" }],

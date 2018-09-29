@@ -1,9 +1,8 @@
 const stats = require('../db/stats');
 const { getPermittedCommands } = require('../functions');
 const { cmdResult } = require('../util');
-const {
-	prefix, aliases, commands, owner_id: ownerId
-} = require('../config');
+const {	prefix, aliases, commands, owner_id: ownerId } = require('../config');
+const { commands: logger } = require('../logger');
 
 module.exports = (client) => {
 	const mentionRe = new RegExp(`^<@!?${client.user.id}>`);
@@ -50,11 +49,19 @@ module.exports = (client) => {
 			return;
 		}
 
+		const cmdId = (new Date()).getTime().toString(32);
+
+		// I'm sorry for this long line :c
+		logger.verbose(`{${cmdId}} Received request ${executable.name} with arguments: "${args.join(', ')}" from  ${message.author.tag}#${message.author.id}@${message.channel.name}#${message.channel.id}@${message.guild === null ? 'DM' : `${message.guild.name}#${message.guild.id}`}`);
+
 		if (!(
 			message.guild === null
             || getPermittedCommands(message).includes(executable.name)
 		) && !message.member.hasPermission('ADMINISTRATOR', { checkAdmin: true, checkOwner: true })) {
+			logger.verbose(`{${cmdId}} User ${message.author.tag}#${message.author.id} had not enough permissions to execute`);
+
 			await message.channel.send('This command is forbidden here!');
+
 			return;
 		}
 
@@ -80,12 +87,14 @@ module.exports = (client) => {
 
 				Object.assign(stat, response);
 			}
-		} catch (error) {
-			await message.channel.send('Error while executing command!');
 
+			logger.verbose(`{${cmdId}} Command finished successfully`);
+		} catch (error) {
 			stat.status_code = cmdResult.FATAL;
 
-			console.log(error);
+			logger.error(`{${cmdId}} Unexpected error while executing command`, error);
+
+			await message.channel.send('Error while executing command!');
 		}
 
 		try {
@@ -94,7 +103,7 @@ module.exports = (client) => {
 				...stat
 			});
 		} catch (error) {
-			console.log('Unable to submit stats: ', error);
+			logger.error(`{${cmdId}} Unable to submit stats`, error);
 		}
 	};
 };

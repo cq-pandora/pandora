@@ -1,5 +1,6 @@
 const connect = require('./connect');
 const { permissions } = require('../config');
+const { db: logger } = require('../logger');
 
 const SET_PERMISSIONS = `INSERT INTO color_lists (server_id, target_type, target_id, mode, commands, priority) VALUES ? 
     ON DUPLICATE KEY UPDATE commands = VALUES(commands), mode = VALUES(mode), priority = VALUES(priority);`;
@@ -17,8 +18,7 @@ exports.set = async (serverId, toInsert) => {
 
 		normalizedPermissions.forEach(permissions.set);
 	} catch (err) {
-		console.log('Error setting permissions:', permissions);
-		console.log(err);
+		logger.error('Error setting permissions:', permissions);
 
 		throw err;
 	}
@@ -30,8 +30,7 @@ exports.clear = async (toClear) => {
 
 		toClear.map(p => permissions.set([p.serverID, p.targetType, p.targetID, 0, '']));
 	} catch (err) {
-		console.log(`Error clearing permissions for ${toClear.map(p => `${p.targetID}@${p.targetType}`)}`);
-		console.log(err);
+		logger.error(`Error clearing permissions for ${toClear.map(p => `${p.targetID}@${p.targetType}`)}`);
 
 		throw err;
 	}
@@ -47,10 +46,9 @@ exports.list = async (serverID = null) => {
 
 		return rows;
 	} catch (err) {
-		console.log(serverID
+		logger.error(serverID
 			? `Error getting permissions for ${serverID}@server`
 			: 'Error getting all permissions list');
-		console.log(err);
 
 		throw err;
 	}

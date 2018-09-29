@@ -1,5 +1,5 @@
 {
-  "name": "cq-pandora",
+  "name": "pandora",
   "version": "1.1.1",
   "main": "./src/index.js",
   "license": "MIT",
@@ -64,10 +64,11 @@
     "lodash": "^4.17.10",
     "manage-database": "^0.2.1",
     "mathjs": "^5.1.1",
-    "mysql2": "^1.6.1"
+    "mysql2": "^1.6.1",
+    "winston": "^3.1.0"
   },
   "scripts": {
-    "db:init": "node src/init-db.js",
+    "db:init": "node migrations/init-db.js",
     "db:migrate": "yarn run db:migrate:up",
     "db:migrate:up": "db-migrate up",
     "db:migrate:down": "db-migrate down",

@@ -1,5 +1,4 @@
 const _ = require('lodash');
-
 const { join: pathJoin } = require('path');
 
 const Config = require('./Config');
@@ -29,6 +28,7 @@ root.db = new Config({
 }, 'PANDORA_DB_');
 
 root.emojis = loadRootConfig('emojis.json');
+root.package = loadRootConfig('package.json');
 root.commands = {};
 root.aliases = {};
 root.reverseAliases = {};
