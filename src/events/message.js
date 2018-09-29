@@ -52,7 +52,7 @@ module.exports = (client) => {
 		const cmdId = (new Date()).getTime().toString(32);
 
 		// I'm sorry for this long line :c
-		logger.verbose(`{${cmdId}} Received request ${executable.name} with arguments: "${args.join(', ')}" from  ${message.author.tag}#${message.author.id}@${message.channel.name}#${message.channel.id}@${message.guild === null ? 'DM' : `${message.guild.name}#${message.guild.id}`}`);
+		logger.verbose(`{${cmdId}} Received request for '${executable.name}' ${args.length ? `with arguments: "${args.join(', ')}"` : 'without arguments'} from  ${message.author.tag}#${message.author.id}@${message.channel.name}#${message.channel.id}@${message.guild === null ? 'DM' : `${message.guild.name}#${message.guild.id}`}`);
 
 		if (!(
 			message.guild === null
