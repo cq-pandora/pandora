@@ -5,7 +5,7 @@ const logger = require('../logger');
 const ERROR_CODES = [
 	APIErrors.UNKNOWN_MESSAGE,
 	APIErrors.MISSING_PERMISSIONS,
-    APIErrors.CANNOT_EXECUTE_ON_DM,
+	APIErrors.CANNOT_EXECUTE_ON_DM,
 ];
 
 const IGNORE_RAW = [
