@@ -64,6 +64,7 @@ module.exports = {
 	fishes: requireFile('fishes'),
 	fishing_gear: requireFile('fishing_gear'),
 	fishing_ponds: requireFile('fishing_ponds'),
+	portraits: requireFile('portraits'),
 	translations,
 	translate: key => (translations[key] ? (translations[key].text || '') : (key || '')).replace(/[@#$^]/g, ''),
 	fuzzyIndices,
@@ -79,6 +80,7 @@ module.exports = {
 	fishesFuzzy: new Fuse(fuzzyIndices.fishes, fuzzyOptions),
 	fishingGearFuzzy: new Fuse(fuzzyIndices.fishing_gear, fuzzyOptions),
 	fishingPondsFuzzy: new Fuse(fuzzyIndices.fishing_ponds, fuzzyOptions),
+	portraitsFuzzy: aliasFuse(new Fuse(fuzzyIndices.portraits, fuzzyOptions)),
 };
 
 module.exports.followPath = followPath.bind(module.exports);
