@@ -20,4 +20,6 @@ module.exports = {
 	pickGrade: require('./pickGrade'),
 	extractMentions: require('./extractMentions'),
 	getPermittedCommands: require('./getPermittedCommands'),
+	formatPullChunks: require('./formatPullChunks'),
+	chancesRoll: require('./chancesRoll'),
 };

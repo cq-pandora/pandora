@@ -1,13 +1,20 @@
-module.exports = () => {
+module.exports = (probabilities = {
+	3: 0.81,
+	4: 0.149,
+	5: 0.035,
+	6: 0.006,
+}, def = 3) => {
 	const roll = Math.random();
 
-	if (roll >= 0 && roll <= 0.81) {
-		return '3';
-	} if (roll > 0.81 && roll <= 0.81 + 0.149) {
-		return '4';
-	} if (roll > 0.81 + 0.149 && roll <= 0.81 + 0.149 + 0.035) {
-		return '5';
+	let shift = 0;
+
+	for (const grade of Object.getOwnPropertyNames(probabilities)) {
+		if (shift <= roll && roll < shift + probabilities[grade]) {
+			return grade;
+		}
+
+		shift += probabilities[grade];
 	}
 
-	return '6';
+	return def;
 };
