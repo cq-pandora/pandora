@@ -12,7 +12,7 @@ exports.run = async (message, args) => {
 			},
 			{
 				name: 'Tier Lists',
-				value: '[kamakiller\'s SS2 Overview](https://goo.gl/yPrKBR)\n[TISTORY](https://goo.gl/nOC3NK)\n[INVEN](https://goo.gl/k5PlhB)',
+				value: '[kamakiller\'s SS2 Overview](https://goo.gl/yPrKBR)\n[kamakiller\'s Tier List](http://bit.ly/cqkktier)[TISTORY](https://goo.gl/nOC3NK)\n[INVEN](https://goo.gl/k5PlhB)',
 				inline: true,
 			},
 			{
