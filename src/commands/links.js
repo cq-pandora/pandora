@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
 		fields: [
 			{
 				name: 'Guides',
-				value: '[Hero skills/builds list](http://bit.ly/2NNDlbg)\n[Beginner and returning player](http://bit.ly/CQNewRetGuide)',
+				value: '[Hero skills/builds list](http://bit.ly/2NNDlbg)\n[Beginner and returning](http://bit.ly/CQNewRetGuide)',
 				inline: true,
 			},
 			{
