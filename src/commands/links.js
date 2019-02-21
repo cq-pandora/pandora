@@ -7,7 +7,7 @@ exports.run = async (message, args) => {
 		fields: [
 			{
 				name: 'Guides',
-				value: '[Hero skills/builds list](http://bit.ly/2NNDlbg)',
+				value: '[Hero skills/builds list](http://bit.ly/2NNDlbg)\n[Beginner and returning player](http://bit.ly/CQNewRetGuide)',
 				inline: true,
 			},
 			{
@@ -47,7 +47,7 @@ exports.run = async (message, args) => {
 			},
 			{
 				name: 'Miscellaneous',
-				value: '[Leveling guide](https://i.redd.it/ya5mgw9xvfk01.jpg)\n[cq-assets](https://goo.gl/UzKBsq)\n[block-map](https://goo.gl/wkYdqt)',
+				value: '[Leveling guide](https://i.redd.it/ya5mgw9xvfk01.jpg)\n[cq-assets](http://bit.ly/PandoraAssets)\n[block-map](http://bit.ly/CQBlockMap)',
 				inline: true,
 			},
 		],
