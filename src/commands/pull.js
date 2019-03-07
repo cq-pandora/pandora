@@ -16,6 +16,15 @@ const {
 	fileDb: { heroes }
 } = require('../util');
 
+const reZeroPool = {
+	CHA_WI_LIMITED_RZ_4_05: 1,
+	CHA_PA_LIMITED_RZ_4_03: 1,
+	CHA_PR_LIMITED_RZ_4_07: 3,
+	CHA_WA_LIMITED_RZ_4_02: 3,
+	CHA_WI_LIMITED_RZ_4_04: 3,
+	CHA_WI_LIMITED_RZ_4_06: 3,
+};
+
 const gg1Pool = {
 	CHA_WI_LIMITED_GG_4_1: 1,
 	CHA_WA_LIMITED_GG_4_2: 1,
@@ -88,6 +97,7 @@ const ggPull = (count, chances) => Array(count)
 const pulls = {
 	gg1: count => ggPull(count, gg1Pool),
 	gg2: count => ggPull(count, gg2Pool),
+	rz: count => ggPull(count, reZeroPool),
 	contract: count => Array(count)
 		.fill()
 		.map((_, idx) => {
