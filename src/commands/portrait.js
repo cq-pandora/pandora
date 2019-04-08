@@ -39,9 +39,17 @@ const command = async (message, args) => {
 		};
 	}
 
-	const portraitsContainer = followPath(candidate.path);
+	const portraits = followPath(candidate.path);
 
-	const embed = new PortraitsListEmbed(message, portraitsContainer.portraits);
+	if (!portraits || !portraits.length) {
+		await message.channel.send('Portrait not found!');
+
+		return {
+			status_code: cmdResult.SUBENTITY_NOT_FOUND,
+		};
+	}
+
+	const embed = new PortraitsListEmbed(message, portraits);
 
 	await embed.send();
 
