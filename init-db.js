@@ -1,6 +1,6 @@
 const createDbManager = require('manage-database');
 
-const { db: dbConfig } = require('./config');
+const { db: dbConfig } = require('./src/config');
 
 const dbManager = createDbManager({
 	user: dbConfig.user,
