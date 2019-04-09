@@ -255,7 +255,7 @@ const command = async (message, [nameAction, field, name, gradeStr]) => {
 	};
 };
 
-exports.run = (message, args) => (
+exports.run = ({ message, args }) => (
 	args.length < 1
 		? instructions(message)
 		: command(message, args)

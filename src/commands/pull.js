@@ -157,6 +157,6 @@ const command = async (message, [pullType, pullCount]) => {
 	};
 };
 
-exports.run = (message, args) => command(message, args);
+exports.run = ({ message, args }) => command(message, args);
 
 exports.category = categories.MISC;

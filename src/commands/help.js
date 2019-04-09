@@ -8,7 +8,7 @@ const {
 
 exports.category = categories.BOT;
 
-exports.run = async (message, args) => {
+exports.run = async ({ message, args }) => {
 	await message.channel.send({
 		embed: {
 			title: 'Commands',

@@ -156,7 +156,7 @@ const command = async (message, [nameAction, alias, fogh]) => {
 	return response;
 };
 
-exports.run = (message, args) => (
+exports.run = ({ message, args }) => (
 	args.length < 1
 		? instructions(message)
 		: command(message, args)

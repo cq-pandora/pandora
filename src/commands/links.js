@@ -1,6 +1,6 @@
 const { categories, cmdResult } = require('../util');
 
-exports.run = async (message, args) => {
+exports.run = async ({ message, args }) => {
 	const embed = {
 		title: 'Useful Links',
 		description: 'Visit the [Crusaders Quest Database (cqdb)](https://goo.gl/fdg6M8)!',

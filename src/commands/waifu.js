@@ -5,7 +5,7 @@ const {
 	fileDb: { heroes }
 } = require('../util');
 
-exports.run = async (message) => {
+exports.run = async ({ message }) => {
 	const hero = heroes[random(0, heroes.length - 1)];
 
 	await message.channel.send({

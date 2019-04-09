@@ -83,7 +83,7 @@ module.exports = (client) => {
 
 				stat.status_code = cmdResult.NOT_ENOUGH_PERMISSIONS;
 			} else {
-				const response = await executable.run(message, args);
+				const response = await executable.run({ client, message, args });
 
 				Object.assign(stat, response);
 			}

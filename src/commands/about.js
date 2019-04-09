@@ -1,7 +1,7 @@
 const config = require('../config');
 const { cmdResult, categories } = require('../util');
 
-exports.run = async (message) => {
+exports.run = async ({ message }) => {
 	await message.channel.send({
 		embed: {
 			title: 'About',

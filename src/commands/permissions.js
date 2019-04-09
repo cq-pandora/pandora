@@ -108,7 +108,7 @@ const command = async (message, args) => {
 	};
 };
 
-exports.run = (message, args) => (
+exports.run = ({ message, args }) => (
 	args.length < 1
 		? instructions(message)
 		: command(message, args)

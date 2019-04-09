@@ -1,6 +1,6 @@
 const { categories, cmdResult } = require('../util');
 
-exports.run = async (message, args) => {
+exports.run = async ({ message, args }) => {
 	const newMessage = await message.channel.send({
 		embed: {
 			description: 'Pinging...'

@@ -5,7 +5,7 @@ const { Script, createContext } = require('vm');
 
 const { categories, cmdResult } = require('../util');
 
-const evaluate = async (message, args) => {
+exports.run = async ({ message, args }) => {
 	let input = args.join(' ');
 
 	input = beautify(input, {
@@ -63,8 +63,6 @@ const evaluate = async (message, args) => {
 		arguments: JSON.stringify({ input: args.join(' ') }),
 	};
 };
-
-exports.run = evaluate;
 
 exports.protected = true;
 
