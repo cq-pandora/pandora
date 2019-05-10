@@ -16,6 +16,11 @@ exports.run = async ({ message, args }) => {
 				inline: true,
 			},
 			{
+				name: 'Raid',
+				value: '[kamakiller\'s Loki](http://bit.ly/CQLokiIncarnate)\n[kamakiller\'s Manacar](https://goo.gl/PbpKdG)\n[Manacar Comic](https://goo.gl/aJ8Yoy)',
+				inline: true,
+			},
+			{
 				name: 'Champions',
 				value: '[Vyrlokar](https://goo.gl/M37qRm)',
 				inline: true,
@@ -33,11 +38,6 @@ exports.run = async ({ message, args }) => {
 			{
 				name: 'LoPF',
 				value: '[Nyaa](https://goo.gl/iqppI0)\n[Shintouyu](https://goo.gl/4i8nCb)\n[LoPF map](https://goo.gl/YtlDQH)',
-				inline: true,
-			},
-			{
-				name: 'Manacar',
-				value: '[kamakiller](https://goo.gl/PbpKdG)\n[Comic](https://goo.gl/aJ8Yoy)',
 				inline: true,
 			},
 			{
