@@ -44,6 +44,16 @@ const gg2Pool = {
 	CHA_WI_LIMITED_GG_4_2: 3,
 };
 
+const gsPool = {
+	CHA_PA_LIMITED_GS_4_02: 1,
+	CHA_WA_LIMITED_GS_4_01: 1,
+	CHA_AR_LIMITED_GS_4_06: 2.4,
+	CHA_PR_LIMITED_GS_4_03: 2.4,
+	CHA_PR_LIMITED_GS_4_04: 2.4,
+	CHA_WA_LIMITED_GS_4_07: 2.4,
+	CHA_WI_LIMITED_GS_4_05: 2.4,
+};
+
 const HEROES_HIDDEN = [
 	'legendary',
 	// 'secret'
@@ -108,6 +118,7 @@ const pulls = {
 			}
 			return sortedForms.guaranteed[random(0, sortedForms.guaranteed.length - 1)];
 		}),
+	gs: count => ggPull(count, gsPool),
 };
 
 const command = async (message, [pullType, pullCount]) => {
