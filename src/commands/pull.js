@@ -56,6 +56,7 @@ const gsPool = {
 
 const HEROES_HIDDEN = [
 	'legendary',
+	'support',
 	// 'secret'
 ];
 
