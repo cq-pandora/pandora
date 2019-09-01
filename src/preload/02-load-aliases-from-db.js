@@ -1,19 +1,22 @@
-const _ = require('lodash');
 const config = require('../config');
 const { get: getAliases } = require('../db/aliases');
+const logger = require('../logger');
 
 module.exports = async () => {
 	const databaseAliases = await getAliases();
 
-	for (const { for: aliasFor, alias = '' } of databaseAliases) {
-		config.aliases[alias.toLowerCase()] = aliasFor;
+	let validAliases = 0;
+
+	for (const { context, alias = '', for: target } of databaseAliases) {
+		if (!context) {
+			logger.warn(`Invalid alias without context: ${alias} => ${target}`);
+		} else {
+			config.setAlias(context, alias, target);
+			validAliases += 1;
+		}
 	}
 
-	const aliasesGroupByFor = _.groupBy(databaseAliases, 'for');
-
-	for (const [fogh, aliases] of Object.entries(aliasesGroupByFor)) {
-		config.reverseAliases[fogh] = aliases.map(item => item.alias);
-	}
+	logger.verbose(`Loaded ${validAliases}/${databaseAliases.length} aliases`);
 };
 
 module.exports.errorCode = 3;
