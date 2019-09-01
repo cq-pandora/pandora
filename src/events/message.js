@@ -1,8 +1,9 @@
 const stats = require('../db/stats');
 const { getPermittedCommands } = require('../functions');
 const { cmdResult } = require('../util');
-const {	prefix, aliases, commands, owner_id: ownerId } = require('../config');
+const {	prefix, getAlias, commands, owner_id: ownerId } = require('../config');
 const { commands: logger } = require('../logger');
+const { contexts } = require('../alias-context');
 
 module.exports = (client) => {
 	const mentionRe = new RegExp(`^<@!?${client.user.id}>`);
@@ -42,7 +43,7 @@ module.exports = (client) => {
 			command = args.shift().toLowerCase();
 		}
 
-		const executable = commands[command] || commands[aliases[command]];
+		const executable = commands[command] || commands[getAlias(contexts.COMMANDS, command)];
 
 		if (!executable) {
 			// message.channel.send('Command not found!');

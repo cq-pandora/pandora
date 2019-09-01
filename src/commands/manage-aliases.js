@@ -1,68 +1,33 @@
-const _ = require('lodash');
 const { MessageEmbed } = require('discord.js');
 
 const aliases = require('../db/aliases');
-const { getPrefix } = require('../functions');
+const { getPrefix, splitText } = require('../functions');
 const {
 	categories,
 	cmdResult,
 	PaginationEmbed,
 } = require('../util');
 
-const instructions = async (message) => {
-	const prefix = getPrefix(message);
-	const embed = {
-		title: `${prefix}alias <action> [<alias>] [<for>]`,
-		fields: [
-			{
-				name: '<action>',
-				value: 'Action to perform.\nCan be accept, decline, clear, list or list-all'
-			},
-			{
-				name: '<alias>',
-				value: 'Alias to work with. **Important**: alias should not contain space'
-			},
-			{
-				name: '<for>',
-				value: 'Target for alias.\n**Important**: this should be single word, so test if bot can find what you want to alias by that word'
-			}
-		],
-		footer: { text: 'Argument order matters!' }
-	};
-
-	await message.channel.send({ embed });
-
-	return {
-		status_code: cmdResult.NOT_ENOUGH_ARGS,
-	};
-};
-
 const aliasesToEmbeds = (ts) => {
-	const embeds = [];
+	ts = ts
+		.sort((a, b) => `${a.context}`.localeCompare(b.context))
+		.map(({ context, alias, for: fogh }) => `${context}: ${alias} => ${fogh}`)
+		.join('\n');
 
-	const chunks = _.chunk(_.groupBy(ts, 'for'), 10);
-
-	let i = 0;
-	for (const chunk of chunks) {
-		const embed = new MessageEmbed()
-			.setFooter(`Page ${i}/${chunks.length}`);
-
-		for (const [key, value] of chunk) {
-			embed.addField(key, _.truncate(value.map(a => a.for).join(', '), 1024));
-		}
-
-		embeds.push(embed);
-
-		i += 1;
-	}
-
-	return embeds;
+	return splitText(ts, 1024, '\n').map((text, idx, total) => (
+		new MessageEmbed()
+			.setTitle('Aliases list')
+			.setFooter(`Page ${idx}/${total}`)
+			.addField('<context>: <alias> => <targer>', text)
+	));
 };
 
 const actions = {
-	list: async (message, { fogh }) => {
+	'list-pending': async (message, { originalArgs }) => {
 		try {
-			const list = aliasesToEmbeds(await aliases.list(fogh));
+			const fogh = originalArgs.length ? originalArgs.join(' ') : null;
+
+			const list = await aliases.list(fogh);
 
 			if (!list.length) {
 				await message.channel.send('No pending aliases!');
@@ -70,7 +35,7 @@ const actions = {
 			}
 
 			const embed = new PaginationEmbed(message)
-				.setArray(list)
+				.setArray(aliasesToEmbeds(list))
 				.setAuthorizedUsers([message.author.id])
 				.setChannel(message.channel)
 				.showPageIndicator(false)
@@ -83,9 +48,32 @@ const actions = {
 			throw error;
 		}
 	},
-	accept: async (message, { alias }) => {
+	list: async (message) => {
 		try {
-			await aliases.accept(alias);
+			const list = await aliases.listAll();
+
+			if (!list.length) {
+				await message.channel.send('No aliases defined!');
+				return;
+			}
+
+			const embed = new PaginationEmbed(message)
+				.setArray(aliasesToEmbeds(list))
+				.setAuthorizedUsers([message.author.id])
+				.setChannel(message.channel)
+				.showPageIndicator(false)
+				.build();
+
+			await embed;
+		} catch (error) {
+			message.channel.send('Unable to list aliases. Please, contact bot owner.');
+
+			throw error;
+		}
+	},
+	accept: async (message, { alias, context }) => {
+		try {
+			await aliases.accept(alias, context);
 
 			await message.channel.send('Alias accepted!');
 		} catch (error) {
@@ -94,9 +82,9 @@ const actions = {
 			throw error;
 		}
 	},
-	decline: async (message, { alias }) => {
+	decline: async (message, { alias, context }) => {
 		try {
-			await aliases.decline(alias);
+			await aliases.decline(alias, context);
 
 			await message.channel.send('Alias declined!');
 		} catch (error) {
@@ -105,7 +93,7 @@ const actions = {
 			throw error;
 		}
 	},
-	clear: async (message, { fogh }) => {
+	clear: async (message, { originalArgs: [fogh] }) => {
 		try {
 			await aliases.declineAllUnaccepted(fogh);
 
@@ -118,10 +106,53 @@ const actions = {
 	}
 };
 
-actions['list-all'] = actions.list;
+const actionsText = Object.keys(actions).join(', ');
 
-const command = async (message, [nameAction, alias, fogh]) => {
+const instructions = async (message) => {
+	const prefix = getPrefix(message);
+	const embed = {
+		title: `${prefix}manage-aliases <action> [<alias>] [<context>] [<for>]`,
+		fields: [
+			{
+				name: '<action>',
+				value: `Action to perform.\nCan be ${actionsText}`,
+			},
+			{
+				name: '<alias>',
+				value: 'Alias to work with. **Important**: alias should not contain space'
+			},
+			{
+				name: '<context>',
+				value: 'Command name, where this alias applies',
+			},
+			{
+				name: '<for>',
+				value: 'Target for alias.\n**Important**: test if bot can find what you want to alias by that alias'
+			}
+		],
+		footer: { text: 'Argument order matters!' }
+	};
+
+	await message.channel.send({ embed });
+
+	return {
+		status_code: cmdResult.NOT_ENOUGH_ARGS,
+	};
+};
+
+const command = async (message, [nameAction, ...args]) => {
+	const [alias, context, ...etc] = args;
+
+	const fogh = etc.join(' ');
 	nameAction = nameAction.toLowerCase();
+
+	const cmdArgs = {
+		action: nameAction,
+		alias,
+		context,
+		fogh,
+		originalArgs: args,
+	};
 
 	const action = actions[nameAction];
 
@@ -131,25 +162,17 @@ const command = async (message, [nameAction, alias, fogh]) => {
 		return {
 			status_code: cmdResult.ENTITY_NOT_FOUND,
 			target: 'action',
-			arguments: JSON.stringify({ action: nameAction, alias, for: fogh }),
+			arguments: JSON.stringify(cmdArgs),
 		};
 	}
 
-	const response = await action(message, {
-		action: nameAction,
-		alias,
-		fogh
-	});
+	const response = await action(message, cmdArgs);
 
 	if (!response) {
 		return {
 			status_code: cmdResult.SUCCESS,
 			target: alias || '*',
-			arguments: JSON.stringify({
-				action: nameAction,
-				for: fogh,
-				alias
-			}),
+			arguments: JSON.stringify(cmdArgs),
 		};
 	}
 

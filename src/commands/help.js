@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const config = require('../config');
+const { prefix, commands, getCommandAliases } = require('../config');
 const {
 	categories,
 	cmdResult,
@@ -8,18 +8,22 @@ const {
 
 exports.category = categories.BOT;
 
-exports.run = async ({ message, args }) => {
+exports.run = async ({ message }) => {
 	await message.channel.send({
 		embed: {
 			title: 'Commands',
-			description: `Prefix: ${config.prefix}, ${message.client.user}`,
-			fields: _(config.commands).groupBy('category').entries().map(([name, cmds]) => ({
+			description: `Prefix: ${prefix}, ${message.client.user}`,
+			fields: _(commands).groupBy('category').entries().map(([name, cmds]) => ({
 				name,
 				inline: false,
 				value: cmds
-					.map(cmd => (
-						`${cmd.name}${config.reverseAliases[cmd.name] ? ` (${config.reverseAliases[cmd.name].join(', ')})` : ''}`
-					))
+					.map((cmd) => {
+						const aliases = getCommandAliases(cmd.name);
+
+						if (!aliases) return cmd.name;
+
+						return `${cmd.name} (${aliases.join(', ')})`;
+					})
 					.join(', ')
 			}))
 			/* footer: {

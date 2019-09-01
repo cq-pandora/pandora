@@ -33,6 +33,44 @@ root.commands = {};
 root.aliases = {};
 root.reverseAliases = {};
 
+root.setAlias = (ctx, aliasRaw = '', f = '') => {
+	const contextAliases = root.aliases[ctx] = root.aliases[ctx] || {};
+	const contextReverseAliases = root.reverseAliases[ctx] = root.reverseAliases[ctx] || {};
+
+	const reverseAliasEntry = contextReverseAliases[f] = contextReverseAliases[f] || [];
+
+	const alias = aliasRaw.toLowerCase();
+
+	contextAliases[alias] = f;
+
+	if (!reverseAliasEntry.includes(alias)) {
+		reverseAliasEntry.push(alias);
+	}
+};
+
+root.getAlias = (ctx, alias) => (root.aliases[ctx] || {})[alias];
+
+root.getCommandAliases = cmd => (root.reverseAliases.commands || {})[cmd];
+
+root.removeAlias = (ctx, aliasRaw) => {
+	const contextAliases = root.aliases[ctx] = root.aliases[ctx] || {};
+	const contextReverseAliases = root.reverseAliases[ctx] = root.reverseAliases[ctx] || {};
+
+	const alias = aliasRaw.toLowerCase();
+	const target = contextAliases[alias];
+
+	if (!target) {
+		return false;
+	}
+
+	delete contextAliases[alias];
+
+	contextReverseAliases[target] = (contextReverseAliases[target] || [])
+		.filter(a => a !== alias);
+
+	return true;
+};
+
 /* {
     '<server_id>': {
         users: {

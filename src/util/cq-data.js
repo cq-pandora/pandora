@@ -2,7 +2,8 @@ const Fuse = require('fuse.js');
 
 const { join: pathJoin, resolve: pathResolve } = require('path');
 
-const { aliases, parsedData } = require('../config');
+const { getAlias, parsedData } = require('../config');
+const { contexts } = require('../alias-context');
 
 const parsedDataDir = pathResolve(parsedData);
 const requireFile = path => require(pathJoin(parsedDataDir, `${path}.json`));
@@ -19,16 +20,16 @@ const fuzzyOptions = {
 
 const translations = requireFile('translations');
 
-const alias = key => (
+const alias = (ctx, key) => (
 	key
-		? aliases[key.toLowerCase()] || key
+		? getAlias(ctx, key.toLowerCase()) || key
 		: ''
 );
 
-const aliasFuse = (fuse) => {
+const aliasFuse = (fuse, context) => {
 	const oldSearch = fuse.search;
 
-	fuse.search = a => oldSearch.call(fuse, alias(a));
+	fuse.search = a => oldSearch.call(fuse, alias(context, a));
 
 	return fuse;
 };
@@ -68,19 +69,19 @@ module.exports = {
 	translations,
 	translate: key => (translations[key] ? (translations[key].text || '') : (key || '')).replace(/[@#$^]/g, ''),
 	fuzzyIndices,
-	heroesFuzzy: aliasFuse(new Fuse(fuzzyIndices.heroes, fuzzyOptions)),
-	championsFuzzy: aliasFuse(new Fuse(fuzzyIndices.champions, fuzzyOptions)),
-	spSkillsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sp_skills, fuzzyOptions)),
-	bossesFuzzy: aliasFuse(new Fuse(fuzzyIndices.bosses, fuzzyOptions)),
-	breadsFuzzy: new Fuse(fuzzyIndices.breads, fuzzyOptions),
-	berriesFuzzy: new Fuse(fuzzyIndices.berries, fuzzyOptions),
-	sigilsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sigils, fuzzyOptions)),
-	goddessesFuzzy: new Fuse(fuzzyIndices.goddesses, fuzzyOptions),
-	factionsFuzzy: new Fuse(fuzzyIndices.factions, fuzzyOptions),
-	fishesFuzzy: new Fuse(fuzzyIndices.fishes, fuzzyOptions),
-	fishingGearFuzzy: new Fuse(fuzzyIndices.fishing_gear, fuzzyOptions),
-	fishingPondsFuzzy: new Fuse(fuzzyIndices.fishing_ponds, fuzzyOptions),
-	portraitsFuzzy: aliasFuse(new Fuse(fuzzyIndices.portraits, fuzzyOptions)),
+	heroesFuzzy: aliasFuse(new Fuse(fuzzyIndices.heroes, fuzzyOptions), contexts.HEROES),
+	championsFuzzy: aliasFuse(new Fuse(fuzzyIndices.champions, fuzzyOptions), contexts.CHAMPIONS),
+	spSkillsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sp_skills, fuzzyOptions), contexts.SP_SKILLS),
+	bossesFuzzy: aliasFuse(new Fuse(fuzzyIndices.bosses, fuzzyOptions), contexts.BOSSES),
+	breadsFuzzy: aliasFuse(new Fuse(fuzzyIndices.breads, fuzzyOptions), contexts.BREADS),
+	berriesFuzzy: aliasFuse(new Fuse(fuzzyIndices.berries, fuzzyOptions), contexts.BERRIES),
+	sigilsFuzzy: aliasFuse(new Fuse(fuzzyIndices.sigils, fuzzyOptions), contexts.SIGILS),
+	goddessesFuzzy: aliasFuse(new Fuse(fuzzyIndices.goddesses, fuzzyOptions), contexts.GODDESSES),
+	factionsFuzzy: aliasFuse(new Fuse(fuzzyIndices.factions, fuzzyOptions), contexts.FACTIONS),
+	fishesFuzzy: aliasFuse(new Fuse(fuzzyIndices.fishes, fuzzyOptions), contexts.FISHES),
+	fishingGearFuzzy: aliasFuse(new Fuse(fuzzyIndices.fishing_gear, fuzzyOptions), contexts.FISH_GEAR),
+	fishingPondsFuzzy: aliasFuse(new Fuse(fuzzyIndices.fishing_ponds, fuzzyOptions), contexts.FISH_PONDS),
+	portraitsFuzzy: aliasFuse(new Fuse(fuzzyIndices.portraits, fuzzyOptions), contexts.PORTRAITS),
 };
 
 module.exports.followPath = followPath.bind(module.exports);
