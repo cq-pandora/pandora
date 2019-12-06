@@ -54,6 +54,15 @@ const gsPool = {
 	CHA_WI_LIMITED_GS_4_05: 2.4,
 };
 
+const shPool = {
+	CHA_PA_LIMITED_SH_4_02: 1,
+	CHA_PA_LIMITED_SH_4_03: 1,
+	CHA_WA_LIMITED_SH_4_01: 1,
+	CHA_WI_LIMITED_SH_4_04: 1,
+	CHA_WI_LIMITED_SH_4_05: 1,
+	CHA_WI_LIMITED_SH_4_06: 1,
+};
+
 const HEROES_HIDDEN = [
 	'legendary',
 	'support',
@@ -70,8 +79,8 @@ const forms = _.flatten(heroes
 		})
 	)));
 
-const secretForms = forms.filter(f => f.hero.type === 'secret');
-const plainForms = forms.filter(f => f.hero.type !== 'secret');
+const secretForms = forms.filter(f => f.hero.type === 'secret' || f.hero.type === 'collab');
+const plainForms = forms.filter(f => f.hero.type !== 'secret' || f.hero.type !== 'collab');
 
 const secretFormsById = secretForms.reduce(arrayToObjectWithIdAsKeyReducer, {});
 
@@ -109,6 +118,7 @@ const pulls = {
 	gg1: count => ggPull(count, gg1Pool),
 	gg2: count => ggPull(count, gg2Pool),
 	rz: count => ggPull(count, reZeroPool),
+	sh: count => ggPull(count, shPool),
 	contract: count => Array(count)
 		.fill()
 		.map((_, idx) => {

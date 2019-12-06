@@ -24,6 +24,7 @@ module.exports = (pull, canBeGuaranteed = true) => _.chunk(
 				return `**${miniContract}${translate(form.name)} (${form.star}★)${((idx + 1) % 10 && canBeGuaranteed) ? '**' : ' (Guaranteed)**'}`;
 			case 'promotable':
 				return `*${miniPromotable}${translate(form.name)} (${form.star}★)*`;
+			case 'collab':
 			case 'secret':
 				return `*${miniEvent}${translate(form.name)} (${form.star}★)*`;
 			default:
