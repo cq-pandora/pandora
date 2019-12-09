@@ -80,7 +80,7 @@ const forms = _.flatten(heroes
 	)));
 
 const secretForms = forms.filter(f => f.hero.type === 'secret' || f.hero.type === 'collab');
-const plainForms = forms.filter(f => f.hero.type !== 'secret' || f.hero.type !== 'collab');
+const plainForms = forms.filter(f => f.hero.type !== 'secret' && f.hero.type !== 'collab');
 
 const secretFormsById = secretForms.reduce(arrayToObjectWithIdAsKeyReducer, {});
 
