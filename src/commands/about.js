@@ -19,7 +19,7 @@ exports.run = async ({ client, message }) => {
 				},
 				{
 					name: 'Git repos',
-					value: '[/TrueLecter/pandora](https://github.com/TrueLecter/pandora)\n[cq-assets](https://gitlab.com/cq-data-re/cq-assets)',
+					value: '[/cq-pandora/pandora](https://github.com/cq-pandora/pandora)\n[cq-assets](https://github.com/cq-pandora/assets/)',
 					inline: true,
 				},
 			],
